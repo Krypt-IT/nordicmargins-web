@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nordic Margins – vet vad varje rätt tjänar</title>
+<meta name="description" content="Menyanalys för restauranger i Örebro: kostnad och vinst per portion, och vad du ska göra åt rätterna som inte bär sig. Byggt av en kökschef.">
+<meta property="og:title" content="Nordic Margins – vet vad varje rätt tjänar">
+<meta property="og:description" content="Menyanalys för restauranger: kostnad och vinst per portion. Byggt av en kökschef.">
+<meta property="og:image" content="https://nordicmargins.se/icon-512.png">
+<meta name="theme-color" content="#172321">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--granskog:#172321;--linne:#F5F1E8;--mynta:#C6F0D0;--text2:#3d4a47;--ljus2:#d8d3c7;--kant:#d9d3c4}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--granskog);background:var(--linne);-webkit-font-smoothing:antialiased}
+h1,h2,h3,.sg{font-family:'Space Grotesk',Inter,sans-serif}
+a{color:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.btn{display:inline-block;font-weight:600;font-size:16px;text-decoration:none;padding:16px 28px;border-radius:12px;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.btn-mynta{background:var(--mynta);color:var(--granskog)}
+.btn-mynta:hover{background:#b3e8c0}
+.btn-ghost{color:var(--linne);border-color:rgba(245,241,232,.4)}
+.btn-ghost:hover{border-color:var(--linne)}
+.btn-dark{background:var(--granskog);color:var(--linne)}
+.btn-outline{color:var(--granskog);border-color:var(--granskog)}
+header{background:var(--granskog);color:var(--linne)}
+nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:20px;padding-bottom:20px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:600;font-size:20px}
+.links{display:flex;flex-wrap:wrap;align-items:center;gap:24px}
+.links a{text-decoration:none;font-size:15px}
+.links .btn{padding:12px 20px;font-size:15px}
+.hero{display:flex;flex-wrap:wrap;align-items:center;gap:56px;padding-top:64px;padding-bottom:96px}
+.hero-text{flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:24px}
+.kicker{margin:0;font-size:14px;font-weight:600;letter-spacing:.12em;color:var(--mynta)}
+h1{margin:0;font-weight:700;font-size:clamp(38px,5.5vw,60px);line-height:1.05;letter-spacing:-.02em}
+.lead{margin:0;font-size:19px;line-height:1.6;color:var(--ljus2);max-width:560px}
+.ctas{display:flex;flex-wrap:wrap;gap:16px;padding-top:8px}
+.card{flex:1 1 360px;min-width:0;background:#22302d;border-radius:20px;padding:28px}
+.card-head{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:12px}
+.card-head span:first-child{font-weight:600;font-size:18px}
+.muted{font-size:12px;color:#b9b4a8}
+.row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:12px 0;border-top:1px solid rgba(245,241,232,.15);font-size:15px}
+.row span:not(:first-child){text-align:right}
+.row.th{border-top:none;font-size:12px;font-weight:600;letter-spacing:.06em;color:#b9b4a8;padding:0 0 8px}
+.fc{font-weight:600;color:var(--mynta)}
+.flag .fc{color:#ffb38a}
+.card-note{margin:12px 0 0;font-size:13px;line-height:1.5;color:#b9b4a8}
+section{padding:96px 0}
+h2{margin:0;font-weight:700;font-size:clamp(30px,4vw,40px);line-height:1.1}
+.intro{display:flex;flex-direction:column;gap:12px;max-width:640px;margin-bottom:40px}
+.intro p,.about p{margin:0;font-size:18px;line-height:1.6;color:var(--text2)}
+.steps{display:flex;flex-wrap:wrap;gap:24px}
+.step{flex:1 1 280px;display:flex;flex-direction:column;gap:12px;padding:32px;border:1px solid var(--kant);border-radius:16px;background:#fff}
+.num{width:40px;height:40px;border-radius:20px;background:var(--mynta);display:flex;align-items:center;justify-content:center;font-weight:700}
+.step h3{margin:0;font-weight:600;font-size:22px}
+.step p{margin:0;font-size:16px;line-height:1.6;color:var(--text2)}
+.offers-bg{background:#fff}
+.offers{display:flex;flex-wrap:wrap;gap:24px}
+.offer{flex:1 1 420px;display:flex;flex-direction:column;gap:16px;padding:40px;border-radius:20px}
+.offer.dark{background:var(--granskog);color:var(--linne)}
+.offer.light{background:var(--linne);border:1px solid var(--kant)}
+.offer h3{margin:0;font-weight:700;font-size:30px}
+.offer .tag{margin:0;font-size:13px;font-weight:600;letter-spacing:.12em}
+.offer.dark .tag{color:var(--mynta)}
+.offer.light .tag{color:var(--text2)}
+.price{margin:0;font-weight:700;font-size:44px;color:var(--mynta)}
+.price small{font-size:16px;font-weight:500;color:var(--ljus2);font-family:Inter,sans-serif}
+.offer ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:16px;line-height:1.5}
+.offer.light p,.offer.light ul{color:var(--text2)}
+.offer.light p{margin:0;font-size:17px;line-height:1.6}
+.offer .btn{align-self:flex-start;margin-top:8px}
+.sub{font-size:16px;font-weight:500;color:var(--text2);font-family:Inter,sans-serif}
+.about{display:flex;flex-wrap:wrap;gap:48px;align-items:center}
+.photo{flex:1 1 320px;min-height:320px;border-radius:20px;background:#e6e0d2;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text2)}
+.about-text{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.contact{background:var(--granskog);color:var(--linne)}
+.contact-grid{display:flex;flex-wrap:wrap;gap:48px}
+.contact-info{flex:1 1 380px;display:flex;flex-direction:column;gap:16px}
+.contact-info p{margin:0;font-size:18px;line-height:1.6;color:var(--ljus2)}
+.contact-info a{color:var(--mynta)}
+form{flex:1 1 420px;display:flex;flex-direction:column;gap:16px;background:var(--linne);border-radius:20px;padding:32px;color:var(--granskog)}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
+input,textarea{font:inherit;font-weight:400;font-size:16px;padding:12px 14px;border:1px solid #b9b2a2;border-radius:10px;background:#fff;color:var(--granskog)}
+input:focus,textarea:focus,.btn:focus-visible,a:focus-visible{outline:3px solid var(--mynta);outline-offset:2px}
+textarea{resize:vertical}
+footer{background:#101917;color:var(--linne)}
+.foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:32px;padding-bottom:32px}
+.foot p{margin:0;font-size:13px;color:#b9b4a8}
+@media (max-width:640px){.links a:not(.btn){display:none}section{padding:64px 0}.offer{padding:28px}}
+</style>
+</head>
+<body>
+<header>
+<nav class="wrap" aria-label="Huvudmeny">
+<a class="brand sg" href="/"><svg width="32" height="34" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
+<div class="links">
+<a href="#sa-funkar-det">Så funkar det</a>
+<a href="#erbjudande">Erbjudande</a>
+<a href="#om">Om oss</a>
+<a class="btn btn-mynta" href="#kontakt">Boka menyanalys</a>
+</div>
+</nav>
+<div class="wrap hero">
+<div class="hero-text">
+<p class="kicker">FÖR RESTAURANGER I ÖREBRO</p>
+<h1>Vet du vad varje rätt på din meny tjänar?</h1>
+<p class="lead">Leverantörspriserna rör sig varje vecka. Menypriserna står still. Vi räknar ut kostnad och vinst per portion – och säger vilka rätter du ska höja, justera eller lyfta fram.</p>
+<div class="ctas">
+<a class="btn btn-mynta" href="#kontakt">Boka menyanalys – 990 kr</a>
+<a class="btn btn-ghost" href="#sa-funkar-det">Så funkar det</a>
+</div>
+</div>
+<div class="card" aria-label="Exempel på menyanalys">
+<div class="card-head"><span class="sg">Menyanalys</span><span class="muted">Exempel, fiktiva siffror</span></div>
+<div class="row th"><span>RÄTT</span><span>RÅVAROR</span><span>PRIS</span><span>FOOD COST</span></div>
+<div class="row"><span>Pasta carbonara</span><span>38 kr</span><span>179 kr</span><span class="fc">24 %</span></div>
+<div class="row"><span>Grillad lax</span><span>72 kr</span><span>249 kr</span><span class="fc">32 %</span></div>
+<div class="row flag"><span>Oxfilé</span><span>118 kr</span><span>285 kr</span><span class="fc">46 %</span></div>
+<p class="card-note">Oxfilén äter upp marginalen: höj priset, byt detalj eller krymp portionen. Varje rätt får sin egen siffra – och ett förslag.</p>
+</div>
+</div>
+</header>
+
+<main>
+<section id="sa-funkar-det">
+<div class="wrap">
+<div class="intro">
+<h2>Från prislista till beslut</h2>
+<p>Du behöver inte räkna själv. Det enda vi behöver är dina recept och dina leverantörspriser.</p>
+</div>
+<div class="steps">
+<div class="step"><div class="num sg">1</div><h3>Skicka recept och prislistor</h3><p>Recept i valfritt format och prislistor från Menigo, Tingstad eller andra leverantörer – PDF går bra.</p></div>
+<div class="step"><div class="num sg">2</div><h3>Vi räknar per portion</h3><p>Varje rätt får kostnad, täckningsbidrag och food cost per portion, inte ett snitt för hela köket.</p></div>
+<div class="step"><div class="num sg">3</div><h3>Du får en åtgärdslista</h3><p>Vilka rätter du ska höja, byta råvara på, krympa eller lyfta fram – genomgånget med dig.</p></div>
+</div>
+</div>
+</section>
+
+<section id="erbjudande" class="offers-bg">
+<div class="wrap offers">
+<div class="offer dark">
+<p class="tag">TILLGÄNGLIGT NU</p>
+<h3>Menyanalys</h3>
+<p class="price sg">990 kr <small>exkl. moms, engångspris</small></p>
+<ul>
+<li>Kostnad och vinst per portion för hela menyn</li>
+<li>Rätterna rangordnade efter lönsamhet</li>
+<li>Konkreta förslag per rätt</li>
+<li>Genomgång på plats i Örebro</li>
+</ul>
+<a class="btn btn-mynta" href="#kontakt">Boka menyanalys</a>
+</div>
+<div class="offer light">
+<p class="tag" style="display:flex;align-items:center;gap:10px"><svg width="24" height="26" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/></svg>UNDER UTVECKLING</p>
+<h3>Marginal <span class="sub">by Nordic Margins</span></h3>
+<p>Verktyget som håller siffrorna uppdaterade efter analysen: prisbevakning på dina leverantörer, receptkalkyl och menyanalys – löpande.</p>
+<ul>
+<li>Larmar när en råvara blir dyrare</li>
+<li>Räknar om alla rätter som påverkas</li>
+<li>Visar vilka menypriser som behöver ses över</li>
+</ul>
+<a class="btn btn-outline" href="#kontakt">Anmäl intresse</a>
+</div>
+</div>
+</section>
+
+<section id="om">
+<div class="wrap about">
+<div class="photo">[Foto: du i köket]</div>
+<div class="about-text">
+<h2>Byggt av en kökschef</h2>
+<p>Jag heter [DITT NAMN] och arbetar som kökschef i Örebro. Jag har sett hur leverantörspriserna stiger medan menypriserna står still – och hur svårt det är att hinna räkna om mitt i vardagen.</p>
+<p>Nordic Margins finns för att du ska veta vad varje tallrik kostar och tjänar, utan att lägga kvällarna på Excel.</p>
+</div>
+</div>
+</section>
+
+<section id="kontakt" class="contact">
+<div class="wrap contact-grid">
+<div class="contact-info">
+<h2>Boka en menyanalys</h2>
+<p>Berätta lite om din restaurang så hör jag av mig och bokar en tid.</p>
+<p><a href="mailto:[DIN-EPOST]">[DIN-EPOST]</a><br><a href="tel:[DITT-TELEFONNUMMER]">[DITT TELEFONNUMMER]</a></p>
+</div>
+<form action="mailto:[DIN-EPOST]?subject=Menyanalys%20-%20f%C3%B6rfr%C3%A5gan" method="post" enctype="text/plain">
+<label>Namn<input type="text" name="Namn" autocomplete="name" required></label>
+<label>Restaurang<input type="text" name="Restaurang" autocomplete="organization" required></label>
+<label>E-post<input type="email" name="E-post" autocomplete="email" required></label>
+<label>Meddelande<textarea name="Meddelande" rows="4"></textarea></label>
+<button class="btn btn-dark" type="submit">Skicka</button>
+</form>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap foot">
+<a class="brand sg" href="/" style="font-size:16px"><svg width="22" height="23" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
+<p>Enskild firma · Org.nr [ÅÅMMDD-XXXX] · Godkänd för F-skatt · nordicmargins.se</p>
+</div>
+</footer>
+</body>
+</html>
