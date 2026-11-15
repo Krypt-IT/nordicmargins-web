@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Integritetspolicy – Nordic Margins</title>
+<meta name="description" content="Så behandlar Nordic Margins dina personuppgifter.">
+<meta name="theme-color" content="#172321">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--granskog:#172321;--linne:#F5F1E8;--mynta:#C6F0D0;--text2:#3d4a47;--ljus2:#d8d3c7;--kant:#d9d3c4}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--granskog);background:var(--linne);-webkit-font-smoothing:antialiased}
+h1,h2,h3,.sg{font-family:'Space Grotesk',Inter,sans-serif}
+a{color:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.btn{display:inline-block;font-weight:600;font-size:16px;text-decoration:none;padding:16px 28px;border-radius:12px;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.btn-mynta{background:var(--mynta);color:var(--granskog)}
+.btn-mynta:hover{background:#b3e8c0}
+.btn-ghost{color:var(--linne);border-color:rgba(245,241,232,.4)}
+.btn-ghost:hover{border-color:var(--linne)}
+.btn-dark{background:var(--granskog);color:var(--linne)}
+.btn-outline{color:var(--granskog);border-color:var(--granskog)}
+header{background:var(--granskog);color:var(--linne)}
+nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:20px;padding-bottom:20px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:600;font-size:20px}
+.links{display:flex;flex-wrap:wrap;align-items:center;gap:24px}
+.links a{text-decoration:none;font-size:15px}
+.links .btn{padding:12px 20px;font-size:15px}
+.hero{display:flex;flex-wrap:wrap;align-items:center;gap:56px;padding-top:64px;padding-bottom:96px}
+.hero-text{flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:24px}
+.kicker{margin:0;font-size:14px;font-weight:600;letter-spacing:.12em;color:var(--mynta)}
+h1{margin:0;font-weight:700;font-size:clamp(38px,5.5vw,60px);line-height:1.05;letter-spacing:-.02em}
+.lead{margin:0;font-size:19px;line-height:1.6;color:var(--ljus2);max-width:560px}
+.ctas{display:flex;flex-wrap:wrap;gap:16px;padding-top:8px}
+.card{flex:1 1 360px;min-width:0;background:#22302d;border-radius:20px;padding:28px}
+.card-head{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:12px}
+.card-head span:first-child{font-weight:600;font-size:18px}
+.muted{font-size:12px;color:#b9b4a8}
+.row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:12px 0;border-top:1px solid rgba(245,241,232,.15);font-size:15px}
+.row span:not(:first-child){text-align:right}
+.row.th{border-top:none;font-size:12px;font-weight:600;letter-spacing:.06em;color:#b9b4a8;padding:0 0 8px}
+.fc{font-weight:600;color:var(--mynta)}
+.flag .fc{color:#ffb38a}
+.card-note{margin:12px 0 0;font-size:13px;line-height:1.5;color:#b9b4a8}
+section{padding:96px 0}
+h2{margin:0;font-weight:700;font-size:clamp(30px,4vw,40px);line-height:1.1}
+.intro{display:flex;flex-direction:column;gap:12px;max-width:640px;margin-bottom:40px}
+.intro p,.about p{margin:0;font-size:18px;line-height:1.6;color:var(--text2)}
+.steps{display:flex;flex-wrap:wrap;gap:24px}
+.step{flex:1 1 280px;display:flex;flex-direction:column;gap:12px;padding:32px;border:1px solid var(--kant);border-radius:16px;background:#fff}
+.num{width:40px;height:40px;border-radius:20px;background:var(--mynta);display:flex;align-items:center;justify-content:center;font-weight:700}
+.step h3{margin:0;font-weight:600;font-size:22px}
+.step p{margin:0;font-size:16px;line-height:1.6;color:var(--text2)}
+.offers-bg{background:#fff}
+.offers{display:flex;flex-wrap:wrap;gap:24px}
+.offer{flex:1 1 420px;display:flex;flex-direction:column;gap:16px;padding:40px;border-radius:20px}
+.offer.dark{background:var(--granskog);color:var(--linne)}
+.offer.light{background:var(--linne);border:1px solid var(--kant)}
+.offer h3{margin:0;font-weight:700;font-size:30px}
+.offer .tag{margin:0;font-size:13px;font-weight:600;letter-spacing:.12em}
+.offer.dark .tag{color:var(--mynta)}
+.offer.light .tag{color:var(--text2)}
+.price{margin:0;font-weight:700;font-size:44px;color:var(--mynta)}
+.price small{font-size:16px;font-weight:500;color:var(--ljus2);font-family:Inter,sans-serif}
+.offer ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:16px;line-height:1.5}
+.offer.light p,.offer.light ul{color:var(--text2)}
+.offer.light p{margin:0;font-size:17px;line-height:1.6}
+.offer .btn{align-self:flex-start;margin-top:8px}
+.sub{font-size:16px;font-weight:500;color:var(--text2);font-family:Inter,sans-serif}
+.about{display:flex;flex-wrap:wrap;gap:48px;align-items:center}
+.photo{flex:1 1 320px;min-height:320px;border-radius:20px;background:var(--granskog);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:24px;padding:40px}
+.photo p{margin:0;font-weight:600;font-size:26px;line-height:1.25;color:var(--linne);max-width:300px}
+.about-text{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.contact{background:var(--granskog);color:var(--linne)}
+.contact-grid{display:flex;flex-wrap:wrap;gap:48px}
+.contact-info{flex:1 1 380px;display:flex;flex-direction:column;gap:16px}
+.contact-info p{margin:0;font-size:18px;line-height:1.6;color:var(--ljus2)}
+.contact-info a{color:var(--mynta)}
+form{flex:1 1 420px;display:flex;flex-direction:column;gap:16px;background:var(--linne);border-radius:20px;padding:32px;color:var(--granskog)}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
+input,textarea{font:inherit;font-weight:400;font-size:16px;padding:12px 14px;border:1px solid #b9b2a2;border-radius:10px;background:#fff;color:var(--granskog)}
+input:focus,textarea:focus,.btn:focus-visible,a:focus-visible{outline:3px solid var(--mynta);outline-offset:2px}
+textarea{resize:vertical}
+.principles{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}
+.principle{flex:1 1 180px;padding:20px;border-radius:14px;background:#fff;border:1px solid var(--kant)}
+.principle h3{margin:0 0 6px;font-size:18px;font-weight:600}
+.principle p{margin:0;font-size:15px;line-height:1.5;color:var(--text2)}
+.signature{margin:8px 0 0;font-size:17px;font-weight:600;color:var(--granskog)}
+footer{background:#101917;color:var(--linne)}
+.foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:32px;padding-bottom:32px}
+.foot p{margin:0;font-size:13px;color:#b9b4a8}
+@media (max-width:640px){.links a:not(.btn){display:none}section{padding:64px 0}.offer{padding:28px}}
+</style>
+<style>
+.doc{max-width:760px;margin:0 auto;padding:64px 24px 96px}
+.doc h1{font-size:clamp(32px,4vw,44px);color:var(--granskog);margin:0 0 8px}
+.doc h2+p{margin-top:0}
+.doc .updated{margin:0 0 40px;color:var(--text2);font-size:14px}
+.doc h2{font-size:22px;margin:36px 0 10px}
+.doc p,.doc li{font-size:16px;line-height:1.7;color:var(--text2)}
+.doc ul{padding-left:20px}
+.doc a{color:var(--granskog)}
+.footlinks{display:flex;gap:16px;flex-wrap:wrap}
+.footlinks a{color:#b9b4a8;font-size:13px}
+</style>
+<script>
+window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<header>
+<nav class="wrap" aria-label="Huvudmeny">
+<a class="brand sg" href="/"><svg width="32" height="34" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
+<div class="links">
+<a href="/#sa-funkar-det">Så funkar det</a>
+<a href="/#erbjudande">Erbjudande</a>
+<a href="/#om">Om oss</a>
+<a class="btn btn-mynta" href="/#kontakt">Boka menyanalys</a>
+</div>
+</nav>
+</header>
+<main class="doc">
+<h1>Integritetspolicy</h1>
+<p class="updated">Version 1.0 · Gäller från och med den 15 november 2026</p>
+<p>Nordic Margins värnar om din personliga integritet. Denna policy beskriver hur vi samlar in, använder och skyddar personuppgifter i enlighet med Europaparlamentets och rådets förordning (EU) 2016/679 (dataskyddsförordningen, GDPR) och kompletterande svensk lagstiftning.</p>
+
+<h2>1. Personuppgiftsansvarig</h2>
+<p>Nordic Margins, enskild näringsverksamhet med organisationsnummer 000524-8737, är personuppgiftsansvarig för behandlingen av dina personuppgifter. Frågor om behandlingen skickas till <a href="mailto:info@nordicmargins.se">info@nordicmargins.se</a>.</p>
+
+<h2>2. Vilka personuppgifter vi behandlar, ändamål och rättslig grund</h2>
+<p><strong>2.1 Förfrågningar och kontakt.</strong> När du kontaktar oss via kontaktformuläret eller e-post behandlar vi namn, e-postadress, restaurangens namn och innehållet i ditt meddelande. Ändamålet är att besvara din förfrågan och lämna offert. Rättslig grund: vårt berättigade intresse av att kunna kommunicera med potentiella kunder (artikel 6.1 f GDPR).</p>
+<p><strong>2.2 Kunduppdrag.</strong> När du eller din restaurang är kund behandlar vi kontaktuppgifter till kontaktpersoner samt de uppgifter som lämnas i underlaget för uppdraget. Ändamålet är att fullgöra avtalet. Rättslig grund: fullgörande av avtal (artikel 6.1 b GDPR) samt berättigat intresse när kontaktpersonen företräder en juridisk person.</p>
+<p><strong>2.3 Fakturering och bokföring.</strong> Vi behandlar de uppgifter som krävs på fakturor och i räkenskapsinformation. Rättslig grund: rättslig förpliktelse enligt bokföringslagen (1999:1078) och mervärdesskattelagen (artikel 6.1 c GDPR).</p>
+<p><strong>2.4 Webbplatsstatistik.</strong> Vi använder Vercel Web Analytics för att mäta antalet besök. Tjänsten använder inga cookies och lagrar inga uppgifter som gör det möjligt för oss att identifiera dig som besökare.</p>
+
+<h2>3. Lagringstid</h2>
+<ul>
+<li>Förfrågningar som inte leder till uppdrag raderas senast 12 månader efter den senaste kontakten.</li>
+<li>Uppgifter kopplade till kunduppdrag sparas under kundförhållandet och högst 24 månader därefter.</li>
+<li>Räkenskapsinformation sparas i sju år efter utgången av det kalenderår då räkenskapsåret avslutades, i enlighet med bokföringslagen.</li>
+</ul>
+
+<h2>4. Mottagare av personuppgifter</h2>
+<p>4.1 Vi säljer eller lämnar aldrig ut personuppgifter till tredje part i marknadsföringssyfte.</p>
+<p>4.2 Vi anlitar leverantörer som behandlar personuppgifter för vår räkning (personuppgiftsbiträden), exempelvis för e-post, webbhotell, bank och bokföring. Dessa får endast behandla uppgifterna enligt våra instruktioner och för att leverera sina tjänster till oss.</p>
+<p>4.3 Vi kan även lämna ut personuppgifter när det krävs enligt lag eller myndighetsbeslut.</p>
+
+<h2>5. Överföring till land utanför EU/EES</h2>
+<p>Vissa av våra leverantörer kan behandla personuppgifter utanför EU/EES, exempelvis i USA. I sådana fall säkerställer vi att överföringen sker med stöd av ett beslut om adekvat skyddsnivå, såsom EU–US Data Privacy Framework, eller EU-kommissionens standardavtalsklausuler.</p>
+
+<h2>6. Säkerhet</h2>
+<p>Vi vidtar lämpliga tekniska och organisatoriska åtgärder för att skydda personuppgifter mot obehörig åtkomst, förlust och förändring, bland annat genom krypterade förbindelser, behörighetsbegränsning och tvåstegsverifiering.</p>
+
+<h2>7. Dina rättigheter</h2>
+<p>Enligt dataskyddsförordningen har du rätt att:</p>
+<ul>
+<li>få information om och tillgång till de personuppgifter vi behandlar om dig (registerutdrag),</li>
+<li>få felaktiga uppgifter rättade,</li>
+<li>få uppgifter raderade, i den mån vi inte är skyldiga att spara dem enligt lag,</li>
+<li>begära att behandlingen begränsas,</li>
+<li>invända mot behandling som grundar sig på berättigat intresse,</li>
+<li>få ut de uppgifter du lämnat till oss i ett strukturerat, maskinläsbart format (dataportabilitet).</li>
+</ul>
+<p>Begäran skickas till <a href="mailto:info@nordicmargins.se">info@nordicmargins.se</a>. Vi besvarar din begäran utan onödigt dröjsmål och senast inom en månad.</p>
+
+<h2>8. Klagomål</h2>
+<p>Om du anser att vi behandlar dina personuppgifter i strid med gällande regler har du rätt att lämna klagomål till Integritetsskyddsmyndigheten (IMY), <a href="https://www.imy.se">www.imy.se</a>.</p>
+
+<h2>9. Ändringar</h2>
+<p>Vi kan komma att uppdatera denna policy. Den senaste versionen finns alltid tillgänglig på denna sida, med angivet datum för när den började gälla.</p>
+</main>
+<footer>
+<div class="wrap foot">
+<a class="brand sg" href="/" style="font-size:16px"><svg width="22" height="23" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
+<div class="footlinks"><a href="/villkor.html">Allmänna villkor</a><a href="/integritet.html">Integritetspolicy</a></div>
+<p>Enskild firma · Org.nr 000524-8737 · Godkänd för F-skatt · nordicmargins.se</p>
+</div>
+</footer>
+</body>
+</html>

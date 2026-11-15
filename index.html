@@ -95,6 +95,8 @@ textarea{resize:vertical}
 .principle{flex:1 1 180px;padding:20px;border-radius:14px;background:#fff;border:1px solid var(--kant)}
 .principle h3{margin:0 0 6px;font-size:18px;font-weight:600}
 .principle p{margin:0;font-size:15px;line-height:1.5;color:var(--text2)}
+.footlinks{display:flex;gap:16px;flex-wrap:wrap}
+.footlinks a{color:#b9b4a8;font-size:13px}
 .signature{margin:8px 0 0;font-size:17px;font-weight:600;color:var(--granskog)}
 footer{background:#101917;color:var(--linne)}
 .foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:32px;padding-bottom:32px}
@@ -211,6 +213,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <label>Restaurang<input type="text" name="Restaurang" autocomplete="organization" required></label>
 <label>E-post<input type="email" name="E-post" autocomplete="email" required></label>
 <label>Meddelande<textarea name="Meddelande" rows="4"></textarea></label>
+<p style="margin:0;font-size:13px;line-height:1.5;color:var(--text2)">Vi använder dina uppgifter för att svara dig. Läs mer i vår <a href="/integritet.html" style="color:var(--granskog)">integritetspolicy</a>.</p>
 <button class="btn btn-dark" type="submit">Skicka</button>
 </form>
 </div>
@@ -220,6 +223,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <footer>
 <div class="wrap foot">
 <a class="brand sg" href="/" style="font-size:16px"><svg width="22" height="23" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
+<div class="footlinks"><a href="/villkor.html">Allmänna villkor</a><a href="/integritet.html">Integritetspolicy</a></div>
 <p>Enskild firma · Org.nr 000524-8737 · Godkänd för F-skatt · nordicmargins.se</p>
 </div>
 </footer>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Allmänna villkor – Nordic Margins</title>
+<meta name="description" content="Villkor för menyanalys och tjänster från Nordic Margins.">
+<meta name="theme-color" content="#172321">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--granskog:#172321;--linne:#F5F1E8;--mynta:#C6F0D0;--text2:#3d4a47;--ljus2:#d8d3c7;--kant:#d9d3c4}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--granskog);background:var(--linne);-webkit-font-smoothing:antialiased}
+h1,h2,h3,.sg{font-family:'Space Grotesk',Inter,sans-serif}
+a{color:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.btn{display:inline-block;font-weight:600;font-size:16px;text-decoration:none;padding:16px 28px;border-radius:12px;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.btn-mynta{background:var(--mynta);color:var(--granskog)}
+.btn-mynta:hover{background:#b3e8c0}
+.btn-ghost{color:var(--linne);border-color:rgba(245,241,232,.4)}
+.btn-ghost:hover{border-color:var(--linne)}
+.btn-dark{background:var(--granskog);color:var(--linne)}
+.btn-outline{color:var(--granskog);border-color:var(--granskog)}
+header{background:var(--granskog);color:var(--linne)}
+nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:20px;padding-bottom:20px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:600;font-size:20px}
+.links{display:flex;flex-wrap:wrap;align-items:center;gap:24px}
+.links a{text-decoration:none;font-size:15px}
+.links .btn{padding:12px 20px;font-size:15px}
+.hero{display:flex;flex-wrap:wrap;align-items:center;gap:56px;padding-top:64px;padding-bottom:96px}
+.hero-text{flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:24px}
+.kicker{margin:0;font-size:14px;font-weight:600;letter-spacing:.12em;color:var(--mynta)}
+h1{margin:0;font-weight:700;font-size:clamp(38px,5.5vw,60px);line-height:1.05;letter-spacing:-.02em}
+.lead{margin:0;font-size:19px;line-height:1.6;color:var(--ljus2);max-width:560px}
+.ctas{display:flex;flex-wrap:wrap;gap:16px;padding-top:8px}
+.card{flex:1 1 360px;min-width:0;background:#22302d;border-radius:20px;padding:28px}
+.card-head{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:12px}
+.card-head span:first-child{font-weight:600;font-size:18px}
+.muted{font-size:12px;color:#b9b4a8}
+.row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:12px 0;border-top:1px solid rgba(245,241,232,.15);font-size:15px}
+.row span:not(:first-child){text-align:right}
+.row.th{border-top:none;font-size:12px;font-weight:600;letter-spacing:.06em;color:#b9b4a8;padding:0 0 8px}
+.fc{font-weight:600;color:var(--mynta)}
+.flag .fc{color:#ffb38a}
+.card-note{margin:12px 0 0;font-size:13px;line-height:1.5;color:#b9b4a8}
+section{padding:96px 0}
+h2{margin:0;font-weight:700;font-size:clamp(30px,4vw,40px);line-height:1.1}
+.intro{display:flex;flex-direction:column;gap:12px;max-width:640px;margin-bottom:40px}
+.intro p,.about p{margin:0;font-size:18px;line-height:1.6;color:var(--text2)}
+.steps{display:flex;flex-wrap:wrap;gap:24px}
+.step{flex:1 1 280px;display:flex;flex-direction:column;gap:12px;padding:32px;border:1px solid var(--kant);border-radius:16px;background:#fff}
+.num{width:40px;height:40px;border-radius:20px;background:var(--mynta);display:flex;align-items:center;justify-content:center;font-weight:700}
+.step h3{margin:0;font-weight:600;font-size:22px}
+.step p{margin:0;font-size:16px;line-height:1.6;color:var(--text2)}
+.offers-bg{background:#fff}
+.offers{display:flex;flex-wrap:wrap;gap:24px}
+.offer{flex:1 1 420px;display:flex;flex-direction:column;gap:16px;padding:40px;border-radius:20px}
+.offer.dark{background:var(--granskog);color:var(--linne)}
+.offer.light{background:var(--linne);border:1px solid var(--kant)}
+.offer h3{margin:0;font-weight:700;font-size:30px}
+.offer .tag{margin:0;font-size:13px;font-weight:600;letter-spacing:.12em}
+.offer.dark .tag{color:var(--mynta)}
+.offer.light .tag{color:var(--text2)}
+.price{margin:0;font-weight:700;font-size:44px;color:var(--mynta)}
+.price small{font-size:16px;font-weight:500;color:var(--ljus2);font-family:Inter,sans-serif}
+.offer ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:16px;line-height:1.5}
+.offer.light p,.offer.light ul{color:var(--text2)}
+.offer.light p{margin:0;font-size:17px;line-height:1.6}
+.offer .btn{align-self:flex-start;margin-top:8px}
+.sub{font-size:16px;font-weight:500;color:var(--text2);font-family:Inter,sans-serif}
+.about{display:flex;flex-wrap:wrap;gap:48px;align-items:center}
+.photo{flex:1 1 320px;min-height:320px;border-radius:20px;background:var(--granskog);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:24px;padding:40px}
+.photo p{margin:0;font-weight:600;font-size:26px;line-height:1.25;color:var(--linne);max-width:300px}
+.about-text{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.contact{background:var(--granskog);color:var(--linne)}
+.contact-grid{display:flex;flex-wrap:wrap;gap:48px}
+.contact-info{flex:1 1 380px;display:flex;flex-direction:column;gap:16px}
+.contact-info p{margin:0;font-size:18px;line-height:1.6;color:var(--ljus2)}
+.contact-info a{color:var(--mynta)}
+form{flex:1 1 420px;display:flex;flex-direction:column;gap:16px;background:var(--linne);border-radius:20px;padding:32px;color:var(--granskog)}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
+input,textarea{font:inherit;font-weight:400;font-size:16px;padding:12px 14px;border:1px solid #b9b2a2;border-radius:10px;background:#fff;color:var(--granskog)}
+input:focus,textarea:focus,.btn:focus-visible,a:focus-visible{outline:3px solid var(--mynta);outline-offset:2px}
+textarea{resize:vertical}
+.principles{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}
+.principle{flex:1 1 180px;padding:20px;border-radius:14px;background:#fff;border:1px solid var(--kant)}
+.principle h3{margin:0 0 6px;font-size:18px;font-weight:600}
+.principle p{margin:0;font-size:15px;line-height:1.5;color:var(--text2)}
+.signature{margin:8px 0 0;font-size:17px;font-weight:600;color:var(--granskog)}
+footer{background:#101917;color:var(--linne)}
+.foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:32px;padding-bottom:32px}
+.foot p{margin:0;font-size:13px;color:#b9b4a8}
+@media (max-width:640px){.links a:not(.btn){display:none}section{padding:64px 0}.offer{padding:28px}}
+</style>
+<style>
+.doc{max-width:760px;margin:0 auto;padding:64px 24px 96px}
+.doc h1{font-size:clamp(32px,4vw,44px);color:var(--granskog);margin:0 0 8px}
+.doc h2+p{margin-top:0}
+.doc .updated{margin:0 0 40px;color:var(--text2);font-size:14px}
+.doc h2{font-size:22px;margin:36px 0 10px}
+.doc p,.doc li{font-size:16px;line-height:1.7;color:var(--text2)}
+.doc ul{padding-left:20px}
+.doc a{color:var(--granskog)}
+.footlinks{display:flex;gap:16px;flex-wrap:wrap}
+.footlinks a{color:#b9b4a8;font-size:13px}
+</style>
+<script>
+window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<header>
+<nav class="wrap" aria-label="Huvudmeny">
+<a class="brand sg" href="/"><svg width="32" height="34" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
+<div class="links">
+<a href="/#sa-funkar-det">Så funkar det</a>
+<a href="/#erbjudande">Erbjudande</a>
+<a href="/#om">Om oss</a>
+<a class="btn btn-mynta" href="/#kontakt">Boka menyanalys</a>
+</div>
+</nav>
+</header>
+<main class="doc">
+<h1>Allmänna villkor</h1>
+<p class="updated">Version 1.0 · Gäller från och med den 15 november 2026</p>
+
+<h2>1. Allmänt</h2>
+<p>1.1 Dessa allmänna villkor ("Villkoren") gäller för samtliga tjänster som Nordic Margins, enskild näringsverksamhet med organisationsnummer 000524-8737 ("Nordic Margins"), tillhandahåller till näringsidkare ("Kunden").</p>
+<p>1.2 Villkoren utgör tillsammans med offert eller orderbekräftelse parternas fullständiga avtal ("Avtalet"). Vid motstridigheter gäller i första hand skriftligt avtalade särskilda villkor, i andra hand offert eller orderbekräftelse och i tredje hand dessa Villkor.</p>
+<p>1.3 Tjänsterna riktar sig uteslutande till näringsidkare. Konsumentskyddande lagstiftning är därför inte tillämplig.</p>
+
+<h2>2. Avtalets ingående</h2>
+<p>2.1 Avtalet ingås när Kunden skriftligen, inklusive via e-post, har accepterat Nordic Margins offert, eller när Nordic Margins har bekräftat Kundens beställning.</p>
+<p>2.2 Offert är giltig i 30 dagar från utfärdandet om inte annat anges.</p>
+
+<h2>3. Tjänsten</h2>
+<p>3.1 Tjänsten menyanalys omfattar beräkning av råvarukostnad, food cost och täckningsbidrag per portion för Kundens meny, en klassificering av rätterna utifrån lönsamhet och försäljning, samt skriftliga rekommendationer. Resultatet presenteras vid en genomgång på plats eller via video.</p>
+<p>3.2 Nordic Margins utför Tjänsten fackmannamässigt och med den omsorg som kan förväntas av en erfaren aktör inom området.</p>
+<p>3.3 Leveranstid anges i offert eller orderbekräftelse och räknas från den dag fullständigt underlag har mottagits enligt punkt 4.</p>
+
+<h2>4. Kundens åtaganden</h2>
+<p>4.1 Kunden ska i rätt tid tillhandahålla det underlag som behövs för Tjänsten, såsom meny med priser, recept eller kalkyler, leverantörspriser och försäljningsstatistik.</p>
+<p>4.2 Kunden ansvarar för att underlaget är korrekt och fullständigt samt för att Kunden har rätt att lämna ut det till Nordic Margins.</p>
+<p>4.3 Om underlaget är ofullständigt eller försenat har Nordic Margins rätt att skjuta upp leveransen i motsvarande mån.</p>
+
+<h2>5. Priser och betalning</h2>
+<p>5.1 Priser framgår av offert eller orderbekräftelse. Samtliga priser anges exklusive mervärdesskatt, som tillkommer enligt vid var tid gällande lag.</p>
+<p>5.2 Fakturering sker när genomgången enligt punkt 3.1 har genomförts, om inte annat avtalats. Betalningsvillkor är 30 dagar netto från fakturadatum.</p>
+<p>5.3 Vid försenad betalning har Nordic Margins rätt till dröjsmålsränta enligt räntelagen (1975:635), samt till påminnelseavgift och förseningsersättning enligt lagen (1981:739) om ersättning för inkassokostnader m.m.</p>
+<p>5.4 Invändningar mot faktura ska framställas skriftligen före förfallodagen.</p>
+
+<h2>6. Avbokning</h2>
+<p>6.1 Kunden har rätt att avboka Tjänsten utan kostnad fram till dess att Nordic Margins har påbörjat arbetet med Kundens underlag.</p>
+<p>6.2 Vid avbokning därefter har Nordic Margins rätt till ersättning för utfört arbete, dock högst det avtalade priset.</p>
+
+<h2>7. Sekretess</h2>
+<p>7.1 Nordic Margins förbinder sig att inte för tredje man röja information som Nordic Margins tagit del av inom ramen för uppdraget, inklusive recept, priser, inköpsvillkor, försäljningsuppgifter och analysresultat ("Konfidentiell Information").</p>
+<p>7.2 Konfidentiell Information får endast användas för att fullgöra Avtalet. Nordic Margins får inte ange Kunden som referens eller använda resultat, citat eller uppgifter från uppdraget i marknadsföring utan Kundens föregående skriftliga godkännande.</p>
+<p>7.3 Sekretessåtagandet gäller inte information som är eller blir allmänt känd på annat sätt än genom brott mot Avtalet, eller som Nordic Margins är skyldig att lämna ut enligt lag eller myndighetsbeslut.</p>
+<p>7.4 Sekretessåtagandet gäller under Avtalets löptid och i fem år därefter.</p>
+
+<h2>8. Immateriella rättigheter</h2>
+<p>8.1 Kunden får fri nyttjanderätt till analysens resultat för användning i den egna verksamheten.</p>
+<p>8.2 Nordic Margins behåller samtliga rättigheter till metoder, mallar, beräkningsmodeller, programvara och know-how som används vid utförandet av Tjänsten.</p>
+
+<h2>9. Reklamation</h2>
+<p>9.1 Kunden ska skriftligen reklamera eventuella fel i Tjänsten inom 30 dagar från genomgången.</p>
+<p>9.2 Vid befogad reklamation åtgärdar Nordic Margins felet utan kostnad för Kunden. Om felet inte kan åtgärdas har Kunden rätt till ett skäligt prisavdrag.</p>
+
+<h2>10. Ansvarsbegränsning</h2>
+<p>10.1 Tjänsten utgör rådgivning. Kunden fattar själv samtliga beslut om priser, menyutformning och inköp och ansvarar för följderna av dessa.</p>
+<p>10.2 Nordic Margins ansvarar inte för fel som beror på att Kundens underlag varit felaktigt eller ofullständigt.</p>
+<p>10.3 Nordic Margins ansvar för skada är begränsat till det belopp Kunden har betalat för den aktuella Tjänsten. Nordic Margins ansvarar inte i något fall för indirekt skada, såsom utebliven vinst, minskad omsättning eller förlust av data.</p>
+<p>10.4 Ansvarsbegränsningarna gäller inte vid uppsåt eller grov vårdslöshet.</p>
+
+<h2>11. Force majeure</h2>
+<p>11.1 Part är befriad från påföljd för underlåtenhet att fullgöra en förpliktelse om underlåtenheten beror på omständighet utanför partens kontroll som parten inte skäligen kunde ha förutsett, såsom sjukdom, myndighetsåtgärd, krig, naturkatastrof eller allvarlig störning i allmän kommunikation.</p>
+
+<h2>12. Personuppgifter</h2>
+<p>12.1 Nordic Margins behandlar personuppgifter i enlighet med gällande dataskyddslagstiftning. Mer information finns i vår <a href="/integritet.html">integritetspolicy</a>.</p>
+
+<h2>13. Ändringar av villkoren</h2>
+<p>13.1 Nordic Margins har rätt att ändra dessa Villkor. Ändringar gäller inte för uppdrag som påbörjats före ändringen, om inte parterna kommer överens om det.</p>
+
+<h2>14. Tillämplig lag och tvister</h2>
+<p>14.1 Svensk lag ska tillämpas på Avtalet.</p>
+<p>14.2 Parterna ska i första hand försöka lösa tvister genom förhandling. Tvist som inte kan lösas på detta sätt ska avgöras av allmän domstol, med Örebro tingsrätt som första instans.</p>
+
+<h2>Kontakt</h2>
+<p>Nordic Margins · Org.nr 000524-8737 · <a href="mailto:info@nordicmargins.se">info@nordicmargins.se</a></p>
+</main>
+<footer>
+<div class="wrap foot">
+<a class="brand sg" href="/" style="font-size:16px"><svg width="22" height="23" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
+<div class="footlinks"><a href="/villkor.html">Allmänna villkor</a><a href="/integritet.html">Integritetspolicy</a></div>
+<p>Enskild firma · Org.nr 000524-8737 · Godkänd för F-skatt · nordicmargins.se</p>
+</div>
+</footer>
+</body>
+</html>
