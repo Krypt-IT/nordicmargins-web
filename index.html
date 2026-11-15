@@ -91,6 +91,11 @@ label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
 input,textarea{font:inherit;font-weight:400;font-size:16px;padding:12px 14px;border:1px solid #b9b2a2;border-radius:10px;background:#fff;color:var(--granskog)}
 input:focus,textarea:focus,.btn:focus-visible,a:focus-visible{outline:3px solid var(--mynta);outline-offset:2px}
 textarea{resize:vertical}
+.principles{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}
+.principle{flex:1 1 180px;padding:20px;border-radius:14px;background:#fff;border:1px solid var(--kant)}
+.principle h3{margin:0 0 6px;font-size:18px;font-weight:600}
+.principle p{margin:0;font-size:15px;line-height:1.5;color:var(--text2)}
+.signature{margin:8px 0 0;font-size:17px;font-weight:600;color:var(--granskog)}
 footer{background:#101917;color:var(--linne)}
 .foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:32px;padding-bottom:32px}
 .foot p{margin:0;font-size:13px;color:#b9b4a8}
@@ -180,9 +185,16 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <div class="wrap about">
 <div class="photo"><svg width="72" height="77" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg><p class="sg">Ingen kock ska behöva gissa vad en tallrik kostar.</p></div>
 <div class="about-text">
-<h2>Byggt av en kökschef</h2>
-<p>Jag heter Olliver Pancetti och arbetar som kökschef i Örebro. Jag har sett hur leverantörspriserna stiger medan menypriserna står still – och hur svårt det är att hinna räkna om mitt i vardagen.</p>
-<p>Nordic Margins finns för att du ska veta vad varje tallrik kostar och tjänar, utan att lägga kvällarna på Excel.</p>
+<p class="kicker" style="color:var(--text2)">OM NORDIC MARGINS</p>
+<h2>Från köket, inte från kontoret</h2>
+<p>Jag heter Olliver Pancetti och är kökschef i Örebro. Varje vecka ser jag samma sak: grädden, köttet och fisken blir dyrare – men menyn står still. Inte för att någon slarvar, utan för att ingen hinner räkna.</p>
+<p>Därför startade jag Nordic Margins. Jag räknar åt dig, med samma prislistor och samma vardag som du har.</p>
+<div class="principles">
+<div class="principle"><h3>Per portion</h3><p>Varje rätt får sin egen siffra – inte ett snitt för hela köket.</p></div>
+<div class="principle"><h3>Köksspråk</h3><p>Portioner, svinn och leverantörer. Inga konsultord.</p></div>
+<div class="principle"><h3>Beslut</h3><p>Du får en lista över vad du ska göra, inte en rapport att läsa.</p></div>
+</div>
+<p class="signature sg">– Olliver Pancetti, grundare</p>
 </div>
 </div>
 </section>
