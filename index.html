@@ -208,13 +208,19 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <p>Berätta lite om din restaurang så hör jag av mig och bokar en tid.</p>
 <p><a href="mailto:info@nordicmargins.se">info@nordicmargins.se</a></p>
 </div>
-<form action="mailto:info@nordicmargins.se?subject=Menyanalys%20-%20f%C3%B6rfr%C3%A5gan" method="post" enctype="text/plain">
+<form id="kontaktform" novalidate>
+<input type="hidden" name="access_key" value="8f15ee07-9187-44c9-8315-139dba990593">
+<input type="hidden" name="subject" value="Ny förfrågan om menyanalys – nordicmargins.se">
+<input type="hidden" name="from_name" value="Nordic Margins hemsida">
+<input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
 <label>Namn<input type="text" name="Namn" autocomplete="name" required></label>
 <label>Restaurang<input type="text" name="Restaurang" autocomplete="organization" required></label>
-<label>E-post<input type="email" name="E-post" autocomplete="email" required></label>
-<label>Meddelande<textarea name="Meddelande" rows="4"></textarea></label>
+<label>E-post<input type="email" name="email" autocomplete="email" required></label>
+<label>Telefon (valfritt)<input type="tel" name="Telefon" autocomplete="tel"></label>
+<label>Meddelande<textarea name="Meddelande" rows="4" placeholder="Berätta gärna kort om restaurangen och menyn."></textarea></label>
 <p style="margin:0;font-size:13px;line-height:1.5;color:var(--text2)">Vi använder dina uppgifter för att svara dig. Läs mer i vår <a href="/integritet.html" style="color:var(--granskog)">integritetspolicy</a>.</p>
 <button class="btn btn-dark" type="submit">Skicka</button>
+<p id="formstatus" role="status" aria-live="polite" style="margin:0;font-size:15px;font-weight:600"></p>
 </form>
 </div>
 </section>
@@ -227,5 +233,24 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <p>Enskild firma · Org.nr 000524-8737 · Godkänd för F-skatt · nordicmargins.se</p>
 </div>
 </footer>
+<script>
+(function(){
+  var f=document.getElementById('kontaktform'); if(!f) return;
+  var st=document.getElementById('formstatus'); var btn=f.querySelector('button[type=submit]');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(!f.checkValidity()){ st.style.color='#8a3b12'; st.textContent='Fyll i namn, restaurang och en giltig e-postadress.'; f.reportValidity(); return; }
+    btn.disabled=true; btn.textContent='Skickar…'; st.textContent='';
+    var data=Object.fromEntries(new FormData(f).entries());
+    fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
+      .then(function(r){return r.json();})
+      .then(function(j){
+        if(j.success){ f.reset(); st.style.color='#172321'; st.textContent='Tack! Vi hör av oss inom två arbetsdagar.'; btn.textContent='Skickat'; }
+        else { throw new Error(j.message||'fel'); }
+      })
+      .catch(function(){ st.style.color='#8a3b12'; st.textContent='Något gick fel. Mejla oss gärna direkt på info@nordicmargins.se.'; btn.disabled=false; btn.textContent='Skicka'; });
+  });
+})();
+</script>
 </body>
 </html>
