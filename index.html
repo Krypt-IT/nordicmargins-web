@@ -171,7 +171,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <li>Konkreta förslag per rätt</li>
 <li>Genomgång på plats i Örebro eller via video</li>
 </ul>
-<a class="btn btn-mynta" href="#kontakt">Boka menyanalys</a>
+<a class="btn btn-mynta" href="#kontakt" data-amne="Menyanalys">Boka menyanalys</a>
 </div>
 <div class="offer mint">
 <p class="tag">UTBILDNING</p>
@@ -183,7 +183,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <li>Gästlektioner för restaurangskolor och YH</li>
 </ul>
 <p class="price sg" style="color:var(--granskog)">från 5 900 kr <small style="color:var(--text2)">exkl. moms per workshop</small></p>
-<a class="btn btn-dark" href="#kontakt">Boka utbildning</a>
+<a class="btn btn-dark" href="#kontakt" data-amne="Utbildning – workshop för vårt kök">Boka utbildning</a>
 </div>
 <div class="offer light">
 <p class="tag" style="display:flex;align-items:center;gap:10px"><svg width="24" height="26" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/></svg>UNDER UTVECKLING</p>
@@ -194,7 +194,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <li>Räknar om alla rätter som påverkas</li>
 <li>Visar vilka menypriser som behöver ses över</li>
 </ul>
-<a class="btn btn-outline" href="#kontakt">Anmäl intresse</a>
+<a class="btn btn-outline" href="#kontakt" data-amne="Marginal – intresseanmälan">Anmäl intresse</a>
 </div>
 </div>
 </section>
@@ -220,20 +220,27 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <section id="kontakt" class="contact">
 <div class="wrap contact-grid">
 <div class="contact-info">
-<h2>Boka en menyanalys</h2>
-<p>Berätta lite om din restaurang så hör jag av mig och bokar en tid.</p>
+<h2>Hör av dig</h2>
+<p>Vill du boka en menyanalys, en utbildning eller veta mer om Marginal? Berätta lite om er, så hör jag av mig inom två arbetsdagar.</p>
 <p><a href="mailto:info@nordicmargins.se">info@nordicmargins.se</a></p>
 </div>
 <form id="kontaktform" novalidate>
 <input type="hidden" name="access_key" value="8f15ee07-9187-44c9-8315-139dba990593">
-<input type="hidden" name="subject" value="Ny förfrågan om menyanalys – nordicmargins.se">
+<input type="hidden" name="subject" id="amne-subject" value="Ny förfrågan – nordicmargins.se">
 <input type="hidden" name="from_name" value="Nordic Margins hemsida">
 <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+<label>Vad gäller det?<select name="Ärende" id="amne" required style="font:inherit;font-weight:400;font-size:16px;padding:12px 14px;border:1px solid #b9b2a2;border-radius:10px;background:#fff;color:var(--granskog)">
+<option value="Menyanalys">Menyanalys</option>
+<option value="Utbildning – workshop för vårt kök">Utbildning – workshop för vårt kök</option>
+<option value="Utbildning – gästlektion för skola">Utbildning – gästlektion för skola</option>
+<option value="Marginal – intresseanmälan">Marginal – intresseanmälan</option>
+<option value="Annat">Annat</option>
+</select></label>
 <label>Namn<input type="text" name="Namn" autocomplete="name" required></label>
-<label>Restaurang<input type="text" name="Restaurang" autocomplete="organization" required></label>
+<label>Restaurang eller skola<input type="text" name="Restaurang eller skola" autocomplete="organization" required></label>
 <label>E-post<input type="email" name="email" autocomplete="email" required></label>
 <label>Telefon (valfritt)<input type="tel" name="Telefon" autocomplete="tel"></label>
-<label>Meddelande<textarea name="Meddelande" rows="4" placeholder="Berätta gärna kort om restaurangen och menyn."></textarea></label>
+<label>Meddelande<textarea name="Meddelande" rows="4" placeholder="Berätta gärna kort om er – t.ex. antal rätter på menyn, hur många som ska gå utbildningen eller vilken klass det gäller."></textarea></label>
 <p style="margin:0;font-size:13px;line-height:1.5;color:var(--text2)">Vi använder dina uppgifter för att svara dig. Läs mer i vår <a href="/integritet.html" style="color:var(--granskog)">integritetspolicy</a>.</p>
 <button class="btn btn-dark" type="submit">Skicka</button>
 <p id="formstatus" role="status" aria-live="polite" style="margin:0;font-size:15px;font-weight:600"></p>
@@ -253,15 +260,19 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 (function(){
   var f=document.getElementById('kontaktform'); if(!f) return;
   var st=document.getElementById('formstatus'); var btn=f.querySelector('button[type=submit]');
+  var sel=document.getElementById('amne'), subj=document.getElementById('amne-subject');
+  function setSubj(){ subj.value='Ny förfrågan: '+sel.value+' – nordicmargins.se'; }
+  sel.addEventListener('change',setSubj); setSubj();
+  document.querySelectorAll('[data-amne]').forEach(function(a){ a.addEventListener('click',function(){ sel.value=a.getAttribute('data-amne'); setSubj(); }); });
   f.addEventListener('submit',function(e){
     e.preventDefault();
-    if(!f.checkValidity()){ st.style.color='#8a3b12'; st.textContent='Fyll i namn, restaurang och en giltig e-postadress.'; f.reportValidity(); return; }
+    if(!f.checkValidity()){ st.style.color='#8a3b12'; st.textContent='Fyll i namn, restaurang eller skola och en giltig e-postadress.'; f.reportValidity(); return; }
     btn.disabled=true; btn.textContent='Skickar…'; st.textContent='';
     var data=Object.fromEntries(new FormData(f).entries());
     fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
       .then(function(r){return r.json();})
       .then(function(j){
-        if(j.success){ f.reset(); st.style.color='#172321'; st.textContent='Tack! Vi hör av oss inom två arbetsdagar.'; btn.textContent='Skickat'; }
+        if(j.success){ f.reset(); setSubj(); st.style.color='#172321'; st.textContent='Tack! Vi hör av oss inom två arbetsdagar.'; btn.textContent='Skickat'; }
         else { throw new Error(j.message||'fel'); }
       })
       .catch(function(){ st.style.color='#8a3b12'; st.textContent='Något gick fel. Mejla oss gärna direkt på info@nordicmargins.se.'; btn.disabled=false; btn.textContent='Skicka'; });
