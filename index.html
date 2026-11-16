@@ -63,19 +63,23 @@ h2{margin:0;font-weight:700;font-size:clamp(30px,4vw,40px);line-height:1.1}
 .step p{margin:0;font-size:16px;line-height:1.6;color:var(--text2)}
 .offers-bg{background:#fff}
 .offers{display:flex;flex-wrap:wrap;gap:24px}
-.offer{flex:1 1 420px;display:flex;flex-direction:column;gap:16px;padding:40px;border-radius:20px}
+.offer{flex:1 1 320px;display:flex;flex-direction:column;gap:16px;padding:40px;border-radius:20px}
 .offer.dark{background:var(--granskog);color:var(--linne)}
+.offer.mint{background:var(--mynta)}
+.offer.mint .tag{color:var(--granskog)}
+.offer.mint p,.offer.mint ul{color:var(--granskog)}
+.offer.mint p:not(.tag):not(.price){margin:0;font-size:17px;line-height:1.6}
 .offer.light{background:var(--linne);border:1px solid var(--kant)}
 .offer h3{margin:0;font-weight:700;font-size:30px}
 .offer .tag{margin:0;font-size:13px;font-weight:600;letter-spacing:.12em}
 .offer.dark .tag{color:var(--mynta)}
 .offer.light .tag{color:var(--text2)}
 .price{margin:0;font-weight:700;font-size:44px;color:var(--mynta)}
-.price small{font-size:16px;font-weight:500;color:var(--ljus2);font-family:Inter,sans-serif}
+.price small{display:block;margin-top:6px;font-size:15px;font-weight:500;color:var(--ljus2);font-family:Inter,sans-serif}
 .offer ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:16px;line-height:1.5}
 .offer.light p,.offer.light ul{color:var(--text2)}
 .offer.light p{margin:0;font-size:17px;line-height:1.6}
-.offer .btn{align-self:flex-start;margin-top:8px}
+.offer .btn{align-self:flex-start;margin-top:auto}
 .sub{font-size:16px;font-weight:500;color:var(--text2);font-family:Inter,sans-serif}
 .about{display:flex;flex-wrap:wrap;gap:48px;align-items:center}
 .photo{flex:1 1 320px;min-height:320px;border-radius:20px;background:var(--granskog);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:24px;padding:40px}
@@ -114,7 +118,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <a class="brand sg" href="/"><svg width="32" height="34" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
 <div class="links">
 <a href="#sa-funkar-det">Så funkar det</a>
-<a href="#erbjudande">Erbjudande</a>
+<a href="#erbjudande">Erbjudanden</a>
 <a href="#om">Om oss</a>
 <a class="btn btn-mynta" href="#kontakt">Boka menyanalys</a>
 </div>
@@ -125,7 +129,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <h1>Vet du vad varje rätt på din meny tjänar?</h1>
 <p class="lead">Leverantörspriserna rör sig varje vecka. Menypriserna står still. Vi räknar ut kostnad och vinst per portion – och säger vilka rätter du ska höja, justera eller lyfta fram.</p>
 <div class="ctas">
-<a class="btn btn-mynta" href="#kontakt">Boka menyanalys – 990 kr</a>
+<a class="btn btn-mynta" href="#kontakt">Boka menyanalys</a>
 <a class="btn btn-ghost" href="#sa-funkar-det">Så funkar det</a>
 </div>
 </div>
@@ -160,7 +164,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <div class="offer dark">
 <p class="tag">TILLGÄNGLIGT NU</p>
 <h3>Menyanalys</h3>
-<p class="price sg">990 kr <small>exkl. moms, engångspris</small></p>
+<p class="price sg">990 kr <small>exkl. moms · introduktionspris för de första kunderna</small></p>
 <ul>
 <li>Kostnad och vinst per portion för hela menyn</li>
 <li>Rätterna rangordnade efter lönsamhet</li>
@@ -168,6 +172,18 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <li>Genomgång på plats i Örebro eller via video</li>
 </ul>
 <a class="btn btn-mynta" href="#kontakt">Boka menyanalys</a>
+</div>
+<div class="offer mint">
+<p class="tag">UTBILDNING</p>
+<h3>Kalkyl för kockar</h3>
+<p>En praktisk workshop där ditt kök lär sig räkna vad varje tallrik kostar och tjänar – med er egen meny som övning.</p>
+<ul>
+<li>3 timmar på plats i ert kök</li>
+<li>Arbetsbok och kalkylmall ingår</li>
+<li>Gästlektioner för restaurangskolor och YH</li>
+</ul>
+<p class="price sg" style="color:var(--granskog)">från 5 900 kr <small style="color:var(--text2)">exkl. moms per workshop</small></p>
+<a class="btn btn-dark" href="#kontakt">Boka utbildning</a>
 </div>
 <div class="offer light">
 <p class="tag" style="display:flex;align-items:center;gap:10px"><svg width="24" height="26" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/></svg>UNDER UTVECKLING</p>
