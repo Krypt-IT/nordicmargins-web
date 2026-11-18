@@ -91,9 +91,23 @@ h2{margin:0;font-weight:700;font-size:clamp(30px,4vw,40px);line-height:1.1}
 .nl-text h2{margin:8px 0 12px}
 .nl-text p{margin:0 0 8px;line-height:1.6}
 .nl-list{margin:12px 0 0;padding-left:20px;line-height:1.7}
-form.nl-form{flex:1 1 380px;background:#fff;gap:14px}
-.nl-consent{flex-direction:row;align-items:flex-start;gap:10px;font-weight:400;font-size:13px;line-height:1.5;color:var(--text2)}
-.nl-consent input{margin-top:3px;width:18px;height:18px;flex:none}
+.nl-box{flex:1 1 380px;min-width:0}
+.nl .sib-form{padding:0!important;background:transparent!important;text-align:left!important;font-family:Inter,sans-serif!important}
+.nl #sib-form-container{max-width:none}
+.nl #sib-container{max-width:none!important;background:#fff!important;border:0!important;border-radius:20px!important;padding:32px!important;text-align:left!important}
+.nl #sib-container .sib-form-block,.nl #sib-container .form__entry{padding:0!important}
+.nl #sib-container .entry__label{font-family:Inter,sans-serif!important;font-size:14px!important;font-weight:600!important;color:var(--granskog)!important;margin-bottom:6px}
+.nl #sib-container .entry__field{border:0!important;background:transparent!important;box-shadow:none!important;margin:0!important}
+.nl #sib-container input.input{width:100%;box-sizing:border-box;font:inherit;font-family:Inter,sans-serif!important;font-size:16px!important;padding:12px 14px!important;height:auto!important;border:1px solid #b9b2a2!important;border-radius:10px!important;background:#fff!important;color:var(--granskog)!important}
+.nl #sib-container input::placeholder{font-family:Inter,sans-serif!important;color:#9a9486!important}
+.nl #sib-container .entry__choice{font-family:Inter,sans-serif;font-size:13px;line-height:1.5;color:var(--text2)}
+.nl #sib-container .entry__choice p,.nl .nl-legal p{margin:0}
+.nl #sib-container .entry__choice a,.nl .nl-legal a{color:var(--granskog)!important}
+.nl .nl-legal{font-family:Inter,sans-serif;font-size:12px;line-height:1.5;color:var(--text2)}
+.nl #sib-container .sib-form-block__button{font-family:Inter,sans-serif!important;font-size:16px!important;font-weight:600!important;background:var(--granskog)!important;color:var(--linne)!important;border:0!important;border-radius:999px!important;padding:14px 26px!important;cursor:pointer}
+.nl #sib-container .sib-form-block__button:hover{opacity:.9}
+.nl .entry__error{font-family:Inter,sans-serif!important;font-size:13px!important;border-radius:8px!important;margin-top:6px}
+.nl .sib-form-message-panel{max-width:none!important;border-radius:12px!important;font-family:Inter,sans-serif!important;margin:0 0 16px!important}
 .contact{background:var(--granskog);color:var(--linne)}
 .contact-grid{display:flex;flex-wrap:wrap;gap:48px}
 .contact-info{flex:1 1 380px;display:flex;flex-direction:column;gap:16px}
@@ -116,6 +130,7 @@ footer{background:#101917;color:var(--linne)}
 .foot p{margin:0;font-size:13px;color:#b9b4a8}
 @media (max-width:640px){.links a:not(.btn){display:none}section{padding:64px 0}.offer{padding:28px}}
 </style>
+<link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
 <script>
 window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
 </script>
@@ -238,17 +253,51 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <li>Vad som händer med råvarupriserna just nu</li>
 </ul>
 </div>
-<form id="nyhetsform" class="nl-form" novalidate>
-<input type="hidden" name="access_key" value="8f15ee07-9187-44c9-8315-139dba990593">
-<input type="hidden" name="subject" value="Ny prenumerant: Marginalbrevet – nordicmargins.se">
-<input type="hidden" name="from_name" value="Nordic Margins hemsida">
-<input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
-<label>Förnamn (valfritt)<input type="text" name="Förnamn" autocomplete="given-name"></label>
-<label>E-post<input type="email" name="email" autocomplete="email" required></label>
-<label class="nl-consent"><input type="checkbox" name="Samtycke" value="Ja" required><span>Ja, skicka Marginalbrevet till mig. Jag kan avsluta när jag vill. Läs mer i vår <a href="/integritet.html" style="color:var(--granskog)">integritetspolicy</a>.</span></label>
-<button class="btn btn-dark" type="submit">Prenumerera – gratis</button>
-<p id="nlstatus" role="status" aria-live="polite" style="margin:0;font-size:15px;font-weight:600"></p>
+<div class="nl-box">
+<div class="sib-form">
+<div id="sib-form-container" class="sib-form-container">
+<div id="error-message" class="sib-form-message-panel" style="font-size:15px;text-align:left;color:#661d1d;background-color:#ffeded;border-color:#ff4949;">
+<div class="sib-form-message-panel__text sib-form-message-panel__text--center"><span class="sib-form-message-panel__inner-text">Det gick inte att spara din anmälan. Försök igen om en stund, eller mejla info@nordicmargins.se.</span></div>
+</div>
+<div id="success-message" class="sib-form-message-panel" style="font-size:15px;text-align:left;color:#172321;background-color:#C6F0D0;border-color:#172321;">
+<div class="sib-form-message-panel__text sib-form-message-panel__text--center"><span class="sib-form-message-panel__inner-text">Tack! Kolla din inkorg och klicka på länken i mejlet för att bekräfta din prenumeration.</span></div>
+</div>
+<div id="sib-container" class="sib-container--large sib-container--vertical">
+<form id="sib-form" method="POST" action="https://9d473784.sibforms.com/serve/MUIFAHG2yTV78QY525nCq8NJ7w_ao66nxq8fLPZDBTchhZLVHuyvEese8OS8Mw0zIHWmIW76erFBd2t7tMFuMgNY1Hj7_7HcCKSLs-zflEGMQt6aayjWDUyHVuKIiE4BOz_zXPIHUWI5hUz9O0_27uSTjo3eUO6EwaFB71Jyu-Id3HniVqWelb3TgsrN9b_kpNFoW6DxlcHehUjgKA==" data-type="subscription">
+<div style="padding:0 0 14px">
+<div class="sib-input sib-form-block"><div class="form__entry entry_block"><div class="form__label-row">
+<label class="entry__label" for="FIRSTNAME">Förnamn (valfritt)</label>
+<div class="entry__field"><input class="input" maxlength="200" type="text" id="FIRSTNAME" name="FIRSTNAME" autocomplete="given-name" placeholder="Ditt förnamn"></div>
+</div><label class="entry__error entry__error--primary"></label></div></div>
+</div>
+<div style="padding:0 0 14px">
+<div class="sib-input sib-form-block"><div class="form__entry entry_block"><div class="form__label-row">
+<label class="entry__label" for="EMAIL" data-required="*">E-post</label>
+<div class="entry__field"><input class="input" type="text" id="EMAIL" name="EMAIL" autocomplete="email" value="" placeholder="namn@restaurang.se" data-required="true" required></div>
+</div><label class="entry__error entry__error--primary"></label></div></div>
+</div>
+<div style="padding:0 0 14px">
+<div class="sib-optin sib-form-block"><div class="form__entry entry_mcq"><div class="form__label-row">
+<div class="entry__choice"><label>
+<input type="checkbox" class="input_replaced" value="1" id="OPT_IN" name="OPT_IN" required>
+<span class="checkbox checkbox_tick_positive"></span><span><p>Jag vill få Marginalbrevet och har läst <a href="/integritet.html">integritetspolicyn</a>. Du kan avsluta när som helst via länken i varje utskick.</p></span>
+</label></div>
+</div><label class="entry__error entry__error--primary"></label></div></div>
+</div>
+<div style="padding:0 0 18px" class="nl-legal"><p>Vi använder Brevo för att samla in dina uppgifter och skicka nyhetsbrevet. Läs mer i <a href="https://www.brevo.com/en/legal/privacypolicy/" target="_blank" rel="nofollow noopener">Brevos integritetspolicy</a>.</p></div>
+<div class="sib-form-block">
+<button class="sib-form-block__button sib-form-block__button-with-loader" form="sib-form" type="submit">
+<svg class="icon clickable__icon progress-indicator__icon sib-hide-loader-icon" viewBox="0 0 512 512"><path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z"/></svg>
+Prenumerera – gratis
+</button>
+</div>
+<input type="text" name="email_address_check" value="" class="input--hidden">
+<input type="hidden" name="locale" value="en">
 </form>
+</div>
+</div>
+</div>
+</div>
 </div>
 </section>
 
@@ -313,23 +362,20 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
       .catch(function(){ st.style.color='#8a3b12'; st.textContent='Något gick fel. Mejla oss gärna direkt på info@nordicmargins.se.'; btn.disabled=false; btn.textContent='Skicka'; });
   });
 })();
-(function(){
-  var f=document.getElementById('nyhetsform'); if(!f) return;
-  var st=document.getElementById('nlstatus'); var btn=f.querySelector('button[type=submit]');
-  f.addEventListener('submit',function(e){
-    e.preventDefault();
-    if(!f.checkValidity()){ st.style.color='#8a3b12'; st.textContent='Fyll i en giltig e-postadress och kryssa i rutan.'; f.reportValidity(); return; }
-    btn.disabled=true; btn.textContent='Skickar…'; st.textContent='';
-    var data=Object.fromEntries(new FormData(f).entries());
-    fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
-      .then(function(r){return r.json();})
-      .then(function(j){
-        if(j.success){ f.reset(); st.style.color='#172321'; st.textContent='Tack! Du får nästa Marginalbrev i din inkorg.'; btn.textContent='Klart'; }
-        else { throw new Error(j.message||'fel'); }
-      })
-      .catch(function(){ st.style.color='#8a3b12'; st.textContent='Något gick fel. Mejla info@nordicmargins.se så lägger vi till dig.'; btn.disabled=false; btn.textContent='Prenumerera – gratis'; });
-  });
-})();
+
 </script>
+<script>
+  window.REQUIRED_CODE_ERROR_MESSAGE = 'Välj landskod';
+  window.LOCALE = 'en';
+  window.EMAIL_INVALID_MESSAGE = window.SMS_INVALID_MESSAGE = "Något stämmer inte. Kontrollera att e-postadressen är rätt och försök igen.";
+  window.REQUIRED_ERROR_MESSAGE = "Det här fältet måste fyllas i.";
+  window.GENERIC_INVALID_MESSAGE = "Något stämmer inte. Kontrollera att e-postadressen är rätt och försök igen.";
+  window.INVALID_NUMBER = "Något stämmer inte. Kontrollera uppgifterna och försök igen.";
+  window.INVALID_DATE = "Ange ett giltigt datum";
+  window.REQUIRED_MULTISELECT_MESSAGE = 'Välj minst ett alternativ';
+  window.translation = { common: { selectedList: '{quantity} lista vald', selectedLists: '{quantity} listor valda', selectedOption: '{quantity} vald', selectedOptions: '{quantity} valda' } };
+  var AUTOHIDE = Boolean(0);
+</script>
+<script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
 </body>
 </html>
