@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nordic Margins – sepa cuánto gana cada plato</title>
+<meta name="description" content="Análisis de menú para restaurantes en Suecia: coste y beneficio por ración, y qué hacer con los platos que no son rentables. Creado por un jefe de cocina.">
+<meta property="og:title" content="Nordic Margins – sepa cuánto gana cada plato">
+<meta property="og:description" content="Análisis de menú para restaurantes: coste y beneficio por ración. Creado por un jefe de cocina.">
+<meta property="og:image" content="https://nordicmargins.se/icon-512.png">
+<link rel="alternate" hreflang="sv" href="https://nordicmargins.se/">
+<link rel="alternate" hreflang="en" href="https://nordicmargins.se/en/">
+<link rel="alternate" hreflang="es" href="https://nordicmargins.se/es/">
+<link rel="alternate" hreflang="ar" href="https://nordicmargins.se/ar/">
+<link rel="alternate" hreflang="x-default" href="https://nordicmargins.se/">
+<meta name="theme-color" content="#172321">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--granskog:#172321;--linne:#F5F1E8;--mynta:#C6F0D0;--text2:#3d4a47;--ljus2:#d8d3c7;--kant:#d9d3c4}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--granskog);background:var(--linne);-webkit-font-smoothing:antialiased}
+h1,h2,h3,.sg{font-family:'Space Grotesk',Inter,sans-serif}
+a{color:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.btn{display:inline-block;font-weight:600;font-size:16px;text-decoration:none;padding:16px 28px;border-radius:12px;border:1px solid transparent;cursor:pointer;font-family:inherit}
+.btn-mynta{background:var(--mynta);color:var(--granskog)}
+.btn-mynta:hover{background:#b3e8c0}
+.btn-ghost{color:var(--linne);border-color:rgba(245,241,232,.4)}
+.btn-ghost:hover{border-color:var(--linne)}
+.btn-dark{background:var(--granskog);color:var(--linne)}
+.btn-outline{color:var(--granskog);border-color:var(--granskog)}
+header{background:var(--granskog);color:var(--linne)}
+nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:20px;padding-bottom:20px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:600;font-size:20px}
+.links{display:flex;flex-wrap:wrap;align-items:center;gap:24px}
+.links a{text-decoration:none;font-size:15px}
+.links .btn{padding:12px 20px;font-size:15px}
+.hero{display:flex;flex-wrap:wrap;align-items:center;gap:56px;padding-top:64px;padding-bottom:96px}
+.hero-text{flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:24px}
+.kicker{margin:0;font-size:14px;font-weight:600;letter-spacing:.12em;color:var(--mynta)}
+h1{margin:0;font-weight:700;font-size:clamp(38px,5.5vw,60px);line-height:1.05;letter-spacing:-.02em}
+.lead{margin:0;font-size:19px;line-height:1.6;color:var(--ljus2);max-width:560px}
+.ctas{display:flex;flex-wrap:wrap;gap:16px;padding-top:8px}
+.card{flex:1 1 360px;min-width:0;background:#22302d;border-radius:20px;padding:28px}
+.card-head{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:12px}
+.card-head span:first-child{font-weight:600;font-size:18px}
+.muted{font-size:12px;color:#b9b4a8}
+.row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:12px 0;border-top:1px solid rgba(245,241,232,.15);font-size:15px}
+.row span:not(:first-child){text-align:right}
+.row.th{border-top:none;font-size:12px;font-weight:600;letter-spacing:.06em;color:#b9b4a8;padding:0 0 8px}
+.fc{font-weight:600;color:var(--mynta)}
+.flag .fc{color:#ffb38a}
+.card-note{margin:12px 0 0;font-size:13px;line-height:1.5;color:#b9b4a8}
+section{padding:96px 0}
+h2{margin:0;font-weight:700;font-size:clamp(30px,4vw,40px);line-height:1.1}
+.intro{display:flex;flex-direction:column;gap:12px;max-width:640px;margin-bottom:40px}
+.intro p,.about p{margin:0;font-size:18px;line-height:1.6;color:var(--text2)}
+.steps{display:flex;flex-wrap:wrap;gap:24px}
+.step{flex:1 1 280px;display:flex;flex-direction:column;gap:12px;padding:32px;border:1px solid var(--kant);border-radius:16px;background:#fff}
+.num{width:40px;height:40px;border-radius:20px;background:var(--mynta);display:flex;align-items:center;justify-content:center;font-weight:700}
+.step h3{margin:0;font-weight:600;font-size:22px}
+.step p{margin:0;font-size:16px;line-height:1.6;color:var(--text2)}
+.offers-bg{background:#fff}
+.offers{display:flex;flex-wrap:wrap;gap:24px}
+.offer{flex:1 1 320px;display:flex;flex-direction:column;gap:16px;padding:40px;border-radius:20px}
+.offer.dark{background:var(--granskog);color:var(--linne)}
+.offer.mint{background:var(--mynta)}
+.offer.mint .tag{color:var(--granskog)}
+.offer.mint p,.offer.mint ul{color:var(--granskog)}
+.offer.mint p:not(.tag):not(.price){margin:0;font-size:17px;line-height:1.6}
+.offer.light{background:var(--linne);border:1px solid var(--kant)}
+.offer h3{margin:0;font-weight:700;font-size:30px}
+.offer .tag{margin:0;font-size:13px;font-weight:600;letter-spacing:.12em}
+.offer.dark .tag{color:var(--mynta)}
+.offer.light .tag{color:var(--text2)}
+.price{margin:0;font-weight:700;font-size:44px;color:var(--mynta)}
+.price small{display:block;margin-top:6px;font-size:15px;font-weight:500;color:var(--ljus2);font-family:Inter,sans-serif}
+.offer ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:16px;line-height:1.5}
+.offer.light p,.offer.light ul{color:var(--text2)}
+.offer.light p{margin:0;font-size:17px;line-height:1.6}
+.offer .btn{align-self:flex-start;margin-top:auto}
+.sub{font-size:16px;font-weight:500;color:var(--text2);font-family:Inter,sans-serif}
+.about{display:flex;flex-wrap:wrap;gap:48px;align-items:center}
+.photo{flex:1 1 320px;min-height:320px;border-radius:20px;background:var(--granskog);display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:24px;padding:40px}
+.photo p{margin:0;font-weight:600;font-size:26px;line-height:1.25;color:var(--linne);max-width:300px}
+.about-text{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.nl{background:var(--mynta)}
+.nl-grid{display:flex;flex-wrap:wrap;gap:40px;align-items:center}
+.nl-text{flex:1 1 380px}
+.nl-text h2{margin:8px 0 12px}
+.nl-text p{margin:0 0 8px;line-height:1.6}
+.nl-list{margin:12px 0 0;padding-left:20px;line-height:1.7}
+.nl-box{flex:1 1 380px;min-width:0}
+.nl .sib-form{padding:0!important;background:transparent!important;text-align:left!important;font-family:Inter,sans-serif!important}
+.nl #sib-form-container{max-width:none}
+.nl #sib-container{max-width:none!important;background:#fff!important;border:0!important;border-radius:20px!important;padding:32px!important;text-align:left!important}
+.nl #sib-container .sib-form-block,.nl #sib-container .form__entry{padding:0!important}
+.nl #sib-container .entry__label{font-family:Inter,sans-serif!important;font-size:14px!important;font-weight:600!important;color:var(--granskog)!important;margin-bottom:6px}
+.nl #sib-container .entry__field{border:0!important;background:transparent!important;box-shadow:none!important;margin:0!important}
+.nl #sib-container input.input{width:100%;box-sizing:border-box;font:inherit;font-family:Inter,sans-serif!important;font-size:16px!important;padding:12px 14px!important;height:auto!important;border:1px solid #b9b2a2!important;border-radius:10px!important;background:#fff!important;color:var(--granskog)!important}
+.nl #sib-container input::placeholder{font-family:Inter,sans-serif!important;color:#9a9486!important}
+.nl #sib-container .entry__choice{font-family:Inter,sans-serif;font-size:13px;line-height:1.5;color:var(--text2)}
+.nl #sib-container .entry__choice p,.nl .nl-legal p{margin:0}
+.nl #sib-container .entry__choice a,.nl .nl-legal a{color:var(--granskog)!important}
+.nl .nl-legal{font-family:Inter,sans-serif;font-size:12px;line-height:1.5;color:var(--text2)}
+.nl #sib-container .sib-form-block__button{font-family:Inter,sans-serif!important;font-size:16px!important;font-weight:600!important;background:var(--granskog)!important;color:var(--linne)!important;border:0!important;border-radius:999px!important;padding:14px 26px!important;cursor:pointer}
+.nl #sib-container .sib-form-block__button:hover{opacity:.9}
+.nl .entry__error{font-family:Inter,sans-serif!important;font-size:13px!important;border-radius:8px!important;margin-top:6px}
+.nl #sib-form{background:transparent!important;padding:0!important;border-radius:0!important;gap:0!important}
+.nl #sib-container .entry__choice label{font-weight:400!important;flex-direction:row;align-items:flex-start;gap:10px;font-size:13px;line-height:1.5;color:var(--text2)}
+.nl .sib-form-message-panel{max-width:none!important;border-radius:12px!important;font-family:Inter,sans-serif!important;margin:0 0 16px!important}
+.contact{background:var(--granskog);color:var(--linne)}
+.contact-grid{display:flex;flex-wrap:wrap;gap:48px}
+.contact-info{flex:1 1 380px;display:flex;flex-direction:column;gap:16px}
+.contact-info p{margin:0;font-size:18px;line-height:1.6;color:var(--ljus2)}
+.contact-info a{color:var(--mynta)}
+form{flex:1 1 420px;display:flex;flex-direction:column;gap:16px;background:var(--linne);border-radius:20px;padding:32px;color:var(--granskog)}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:600}
+input,textarea{font:inherit;font-weight:400;font-size:16px;padding:12px 14px;border:1px solid #b9b2a2;border-radius:10px;background:#fff;color:var(--granskog)}
+input:focus,textarea:focus,.btn:focus-visible,a:focus-visible{outline:3px solid var(--mynta);outline-offset:2px}
+textarea{resize:vertical}
+.principles{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}
+.principle{flex:1 1 180px;padding:20px;border-radius:14px;background:#fff;border:1px solid var(--kant)}
+.principle h3{margin:0 0 6px;font-size:18px;font-weight:600}
+.principle p{margin:0;font-size:15px;line-height:1.5;color:var(--text2)}
+.footlinks{display:flex;gap:16px;flex-wrap:wrap}
+.footlinks a{color:#b9b4a8;font-size:13px}
+.signature{margin:8px 0 0;font-size:17px;font-weight:600;color:var(--granskog)}
+footer{background:#101917;color:var(--linne)}
+.foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:32px;padding-bottom:32px}
+.foot p{margin:0;font-size:13px;color:#b9b4a8}
+@media (max-width:640px){.links a:not(.btn){display:none}section{padding:64px 0}.offer{padding:28px}}
+.lang{font:inherit;font-size:14px;background:transparent;color:var(--linne);border:1px solid rgba(245,241,232,.4);border-radius:10px;padding:8px 10px;cursor:pointer}
+.lang option{color:#172321;background:#F5F1E8}
+[dir=rtl] .row span:not(:first-child){text-align:left}
+[dir=rtl] ul{padding-left:0;padding-right:20px}
+[lang=ar] body,[lang=ar] h1,[lang=ar] h2,[lang=ar] h3,[lang=ar] .sg,[lang=ar] input,[lang=ar] textarea,[lang=ar] select,[lang=ar] button{font-family:'Noto Sans Arabic','Space Grotesk',Inter,sans-serif!important}
+[lang=ar] .kicker,[lang=ar] .tag{letter-spacing:0}
+</style>
+<link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
+<script>
+window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<header>
+<nav class="wrap" aria-label="Menú principal">
+<a class="brand sg" href="/es/"><svg width="32" height="34" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
+<div class="links">
+<select class="lang" aria-label="Idioma" onchange="location.href=this.value"><option value="/">Svenska</option><option value="/en/">English</option><option value="/es/" selected>Español</option><option value="/ar/">العربية</option></select>
+<a href="#sa-funkar-det">Cómo funciona</a>
+<a href="#erbjudande">Servicios</a>
+<a href="#om">Sobre nosotros</a>
+<a class="btn btn-mynta" href="#kontakt">Reservar análisis de menú</a>
+</div>
+</nav>
+<div class="wrap hero">
+<div class="hero-text">
+<p class="kicker">PARA RESTAURANTES EN SUECIA</p>
+<h1>¿Sabes cuánto gana cada plato de tu carta?</h1>
+<p class="lead">Los precios de los proveedores cambian cada semana. Los precios de la carta no. Calculamos el coste y el beneficio por ración, y te decimos qué platos subir, ajustar o destacar.</p>
+<div class="ctas">
+<a class="btn btn-mynta" href="#kontakt">Reservar análisis de menú</a>
+<a class="btn btn-ghost" href="#sa-funkar-det">Cómo funciona</a>
+</div>
+</div>
+<div class="card" aria-label="Ejemplo de análisis de menú">
+<div class="card-head"><span class="sg">Análisis de menú</span><span class="muted">Ejemplo, cifras ficticias</span></div>
+<div class="row th"><span>PLATO</span><span>MATERIA PRIMA</span><span>PRECIO</span><span>FOOD COST</span></div>
+<div class="row"><span>Pasta carbonara</span><span>38 kr</span><span>179 kr</span><span class="fc">24 %</span></div>
+<div class="row"><span>Salmón a la parrilla</span><span>72 kr</span><span>249 kr</span><span class="fc">32 %</span></div>
+<div class="row flag"><span>Solomillo de ternera</span><span>118 kr</span><span>285 kr</span><span class="fc">46 %</span></div>
+<p class="card-note">El solomillo se come el margen: sube el precio, cambia un componente o reduce la ración. Cada plato tiene su propia cifra, y una propuesta.</p>
+</div>
+</div>
+</header>
+
+<main>
+<section id="sa-funkar-det">
+<div class="wrap">
+<div class="intro">
+<h2>De la lista de precios a la decisión</h2>
+<p>No tienes que hacer cuentas. Solo necesitamos tus recetas y los precios de tus proveedores.</p>
+</div>
+<div class="steps">
+<div class="step"><div class="num sg">1</div><h3>Envía recetas y listas de precios</h3><p>Recetas en cualquier formato y listas de precios de Menigo, Tingstad u otros proveedores. Un PDF sirve.</p></div>
+<div class="step"><div class="num sg">2</div><h3>Calculamos por ración</h3><p>Cada plato tiene su coste, margen de contribución y food cost por ración, no una media de toda la cocina.</p></div>
+<div class="step"><div class="num sg">3</div><h3>Recibes una lista de acciones</h3><p>Qué platos subir de precio, cambiar de ingrediente, reducir o destacar, revisado contigo.</p></div>
+</div>
+</div>
+</section>
+
+<section id="erbjudande" class="offers-bg">
+<div class="wrap offers">
+<div class="offer dark">
+<p class="tag">DISPONIBLE AHORA</p>
+<h3>Análisis de menú</h3>
+<p class="price sg">990 SEK <small>sin IVA · precio de lanzamiento para los primeros clientes</small></p>
+<ul>
+<li>Coste y beneficio por ración de toda la carta</li>
+<li>Platos ordenados por rentabilidad</li>
+<li>Propuestas concretas para cada plato</li>
+<li>Revisión en persona en Örebro o por videollamada</li>
+</ul>
+<a class="btn btn-mynta" href="#kontakt" data-amne="Menyanalys">Reservar análisis de menú</a>
+</div>
+<div class="offer mint">
+<p class="tag">FORMACIÓN</p>
+<h3>Escandallos para cocineros</h3>
+<p>Un taller práctico en el que tu cocina aprende a calcular cuánto cuesta y gana cada plato, con vuestra propia carta como ejercicio.</p>
+<ul>
+<li>3 horas en vuestra cocina</li>
+<li>Incluye cuaderno de trabajo y plantilla de escandallo</li>
+<li>Clases invitadas para escuelas de hostelería</li>
+</ul>
+<p class="price sg" style="color:var(--granskog)">desde 5.900 SEK <small style="color:var(--text2)">sin IVA por taller</small></p>
+<a class="btn btn-dark" href="#kontakt" data-amne="Utbildning – workshop för vårt kök">Reservar formación</a>
+</div>
+<div class="offer light">
+<p class="tag" style="display:flex;align-items:center;gap:10px"><svg width="24" height="26" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/></svg>EN DESARROLLO</p>
+<h3>Marginal <span class="sub">by Nordic Margins</span></h3>
+<p>La herramienta que mantiene las cifras al día después del análisis: seguimiento de precios de tus proveedores, escandallos y análisis de menú, de forma continua.</p>
+<ul>
+<li>Avisa cuando un ingrediente sube de precio</li>
+<li>Recalcula todos los platos afectados</li>
+<li>Muestra qué precios de la carta hay que revisar</li>
+</ul>
+<a class="btn btn-outline" href="#kontakt" data-amne="Marginal – intresseanmälan">Me interesa</a>
+</div>
+</div>
+</section>
+
+<section id="om">
+<div class="wrap about">
+<div class="photo"><svg width="72" height="77" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg><p class="sg">Ningún cocinero debería tener que adivinar cuánto cuesta un plato.</p></div>
+<div class="about-text">
+<p class="kicker" style="color:var(--text2)">SOBRE NORDIC MARGINS</p>
+<h2>Desde la cocina, no desde la oficina</h2>
+<p>Me llamo Olliver y soy jefe de cocina en Örebro. Cada semana veo lo mismo: la nata, la carne y el pescado suben de precio, pero la carta no cambia. No por descuido, sino porque nadie tiene tiempo de hacer las cuentas.</p>
+<p>Por eso fundé Nordic Margins. Hago las cuentas por ti, con las mismas listas de precios y el mismo día a día que tú.</p>
+<div class="principles">
+<div class="principle"><h3>Por ración</h3><p>Cada plato tiene su propia cifra, no una media de toda la cocina.</p></div>
+<div class="principle"><h3>Lenguaje de cocina</h3><p>Raciones, mermas y proveedores. Sin jerga de consultor.</p></div>
+<div class="principle"><h3>Decisiones</h3><p>Recibes una lista de lo que hay que hacer, no un informe para leer.</p></div>
+</div>
+<p class="signature sg">– Olliver, fundador</p>
+</div>
+</div>
+</section>
+
+<section id="nyhetsbrev" class="nl">
+<div class="wrap nl-grid">
+<div class="nl-text">
+<p class="kicker" style="color:var(--text2)">BOLETÍN</p>
+<h2>Marginalbrevet</h2>
+<p>Un correo al mes para cocineros y restauradores que quieren ganar más con cada plato.</p>
+<ul class="nl-list">
+<li>Un consejo de escandallo que puedes aplicar el mismo día</li>
+<li>Un plato calculado: antes y después</li>
+<li>Qué está pasando ahora con los precios de las materias primas</li>
+</ul>
+</div>
+<div class="nl-box">
+<div class="sib-form">
+<div id="sib-form-container" class="sib-form-container">
+<div id="error-message" class="sib-form-message-panel" style="font-size:15px;text-align:left;color:#661d1d;background-color:#ffeded;border-color:#ff4949;">
+<div class="sib-form-message-panel__text sib-form-message-panel__text--center"><span class="sib-form-message-panel__inner-text">No se pudo guardar tu suscripción. Inténtalo de nuevo en un rato o escribe a info@nordicmargins.se.</span></div>
+</div>
+<div id="success-message" class="sib-form-message-panel" style="font-size:15px;text-align:left;color:#172321;background-color:#C6F0D0;border-color:#172321;">
+<div class="sib-form-message-panel__text sib-form-message-panel__text--center"><span class="sib-form-message-panel__inner-text">¡Gracias! Revisa tu bandeja de entrada y haz clic en el enlace del correo para confirmar tu suscripción.</span></div>
+</div>
+<div id="sib-container" class="sib-container--large sib-container--vertical">
+<form id="sib-form" method="POST" action="https://9d473784.sibforms.com/serve/MUIFAHG2yTV78QY525nCq8NJ7w_ao66nxq8fLPZDBTchhZLVHuyvEese8OS8Mw0zIHWmIW76erFBd2t7tMFuMgNY1Hj7_7HcCKSLs-zflEGMQt6aayjWDUyHVuKIiE4BOz_zXPIHUWI5hUz9O0_27uSTjo3eUO6EwaFB71Jyu-Id3HniVqWelb3TgsrN9b_kpNFoW6DxlcHehUjgKA==" data-type="subscription">
+<div style="padding:0 0 14px">
+<div class="sib-input sib-form-block"><div class="form__entry entry_block"><div class="form__label-row">
+<label class="entry__label" for="FIRSTNAME">Nombre (opcional)</label>
+<div class="entry__field"><input class="input" maxlength="200" type="text" id="FIRSTNAME" name="FIRSTNAME" autocomplete="given-name" placeholder="Tu nombre"></div>
+</div><label class="entry__error entry__error--primary"></label></div></div>
+</div>
+<div style="padding:0 0 14px">
+<div class="sib-input sib-form-block"><div class="form__entry entry_block"><div class="form__label-row">
+<label class="entry__label" for="EMAIL" data-required="*">Correo electrónico</label>
+<div class="entry__field"><input class="input" type="text" id="EMAIL" name="EMAIL" autocomplete="email" value="" placeholder="nombre@restaurante.com" data-required="true" required></div>
+</div><label class="entry__error entry__error--primary"></label></div></div>
+</div>
+<div style="padding:0 0 14px">
+<div class="sib-optin sib-form-block"><div class="form__entry entry_mcq"><div class="form__label-row">
+<div class="entry__choice"><label>
+<input type="checkbox" class="input_replaced" value="1" id="OPT_IN" name="OPT_IN" required>
+<span class="checkbox checkbox_tick_positive"></span><span><p>Quiero recibir Marginalbrevet y he leído la <a href="/integritet.html">política de privacidad</a> (en sueco). Puedes darte de baja en cualquier momento con el enlace de cada correo. El boletín está escrito en sueco.</p></span>
+</label></div>
+</div><label class="entry__error entry__error--primary"></label></div></div>
+</div>
+<div style="padding:0 0 18px" class="nl-legal"><p>Usamos Brevo para recoger tus datos y enviar el boletín. Más información en la <a href="https://www.brevo.com/en/legal/privacypolicy/" target="_blank" rel="nofollow noopener">política de privacidad de Brevo</a>.</p></div>
+<div class="sib-form-block">
+<button class="sib-form-block__button sib-form-block__button-with-loader" form="sib-form" type="submit">
+<svg class="icon clickable__icon progress-indicator__icon sib-hide-loader-icon" viewBox="0 0 512 512"><path d="M460.116 373.846l-20.823-12.022c-5.541-3.199-7.54-10.159-4.663-15.874 30.137-59.886 28.343-131.652-5.386-189.946-33.641-58.394-94.896-95.833-161.827-99.676C261.028 55.961 256 50.751 256 44.352V20.309c0-6.904 5.808-12.337 12.703-11.982 83.556 4.306 160.163 50.864 202.11 123.677 42.063 72.696 44.079 162.316 6.031 236.832-3.14 6.148-10.75 8.461-16.728 5.01z"/></svg>
+Suscribirse – gratis
+</button>
+</div>
+<input type="text" name="email_address_check" value="" class="input--hidden">
+<input type="hidden" name="locale" value="en">
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="kontakt" class="contact">
+<div class="wrap contact-grid">
+<div class="contact-info">
+<h2>Hablemos</h2>
+<p>¿Quieres reservar un análisis de menú o una formación, o saber más sobre Marginal? Cuéntanos un poco sobre vosotros y te responderé en dos días laborables.</p>
+<p><a href="mailto:info@nordicmargins.se">info@nordicmargins.se</a></p>
+</div>
+<form id="kontaktform" novalidate>
+<input type="hidden" name="access_key" value="8f15ee07-9187-44c9-8315-139dba990593">
+<input type="hidden" name="subject" id="amne-subject" value="Ny förfrågan [ES] – nordicmargins.se">
+<input type="hidden" name="from_name" value="Nordic Margins hemsida">
+<input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+<label>¿Sobre qué es?<select name="Ärende" id="amne" required style="font:inherit;font-weight:400;font-size:16px;padding:12px 14px;border:1px solid #b9b2a2;border-radius:10px;background:#fff;color:var(--granskog)">
+<option value="Menyanalys">Análisis de menú</option>
+<option value="Utbildning – workshop för vårt kök">Formación – taller para nuestra cocina</option>
+<option value="Utbildning – gästlektion för skola">Formación – clase invitada para una escuela</option>
+<option value="Marginal – intresseanmälan">Marginal – me interesa</option>
+<option value="Annat">Otro</option>
+</select></label>
+<label>Nombre<input type="text" name="Namn" autocomplete="name" required></label>
+<label>Restaurante o escuela<input type="text" name="Restaurang eller skola" autocomplete="organization" required></label>
+<label>Correo electrónico<input type="email" name="email" autocomplete="email" required></label>
+<label>Teléfono (opcional)<input type="tel" name="Telefon" autocomplete="tel"></label>
+<label>Mensaje<textarea name="Meddelande" rows="4" placeholder="Cuéntanos brevemente sobre vosotros: por ejemplo, cuántos platos tiene la carta, cuántas personas harán la formación o de qué clase se trata."></textarea></label>
+<p style="margin:0;font-size:13px;line-height:1.5;color:var(--text2)">Usamos tus datos para responderte. Más información en nuestra <a href="/integritet.html" style="color:var(--granskog)">política de privacidad</a> (en sueco).</p>
+<button class="btn btn-dark" type="submit">Enviar</button>
+<p id="formstatus" role="status" aria-live="polite" style="margin:0;font-size:15px;font-weight:600"></p>
+</form>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap foot">
+<a class="brand sg" href="/es/" style="font-size:16px"><svg width="22" height="23" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
+<div class="footlinks"><a href="/villkor.html">Condiciones (en sueco)</a><a href="/integritet.html">Privacidad (en sueco)</a></div>
+<p>Empresa individual · N.º de registro 000524-8737 · Registrada para impuestos (F-skatt) · nordicmargins.se</p>
+</div>
+</footer>
+<script>
+(function(){
+  var f=document.getElementById('kontaktform'); if(!f) return;
+  var st=document.getElementById('formstatus'); var btn=f.querySelector('button[type=submit]');
+  var sel=document.getElementById('amne'), subj=document.getElementById('amne-subject');
+  function setSubj(){ subj.value='Ny förfrågan [ES]: '+sel.value+' – nordicmargins.se'; }
+  sel.addEventListener('change',setSubj); setSubj();
+  document.querySelectorAll('[data-amne]').forEach(function(a){ a.addEventListener('click',function(){ sel.value=a.getAttribute('data-amne'); setSubj(); }); });
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(!f.checkValidity()){ st.style.color='#8a3b12'; st.textContent='Indica tu nombre, restaurante o escuela y un correo electrónico válido.'; f.reportValidity(); return; }
+    btn.disabled=true; btn.textContent='Enviando…'; st.textContent='';
+    var data=Object.fromEntries(new FormData(f).entries());
+    fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
+      .then(function(r){return r.json();})
+      .then(function(j){
+        if(j.success){ f.reset(); setSubj(); st.style.color='#172321'; st.textContent='¡Gracias! Te responderemos en dos días laborables.'; btn.textContent='Enviado'; }
+        else { throw new Error(j.message||'fel'); }
+      })
+      .catch(function(){ st.style.color='#8a3b12'; st.textContent='Algo ha fallado. Escríbenos directamente a info@nordicmargins.se.'; btn.disabled=false; btn.textContent='Enviar'; });
+  });
+})();
+
+</script>
+<script>
+  window.REQUIRED_CODE_ERROR_MESSAGE = 'Elige un prefijo de país';
+  window.LOCALE = 'en';
+  window.EMAIL_INVALID_MESSAGE = window.SMS_INVALID_MESSAGE = "Algo no está bien. Comprueba que el correo electrónico es correcto e inténtalo de nuevo.";
+  window.REQUIRED_ERROR_MESSAGE = "Este campo es obligatorio.";
+  window.GENERIC_INVALID_MESSAGE = "Algo no está bien. Comprueba que el correo electrónico es correcto e inténtalo de nuevo.";
+  window.INVALID_NUMBER = "Algo no está bien. Revisa los datos e inténtalo de nuevo.";
+  window.INVALID_DATE = "Introduce una fecha válida";
+  window.REQUIRED_MULTISELECT_MESSAGE = 'Elige al menos una opción';
+  window.translation = { common: { selectedList: '{quantity} lista vald', selectedLists: '{quantity} listor valda', selectedOption: '{quantity} vald', selectedOptions: '{quantity} valda' } };
+  var AUTOHIDE = Boolean(0);
+</script>
+<script defer src="https://sibforms.com/forms/end-form/build/main.js"></script>
+</body>
+</html>

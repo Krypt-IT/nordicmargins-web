@@ -8,6 +8,11 @@
 <meta property="og:title" content="Nordic Margins – vet vad varje rätt tjänar">
 <meta property="og:description" content="Menyanalys för restauranger: kostnad och vinst per portion. Byggt av en kökschef.">
 <meta property="og:image" content="https://nordicmargins.se/icon-512.png">
+<link rel="alternate" hreflang="sv" href="https://nordicmargins.se/">
+<link rel="alternate" hreflang="en" href="https://nordicmargins.se/en/">
+<link rel="alternate" hreflang="es" href="https://nordicmargins.se/es/">
+<link rel="alternate" hreflang="ar" href="https://nordicmargins.se/ar/">
+<link rel="alternate" hreflang="x-default" href="https://nordicmargins.se/">
 <meta name="theme-color" content="#172321">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -131,6 +136,12 @@ footer{background:#101917;color:var(--linne)}
 .foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding-top:32px;padding-bottom:32px}
 .foot p{margin:0;font-size:13px;color:#b9b4a8}
 @media (max-width:640px){.links a:not(.btn){display:none}section{padding:64px 0}.offer{padding:28px}}
+.lang{font:inherit;font-size:14px;background:transparent;color:var(--linne);border:1px solid rgba(245,241,232,.4);border-radius:10px;padding:8px 10px;cursor:pointer}
+.lang option{color:#172321;background:#F5F1E8}
+[dir=rtl] .row span:not(:first-child){text-align:left}
+[dir=rtl] ul{padding-left:0;padding-right:20px}
+[lang=ar] body,[lang=ar] h1,[lang=ar] h2,[lang=ar] h3,[lang=ar] .sg,[lang=ar] input,[lang=ar] textarea,[lang=ar] select,[lang=ar] button{font-family:'Noto Sans Arabic','Space Grotesk',Inter,sans-serif!important}
+[lang=ar] .kicker,[lang=ar] .tag{letter-spacing:0}
 </style>
 <link rel="stylesheet" href="https://sibforms.com/forms/end-form/build/sib-styles.css">
 <script>
@@ -143,6 +154,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <nav class="wrap" aria-label="Huvudmeny">
 <a class="brand sg" href="/"><svg width="32" height="34" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>Nordic Margins</a>
 <div class="links">
+<select class="lang" aria-label="Språk" onchange="location.href=this.value"><option value="/" selected>Svenska</option><option value="/en/">English</option><option value="/es/">Español</option><option value="/ar/">العربية</option></select>
 <a href="#sa-funkar-det">Så funkar det</a>
 <a href="#erbjudande">Erbjudanden</a>
 <a href="#om">Om oss</a>
