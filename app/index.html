@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Marginal</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#172321">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: lugnt, praktiskt verktyg för köket – som ett riktigt lanserat appflöde
+   IDEA: en inventeringslista på en klippbräda i kylrummet
+   PICTURE: själva appen – lagervärdet stort överst, listan med stora +/- knappar
+   COLOUR and TYPE: Granskog #172321, Linne #F5F1E8, Mynta #C6F0D0; Space Grotesk + Inter
+   LAYOUT: en mobilkolumn, flikar i botten, fungerar likadant på dator */
+:root{color-scheme:light dark;
+--bg:light-dark(#F5F1E8,#0f1716);--card:light-dark(#fffdf8,#18221f);--ink:light-dark(#172321,#eef2ec);
+--soft:light-dark(#5b6763,#a4b1ac);--line:light-dark(#e2dccd,#2a3632);--g:#172321;--m:#C6F0D0;
+--ok:light-dark(#1f7a4d,#7fe0a6);--warn:light-dark(#a86400,#ffc46b);--bad:light-dark(#b3261e,#ff8a80)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif;overflow-x:clip}
+.app{max-width:520px;margin:0 auto;min-height:100vh;padding-bottom:96px}
+header{background:var(--g);color:#F5F1E8;padding:18px 18px 22px}
+.top{display:flex;align-items:center;gap:10px}
+.top svg{width:26px;height:28px;flex:none}
+.top b{font:700 20px 'Space Grotesk',sans-serif}
+.demo{margin-left:auto;font-size:12px;background:rgba(198,240,208,.15);color:var(--m);padding:4px 10px;border-radius:99px}
+.hero{margin-top:18px}
+.hero small{display:block;color:#b9c6c0;font-size:14px}
+.hero .big{font:700 clamp(36px,11vw,48px)/1.05 'Space Grotesk',sans-serif;color:var(--m);white-space:nowrap}
+.hero .sub{font-size:14px;color:#d6dfd9;margin-top:4px}
+h2{font:700 22px/1.15 'Space Grotesk',sans-serif;margin:0 0 4px}
+.pad{padding:18px}
+.hint{color:var(--soft);font-size:14px;margin:0 0 14px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:14px 18px 4px;scrollbar-width:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:10px 16px;font:500 15px Inter,sans-serif;min-height:44px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--g);color:#F5F1E8;border-color:var(--g)}
+.list{margin:0 18px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 14px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.nm{font-weight:600}.meta{font-size:13px;color:var(--soft);white-space:nowrap}
+.ctr{display:flex;align-items:center;gap:6px}
+.ctr button{width:44px;height:44px;border-radius:12px;border:0;background:var(--m);color:#172321;font:700 22px Inter,sans-serif;cursor:pointer}
+.ctr input{width:64px;height:44px;text-align:center;font:600 16px Inter,sans-serif;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #6fcf97;outline-offset:2px}
+.dish{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 18px 12px}
+.dish-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.pct{font:700 26px 'Space Grotesk',sans-serif;white-space:nowrap}
+.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+.bar{height:10px;background:var(--line);border-radius:99px;margin:10px 0 8px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:13px;color:var(--soft)}
+.kv b{display:block;color:var(--ink);font-size:16px;white-space:nowrap}
+details{margin-top:10px;font-size:14px}summary{cursor:pointer;color:var(--soft);min-height:32px}
+details table{width:100%;border-collapse:collapse;margin-top:6px}
+details td{padding:4px 0;border-top:1px solid var(--line)}details td+td{text-align:right;white-space:nowrap}
+label{display:block;font-size:13px;color:var(--soft);margin-bottom:4px}
+.f{width:100%;height:44px;font:16px Inter,sans-serif;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.btn{height:48px;border:0;border-radius:12px;background:var(--g);color:#F5F1E8;font:600 16px Inter,sans-serif;padding:0 18px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--soft);border:1px solid var(--line)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 18px 12px}
+.sum{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);gap:10px}
+.sum:first-of-type{border-top:0}.sum b{white-space:nowrap}
+.cmp{margin:6px 0 14px}.cmp .lbl{display:flex;justify-content:space-between;font-size:14px}
+.cmp .bar{height:18px}
+.gap{background:var(--g);color:#F5F1E8;border-radius:14px;padding:16px;margin:0 18px 12px}
+.gap .big{font:700 32px/1.1 'Space Grotesk',sans-serif;color:var(--m)}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav div{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+nav button{background:none;border:0;color:var(--soft);font:500 13px Inter,sans-serif;padding:10px 4px 12px;min-height:60px;cursor:pointer}
+nav button svg{display:block;margin:0 auto 4px;width:22px;height:22px}
+nav button[aria-current=true]{color:var(--ink);font-weight:600}
+nav button[aria-current=true] svg{color:#1f7a4d}
+.exp{margin:0 18px 14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.exp .row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.exp .btn{width:100%}
+.msg{font-size:13px;color:var(--soft);margin:8px 0 0;min-height:1em}
+.scan{margin:0 18px 12px}
+.scanbtn{width:100%;height:56px;border:0;border-radius:14px;background:var(--m);color:#172321;font:700 17px 'Space Grotesk',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer}
+.scanbtn svg{width:24px;height:24px}
+.link{background:none;border:0;color:var(--soft);font:14px Inter,sans-serif;text-decoration:underline;padding:10px 0;min-height:44px;cursor:pointer}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px}
+.flash{animation:fl 1.2s ease}@keyframes fl{0%{background:var(--m)}100%{background:transparent}}
+.live{position:fixed;inset:0;background:#000;z-index:50;display:flex;flex-direction:column}
+.live video{flex:1;width:100%;height:100%;object-fit:cover}
+.live .frame{position:absolute;left:10%;right:10%;top:35%;height:22%;border:3px solid var(--m);border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,.35)}
+.live .bar2{position:absolute;left:0;right:0;bottom:0;padding:16px 18px calc(16px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.8));color:#fff}
+.live .toast{font:600 17px Inter,sans-serif;min-height:26px;margin-bottom:12px;text-align:center}
+.live .top2{position:absolute;top:0;left:0;right:0;padding:calc(14px + env(safe-area-inset-top)) 18px 14px;color:#fff;font-size:15px;text-align:center;background:linear-gradient(rgba(0,0,0,.7),transparent)}
+.foot{font-size:12px;color:var(--soft);text-align:center;padding:16px 18px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .4s ease}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="top">
+    <svg viewBox="0 0 60 64" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg>
+    <b>Marginal</b><span class="demo">Beta</span>
+  </div>
+  <div class="hero" id="hero"></div>
+</header>
+
+<section id="v-inv">
+  <div class="chips" id="locs"></div>
+  <p class="hint pad" style="padding-bottom:0;margin-bottom:10px">Skanna en vara eller räkna med + och −. Lagervärdet uppdateras direkt.</p>
+  <div class="scan">
+    <button class="scanbtn" id="scanBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V4h3M18 4h3v3M21 17v3h-3M6 20H3v-3"/><path d="M7 8v8M10 8v8M13 8v8M16 8v8"/></svg>Skanna vara</button>
+    <input id="cam" type="file" accept="image/*" capture="environment" hidden>
+    <button class="link" id="manBtn" type="button">Skriv in streckkoden i stället</button>
+    <div class="panel" id="manPanel" hidden><label for="manCode">Streckkod</label><div class="row2" style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px"><input class="f" id="manCode" inputmode="numeric" placeholder="T.ex. 7310865004703"><button class="btn" id="manGo" type="button">OK</button></div></div>
+    <div class="panel" id="newPanel" hidden>
+      <b>Ny vara</b><p class="hint" style="margin:2px 0 10px">Streckkod <span id="newCode"></span>. Fyll i en gång, sedan känns varan igen nästa gång.</p>
+      <label for="sName">Namn</label><input class="f" id="sName">
+      <div class="grid2" style="margin-top:10px"><div><label for="sUnit">Enhet</label><select class="f" id="sUnit"><option>st</option><option>kg</option><option>l</option><option>flaska</option><option>förp</option></select></div>
+      <div><label for="sPrice">Pris per enhet (kr)</label><input class="f" id="sPrice" type="number" step="0.1" min="0"></div></div>
+      <label for="sLoc" style="margin-top:10px">Lagerplats</label><select class="f" id="sLoc"></select>
+      <div class="grid2" style="margin-top:12px"><button class="btn" id="sSave" type="button">Spara</button><button class="btn ghost" id="sCancel" type="button">Avbryt</button></div>
+    </div>
+    <p class="msg" id="scanMsg" role="status"></p>
+  </div>
+  <div class="list" id="invList"></div>
+  <div class="exp" style="margin-top:14px">
+    <h2 style="font-size:18px">Skicka inventeringen</h2>
+    <p class="hint" style="margin:0 0 10px">Ladda ner inventeringen som PDF eller Excel.</p>
+    <label for="rest">Restaurangens namn</label><input class="f" id="rest" placeholder="T.ex. Restaurang Granen">
+    <div class="row2"><button class="btn" id="pdfBtn" type="button">Ladda ner PDF</button><button class="btn ghost" id="csvBtn" type="button">Excel (CSV)</button></div>
+    <p class="msg" id="msg" role="status"></p>
+  </div>
+</section>
+
+<section id="v-items" hidden>
+  <div class="pad"><h2>Råvaror</h2><p class="hint">Ändra ett pris så räknas alla rätter om.</p></div>
+  <div class="list" id="itemList"></div>
+  <div class="box" style="margin-top:14px">
+    <h2 style="font-size:18px;margin-bottom:12px">Lägg till råvara</h2>
+    <form id="addForm">
+      <label for="nName">Namn</label><input class="f" id="nName" required placeholder="T.ex. Crème fraiche">
+      <div class="grid2" style="margin-top:10px">
+        <div><label for="nUnit">Enhet</label><select class="f" id="nUnit"><option>kg</option><option>l</option><option>st</option><option>flaska</option><option>knippe</option></select></div>
+        <div><label for="nPrice">Pris per enhet (kr)</label><input class="f" id="nPrice" type="number" step="0.1" min="0" required></div>
+      </div>
+      <label for="nLoc" style="margin-top:10px">Lagerplats</label><select class="f" id="nLoc"></select>
+      <button class="btn" style="margin-top:14px;width:100%">Lägg till</button>
+    </form>
+  </div>
+</section>
+
+<section id="v-menu" hidden>
+  <div class="pad"><h2>Meny</h2><p class="hint">Food cost per tallrik, räknat på dagens priser i lagret. Priser inkl. 12 % moms.</p></div>
+  <div id="menuList"></div>
+</section>
+
+<section id="v-rep" hidden>
+  <div class="pad"><h2>Månadsrapport</h2><p class="hint">Vad som borde ha gått åt enligt recepten, jämfört med vad som faktiskt gick åt.</p></div>
+  <div class="box">
+    <div class="grid2">
+      <div><label for="ib">Ingående lager (kr)</label><input class="f" id="ib" type="number" min="0"></div>
+      <div><label for="buy">Inköp under månaden (kr)</label><input class="f" id="buy" type="number" min="0"></div>
+    </div>
+  </div>
+  <div class="box" id="repSum"></div>
+  <div class="box" id="repCmp"></div>
+  <div class="gap" id="repGap"></div>
+</section>
+
+<div class="live" id="live" hidden>
+  <video id="vid" playsinline muted autoplay></video>
+  <div class="frame"></div>
+  <div class="top2" id="liveLoc">Skannar</div>
+  <div class="bar2"><div class="toast" id="toast">Håll streckkoden i rutan</div><button class="btn" id="liveDone" type="button" style="width:100%;background:var(--m);color:#172321">Klar</button></div>
+</div>
+<p class="foot">Påhittade exempelsiffror. Det du ändrar sparas bara i den här webbläsaren.<br><button class="btn ghost" id="reset" style="margin-top:10px;height:44px">Återställ demo</button></p>
+</div>
+
+<nav><div id="tabs">
+  <button data-v="inv" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>Inventera</button>
+  <button data-v="items"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg>Råvaror</button>
+  <button data-v="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M9 3h6"/></svg>Meny</button>
+  <button data-v="rep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Rapport</button>
+</div></nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
+<script>
+{
+const LOCS=['Kyl','Frys','Torrförråd','Bar'];
+const SEED={
+ items:[
+  {id:'lax',n:'Laxfilé',u:'kg',p:189,l:'Kyl',c:6},
+  {id:'gra',n:'Grädde 36 %',u:'l',p:42,l:'Kyl',c:12},
+  {id:'smo',n:'Smör',u:'kg',p:98,l:'Kyl',c:8},
+  {id:'agg',n:'Ägg',u:'st',p:3.2,l:'Kyl',c:120},
+  {id:'cit',n:'Citron',u:'st',p:5,l:'Kyl',c:30},
+  {id:'dil',n:'Dill',u:'knippe',p:18,l:'Kyl',c:10},
+  {id:'oxf',n:'Oxfilé',u:'kg',p:459,l:'Frys',c:4},
+  {id:'kyc',n:'Kycklinglårfilé',u:'kg',p:119,l:'Frys',c:10},
+  {id:'pom',n:'Pommes frites',u:'kg',p:32,l:'Frys',c:25},
+  {id:'pot',n:'Potatis',u:'kg',p:12,l:'Torrförråd',c:40},
+  {id:'ris',n:'Jasminris',u:'kg',p:28,l:'Torrförråd',c:15},
+  {id:'olj',n:'Olivolja',u:'l',p:95,l:'Torrförråd',c:6},
+  {id:'vin',n:'Rödvin (till sås)',u:'flaska',p:89,l:'Torrförråd',c:6}],
+ dishes:[
+  {n:'Lax med dillpotatis',price:289,sold:140,ing:[['lax',.2],['pot',.25],['smo',.03],['gra',.05],['dil',.2],['cit',.5]]},
+  {n:'Oxfilé med pommes och rödvinssås',price:349,sold:90,ing:[['oxf',.2],['pom',.2],['smo',.04],['vin',.1]]},
+  {n:'Krämig kyckling med ris',price:219,sold:160,ing:[['kyc',.2],['ris',.1],['gra',.1],['olj',.02]]}],
+ ib:11000,buy:26000};
+const KEY='marginal-demo-v1';
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.items)S=JSON.parse(JSON.stringify(SEED));
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+let loc='Alla',view='inv';
+const kr=(v,d=0)=>v.toLocaleString('sv-SE',{minimumFractionDigits:d,maximumFractionDigits:d})+' kr';
+const num=v=>v.toLocaleString('sv-SE',{maximumFractionDigits:2});
+const pc=v=>v.toLocaleString('sv-SE',{maximumFractionDigits:1});
+const byId=id=>S.items.find(i=>i.id===id);
+const stock=()=>S.items.reduce((a,i)=>a+i.p*i.c,0);
+const cost=d=>d.ing.reduce((a,[id,q])=>{const i=byId(id);return a+(i?i.p*q:0)},0);
+const ex=d=>d.price/1.12;
+const cls=p=>p<=30?'ok':p<=35?'warn':'bad';
+const col=p=>p<=30?'var(--ok)':p<=35?'var(--warn)':'var(--bad)';
+const $=id=>document.getElementById(id);
+
+function hero(){
+  const h={inv:[`Lagervärde ${loc==='Alla'?'totalt':'i '+loc.toLowerCase()}`,kr(S.items.filter(i=>loc==='Alla'||i.l===loc).reduce((a,i)=>a+i.p*i.c,0)),`${S.items.length} råvaror · senast räknat idag`],
+   items:['Lagervärde totalt',kr(stock()),`${S.items.length} råvaror i ${LOCS.length} lagerplatser`],
+   menu:(()=>{const t=S.dishes.reduce((a,d)=>a+cost(d)*d.sold,0),s=S.dishes.reduce((a,d)=>a+ex(d)*d.sold,0);return['Food cost för menyn',pc(t/s*100)+' %','Viktat efter hur mycket varje rätt säljer']})(),
+   rep:(()=>{const r=report();return['Faktisk food cost',pc(r.act)+' %',`Enligt recepten borde den vara ${pc(r.theo)} %`]})()}[view];
+  $('hero').innerHTML=`<small>${h[0]}</small><div class="big">${h[1]}</div><div class="sub">${h[2]}</div>`;
+}
+function inv(){
+  $('locs').innerHTML=['Alla',...LOCS].map(l=>`<button class="chip" aria-pressed="${l===loc}" data-l="${l}">${l}</button>`).join('');
+  const list=S.items.filter(i=>loc==='Alla'||i.l===loc);
+  $('invList').innerHTML=list.map(i=>`<div class="row" id="r-${i.id}"><div><div class="nm">${i.n}</div><div class="meta">${kr(i.p,i.p<10?1:0)}/${i.u} · ${kr(i.p*i.c)}</div></div>
+   <div class="ctr"><button aria-label="En mindre ${i.n}" data-d="-1" data-id="${i.id}">−</button><input aria-label="Antal ${i.n} i ${i.u}" inputmode="decimal" value="${num(i.c)}" data-id="${i.id}"><button aria-label="En till ${i.n}" data-d="1" data-id="${i.id}">+</button></div></div>`).join('')||'<p class="pad hint">Inga råvaror här än.</p>';
+}
+function items(){
+  $('itemList').innerHTML=S.items.map(i=>`<div class="row"><div><div class="nm">${i.n}</div><div class="meta">${i.l} · i lager ${num(i.c)} ${i.u}</div></div>
+   <div class="ctr"><input style="width:88px" aria-label="Pris för ${i.n}" inputmode="decimal" value="${num(i.p)}" data-price="${i.id}"><span class="meta">kr/${i.u}</span></div></div>`).join('');
+  $('nLoc').innerHTML=LOCS.map(l=>`<option>${l}</option>`).join('');
+}
+function menu(){
+  $('menuList').innerHTML=S.dishes.map((d,k)=>{const c=cost(d),p=c/ex(d)*100;return`<div class="dish">
+   <div class="dish-h"><div class="nm">${d.n}</div><div class="pct ${cls(p)}">${pc(p)} %</div></div>
+   <div class="bar"><i style="width:${Math.min(p,100)}%;background:${col(p)}"></i></div>
+   <div class="kv"><div>Pris<b>${kr(d.price)}</b></div><div>Råvaror<b>${kr(c,2)}</b></div><div>Kvar/tallrik<b>${kr(ex(d)-c)}</b></div></div>
+   <details><summary>Visa receptet</summary><table>${d.ing.map(([id,q])=>{const i=byId(id);return i?`<tr><td>${i.n}, ${num(q)} ${i.u}</td><td>${kr(i.p*q,2)}</td></tr>`:''}).join('')}</table>
+   <div class="grid2" style="margin-top:10px"><div><label for="dp${k}">Pris inkl. moms</label><input class="f" id="dp${k}" type="number" value="${d.price}" data-dp="${k}"></div>
+   <div><label for="ds${k}">Sålda denna månad</label><input class="f" id="ds${k}" type="number" value="${d.sold}" data-ds="${k}"></div></div></details></div>`}).join('');
+}
+function report(){
+  const ub=stock(),use=S.ib+S.buy-ub,sales=S.dishes.reduce((a,d)=>a+ex(d)*d.sold,0),theoC=S.dishes.reduce((a,d)=>a+cost(d)*d.sold,0);
+  return{ub,use,sales,theoC,theo:theoC/sales*100,act:use/sales*100,gap:use-theoC};
+}
+function rep(){
+  const r=report();$('ib').value=S.ib;$('buy').value=S.buy;
+  $('repSum').innerHTML=[['Ingående lager',S.ib],['+ Inköp',S.buy],['− Utgående lager (inventeringen)',r.ub],['= Det som gick åt',r.use],['Försäljning exkl. moms',r.sales]].map(([a,b])=>`<div class="sum"><span>${a}</span><b>${kr(b)}</b></div>`).join('');
+  const mx=Math.max(r.theo,r.act,40);
+  $('repCmp').innerHTML=`<div class="cmp"><div class="lbl"><span>Enligt recepten</span><b>${pc(r.theo)} %</b></div><div class="bar"><i style="width:${r.theo/mx*100}%;background:var(--ok)"></i></div></div>
+   <div class="cmp"><div class="lbl"><span>Faktiskt</span><b class="${r.act-r.theo>3?'bad':'ok'}">${pc(r.act)} %</b></div><div class="bar"><i style="width:${r.act/mx*100}%;background:${r.act-r.theo>3?'var(--bad)':'var(--ok)'}"></i></div></div>`;
+  $('repGap').innerHTML=r.gap>0?`<small>Råvaror som försvann utan att säljas</small><div class="big">${kr(r.gap)}</div><p style="margin:8px 0 0;font-size:14px;color:#d6dfd9">Det kan vara svinn, för stora portioner eller felräknade leveranser. Börja med rätten som har högst food cost.</p>`:`<small>Bra jobbat</small><div class="big">Inget glapp</div><p style="margin:8px 0 0;font-size:14px;color:#d6dfd9">Det som gick åt stämmer med recepten.</p>`;
+}
+function render(){hero();({inv,items,menu,rep})[view]();}
+function show(v){view=v;for(const b of document.querySelectorAll('#tabs button'))b.setAttribute('aria-current',b.dataset.v===v);
+  for(const s of['inv','items','menu','rep'])$('v-'+s).hidden=s!==v;render();window.scrollTo(0,0);}
+const pn=v=>parseFloat(String(v).replace(/\s/g,'').replace(',','.'));
+
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.v)});
+$('locs').addEventListener('click',e=>{const b=e.target.closest('.chip');if(b){loc=b.dataset.l;render()}});
+$('invList').addEventListener('click',e=>{const b=e.target.closest('button[data-d]');if(!b)return;const i=byId(b.dataset.id);i.c=Math.max(0,Math.round((i.c+ +b.dataset.d)*100)/100);save();render()});
+$('invList').addEventListener('change',e=>{const t=e.target;if(t.dataset.id){const v=pn(t.value);if(!isNaN(v)&&v>=0)byId(t.dataset.id).c=v;save();render()}});
+$('itemList').addEventListener('change',e=>{const t=e.target;if(t.dataset.price){const v=pn(t.value);if(!isNaN(v)&&v>=0)byId(t.dataset.price).p=v;save();render()}});
+$('menuList').addEventListener('change',e=>{const t=e.target,v=pn(t.value);if(isNaN(v)||v<0)return;
+  if(t.dataset.dp)S.dishes[t.dataset.dp].price=v;if(t.dataset.ds)S.dishes[t.dataset.ds].sold=v;save();
+  const open=[...document.querySelectorAll('#menuList details')].map(d=>d.open);render();document.querySelectorAll('#menuList details').forEach((d,k)=>d.open=open[k])});
+for(const id of['ib','buy'])$(id).addEventListener('change',e=>{const v=pn(e.target.value);if(!isNaN(v)&&v>=0)S[id]=v;save();render()});
+$('addForm').addEventListener('submit',e=>{e.preventDefault();const p=pn($('nPrice').value);if(isNaN(p))return;
+  S.items.push({id:'x'+Date.now(),n:$('nName').value.trim(),u:$('nUnit').value,p,l:$('nLoc').value,c:0});save();e.target.reset();render()});
+$('reset').addEventListener('click',()=>{S=JSON.parse(JSON.stringify(SEED));save();loc='Alla';show('inv')});
+
+const today=()=>new Date().toLocaleDateString('sv-SE');
+const restName=()=>($('rest').value.trim()||'Restaurang');
+const slug=t=>t.toLowerCase().replace(/[åä]/g,'a').replace(/ö/g,'o').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+let dl=null;
+try{window.claude&&window.claude.use&&window.claude.use('downloads').then(d=>{dl=d}).catch(()=>{})}catch(e){}
+async function saveFile(name,blob){
+  const m=$('msg');m.textContent='';
+  if(dl){try{await dl.save({filename:name,data:blob});m.textContent='Filen är sparad.';return}
+    catch(e){if(e&&e.code==='declined'){m.textContent='Nedladdningen avbröts.';return}}}
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();m.textContent='Filen laddas ner.'}
+  catch(e){m.textContent='Nedladdning fungerar inte i den här vyn.'}
+}
+function pdf(){
+  if(!window.jspdf){$('msg').textContent='PDF-verktyget har inte laddats än. Försök igen om en stund.';return}
+  const doc=new window.jspdf.jsPDF({unit:'mm',format:'a4'});const R=restName();
+  const f=v=>v.toLocaleString('sv-SE',{minimumFractionDigits:2,maximumFractionDigits:2}).replace(/ /g,' ');
+  const n=v=>String(num(v)).replace(/ /g,' ');
+  doc.setFillColor(23,35,33);doc.rect(0,0,210,30,'F');
+  doc.setTextColor(245,241,232);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text('Inventering',15,14);
+  doc.setFont('helvetica','normal');doc.setFontSize(11);doc.text(R+'  |  '+today(),15,22);
+  doc.setTextColor(198,240,208);doc.setFontSize(9);doc.text('Marginal by Nordic Margins',195,22,{align:'right'});
+  doc.setTextColor(23,35,33);let y=42;
+  const cols=[[15,'Råvara','left'],[95,'Antal','right'],[110,'Enhet','left'],[155,'Pris/enhet','right'],[195,'Värde (kr)','right']];
+  const head=()=>{doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(91,103,99);cols.forEach(([x,t,a])=>doc.text(t,x,y,{align:a}));doc.setDrawColor(210,204,190);doc.line(15,y+2,195,y+2);y+=8;doc.setTextColor(23,35,33)};
+  const brk=()=>{if(y>275){doc.addPage();y=20;head()}};
+  let tot=0;
+  for(const L of LOCS){const it=S.items.filter(i=>i.l===L);if(!it.length)continue;
+    brk();doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text(L,15,y);y+=7;head();
+    let sub=0;doc.setFont('helvetica','normal');doc.setFontSize(10);
+    for(const i of it){brk();const v=i.p*i.c;sub+=v;doc.text(i.n,15,y);doc.text(n(i.c),95,y,{align:'right'});doc.text(i.u,110,y);doc.text(f(i.p),155,y,{align:'right'});doc.text(f(v),195,y,{align:'right'});y+=6.5}
+    doc.setFont('helvetica','bold');doc.text('Summa '+L.toLowerCase(),15,y);doc.text(f(sub),195,y,{align:'right'});y+=11;tot+=sub}
+  brk();doc.setDrawColor(23,35,33);doc.setLineWidth(.6);doc.line(15,y-4,195,y-4);
+  doc.setFontSize(13);doc.text('Totalt lagervärde',15,y+3);doc.text(f(tot)+' kr',195,y+3,{align:'right'});
+  y+=20;if(y>270){doc.addPage();y=30}
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setLineWidth(.2);
+  doc.text('Inventerat av:',15,y);doc.line(45,y,110,y);doc.text('Datum:',120,y);doc.line(135,y,195,y);
+  doc.setFontSize(8);doc.setTextColor(91,103,99);doc.text('Värden exkl. moms, beräknade på senaste inköpspris.',15,288);
+  saveFile('inventering-'+slug(R)+'-'+today()+'.pdf',doc.output('blob'));
+}
+function csv(){
+  const c=v=>String(v).replace('.',',');const q=t=>'"'+String(t).replace(/"/g,'""')+'"';
+  const lines=[['Restaurang',restName()].map(q).join(';'),['Datum',today()].map(q).join(';'),'',['Lagerplats','Råvara','Antal','Enhet','Pris per enhet (kr)','Värde (kr)'].map(q).join(';')];
+  let tot=0;for(const L of LOCS)for(const i of S.items.filter(x=>x.l===L)){const v=Math.round(i.p*i.c*100)/100;tot+=v;lines.push([q(L),q(i.n),c(i.c),q(i.u),c(i.p),c(v)].join(';'))}
+  lines.push('',[q('Totalt lagervärde'),'','','','',c(Math.round(tot*100)/100)].join(';'));
+  saveFile('inventering-'+slug(restName())+'-'+today()+'.csv',new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv'}));
+}
+$('rest').value=S.rest||'';
+$('rest').addEventListener('change',e=>{S.rest=e.target.value.trim();save()});
+$('pdfBtn').addEventListener('click',pdf);
+$('csvBtn').addEventListener('click',csv);
+
+let pendingCode=null;
+const sm=t=>{$('scanMsg').textContent=t};
+function handleCode(code){
+  code=String(code).replace(/\D/g,'');if(code.length<6){sm('Ogiltig streckkod.');return}
+  const it=S.items.find(i=>i.code===code);
+  if(it){it.c=Math.round((it.c+1)*100)/100;save();if(loc!=='Alla'&&loc!==it.l)loc=it.l;render();
+    sm(`${it.n} +1 (nu ${num(it.c)} ${it.u}).`);const r=$('r-'+it.id);if(r){r.classList.add('flash');r.scrollIntoView({block:'center',behavior:'smooth'})}return}
+  pendingCode=code;$('newCode').textContent=code;$('sLoc').innerHTML=LOCS.map(l=>`<option${l===loc?' selected':''}>${l}</option>`).join('');
+  $('newPanel').hidden=false;$('manPanel').hidden=true;sm('');$('sName').focus();
+}
+async function decode(file){
+  sm('Läser streckkoden …');
+  try{if('BarcodeDetector' in window){const bmp=await createImageBitmap(file);const r=await new BarcodeDetector().detect(bmp);if(r&&r[0]){handleCode(r[0].rawValue);return}}}catch(e){}
+  try{if(window.ZXing){const url=URL.createObjectURL(file);const res=await new ZXing.BrowserMultiFormatReader().decodeFromImageUrl(url);URL.revokeObjectURL(url);handleCode(res.getText());return}}catch(e){}
+  sm('Hittade ingen streckkod. Ta bilden närmare och rakt framifrån, eller skriv in koden.');
+}
+$('cam').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(f)decode(f);e.target.value=''});
+$('manBtn').addEventListener('click',()=>{$('manPanel').hidden=!$('manPanel').hidden;if(!$('manPanel').hidden)$('manCode').focus()});
+$('manGo').addEventListener('click',()=>{handleCode($('manCode').value);$('manCode').value=''});
+$('manCode').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('manGo').click()}});
+$('sCancel').addEventListener('click',()=>{$('newPanel').hidden=true;pendingCode=null});
+$('sSave').addEventListener('click',()=>{const n=$('sName').value.trim(),p=pn($('sPrice').value);
+  if(!n||isNaN(p)){sm('Fyll i namn och pris.');return}
+  const it={id:'x'+Date.now(),code:pendingCode,n,u:$('sUnit').value,p,l:$('sLoc').value,c:1};S.items.push(it);save();
+  $('newPanel').hidden=true;$('sName').value='';$('sPrice').value='';pendingCode=null;loc=it.l;render();sm(`${n} är tillagd i ${it.l.toLowerCase()} med antal 1.`);
+  const r=$('r-'+it.id);if(r){r.classList.add('flash');r.scrollIntoView({block:'center',behavior:'smooth'})}});
+
+let liveFailed=false,stream=null,zx=null,raf=0,lastCode='',lastAt=0,det=null;
+const canLive=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+function liveHit(code){
+  code=String(code).replace(/\D/g,'');const now=Date.now();
+  if(code.length<6||(code===lastCode&&now-lastAt<2500))return;lastCode=code;lastAt=now;
+  const it=S.items.find(i=>i.code===code);
+  if(it){it.c=Math.round((it.c+1)*100)/100;save();render();try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}
+    $('toast').textContent=`${it.n} +1 → ${num(it.c)} ${it.u}`;return}
+  stopLive();handleCode(code);
+}
+async function startLive(){
+  $('live').hidden=false;$('toast').textContent='Håll streckkoden i rutan';$('liveLoc').textContent='Skannar till: '+(loc==='Alla'?'valfri plats':loc.toLowerCase());
+  const v=$('vid');
+  try{
+    if('BarcodeDetector' in window){
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});v.srcObject=stream;await v.play();
+      det=new BarcodeDetector();let t=0;
+      const loop=async ts=>{raf=requestAnimationFrame(loop);if(ts-t<250||v.readyState<2)return;t=ts;try{const r=await det.detect(v);if(r&&r[0])liveHit(r[0].rawValue)}catch(e){}};
+      raf=requestAnimationFrame(loop);
+    }else if(window.ZXing){
+      zx=new ZXing.BrowserMultiFormatReader();
+      await zx.decodeFromConstraints({video:{facingMode:'environment'}},v,(res)=>{if(res)liveHit(res.getText())});
+    }else throw 0;
+  }catch(e){stopLive();liveFailed=true;sm('Live-kameran går inte att använda här. Tryck på Skanna vara igen för att ta en bild.')}
+}
+function stopLive(){cancelAnimationFrame(raf);raf=0;
+  try{zx&&zx.reset()}catch(e){}zx=null;
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+  const v=$('vid');try{v.pause();v.srcObject=null}catch(e){}$('live').hidden=true;}
+$('scanBtn').addEventListener('click',()=>{if(canLive&&!liveFailed)startLive();else $('cam').click()});
+$('liveDone').addEventListener('click',()=>{stopLive();sm('')});
+render();
+}
+</script>
+</body>
+</html>
