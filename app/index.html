@@ -108,6 +108,10 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 #langS .langsw{justify-content:flex-start;margin-top:4px}
 .langsw button{background:none;border:0;color:var(--soft);font:500 15px Inter,sans-serif;min-height:44px;padding:0 6px;cursor:pointer}
 .langsw button[aria-pressed=true]{color:var(--ink);font-weight:600;text-decoration:underline}
+.splash{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:60}
+.splash svg{stroke:light-dark(#172321,#C6F0D0);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.splash svg{animation:none}}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;margin:18px 0 16px}
 .seg button{height:40px;border:0;border-radius:9px;background:none;color:var(--soft);font:600 15px Inter,sans-serif;cursor:pointer}
 .seg button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
@@ -124,11 +128,12 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 </style>
 </head>
 <body>
-<div class="authwrap" id="auth">
+<div class="splash" id="splash" aria-label="Laddar"><svg viewBox="0 0 60 64" fill="none" stroke-width="6" stroke-linecap="square" width="56" height="60"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg></div>
+<div class="authwrap" id="auth" hidden>
   <div class="authcard">
     <svg viewBox="0 0 60 64" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square" width="44" height="47"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg>
     <h1>Marginal</h1>
-    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v4</span></p>
+    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v4.1</span></p>
     <div class="seg" role="tablist"><button type="button" id="mLogin" aria-pressed="true">Logga in</button><button type="button" id="mSignup" aria-pressed="false">Skapa konto</button></div>
     <form id="authForm">
       <label for="aEmail">E-post</label><input class="f" id="aEmail" type="email" autocomplete="email" required>
@@ -418,7 +423,7 @@ const sn=s=>LANG==='en'&&SEED_EN[s]?SEED_EN[s]:s;
 function langSwitch(){return`<div class="langsw"><button type="button" data-lang="sv" aria-pressed="${LANG==='sv'}">Svenska</button><span aria-hidden="true">·</span><button type="button" data-lang="en" aria-pressed="${LANG==='en'}">English</button></div>`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(!b)return;try{localStorage.setItem('marginal-lang',b.dataset.lang)}catch(err){}location.reload()});
 
-if(!window.supabase){$('aMsg').textContent='Kunde inte ansluta till servern. Kontrollera internet och ladda om sidan.';throw new Error('supabase saknas')}
+if(!window.supabase){$('splash').hidden=true;$('auth').hidden=false;$('aMsg').textContent='Kunde inte ansluta till servern. Kontrollera internet och ladda om sidan.';throw new Error('supabase saknas')}
 const sb=window.supabase.createClient('https://pquyhrbogqmmtjvwjhkd.supabase.co','sb_publishable_-Y8eFxapLaflPq16dm43gw_APtApYL4',{auth:{persistSession:true,autoRefreshToken:true}});
 window.addEventListener('unhandledrejection',e=>{const t='Fel: '+((e.reason&&e.reason.message)||e.reason);if(!$('auth').hidden)$('aMsg').textContent=t;else if(!$('setup').hidden)$('sMsg').textContent=t;else $('sync').textContent=' · '+t});
 const LOCS=['Kyl','Frys','Torrförråd','Bar'];
@@ -466,7 +471,7 @@ async function seed(){
 
 /* ---------- inloggning ---------- */
 const am=t=>{$('aMsg').textContent=t};
-function screen(w){$('auth').hidden=w!=='auth';$('setup').hidden=w!=='setup';$('app').hidden=w!=='app';$('nav').hidden=w!=='app'}
+function screen(w){$('splash').hidden=true;$('auth').hidden=w!=='auth';$('setup').hidden=w!=='setup';$('app').hidden=w!=='app';$('nav').hidden=w!=='app'}
 let recovering=false;
 async function afterLogin(session){
   ME=(session.user.email||'').toLowerCase();$('who').textContent=ME;
@@ -508,6 +513,7 @@ $('sEmpty').addEventListener('click',async()=>{await load();screen('app');show('
 async function logout(){await sb.auth.signOut();RID=null;S={items:[],dishes:[],ib:0,buy:0,rest:'',hist:[]};screen('auth')}
 $('logout').addEventListener('click',logout);$('sLogout').addEventListener('click',logout);
 sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){recovering=true;screen('auth');$('aLogin').textContent='Spara nytt lösenord';am('Skriv ett nytt lösenord och tryck på knappen.')}});
+setTimeout(()=>{if(!$('splash').hidden)screen('auth')},8000);
 (async()=>{const {data}=await sb.auth.getSession();if(data.session&&!location.hash.includes('type=recovery'))afterLogin(data.session);else screen('auth')})();
 
 /* ---------- vyer ---------- */
