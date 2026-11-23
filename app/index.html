@@ -104,6 +104,10 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 .authcard a,.box a{color:inherit}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) .authcard svg{stroke:#C6F0D0}:root:not([data-theme=light]) .btn:not(.ghost){background:#C6F0D0;color:#172321}}
 :root[data-theme=dark] .authcard svg{stroke:#C6F0D0}:root[data-theme=dark] .btn:not(.ghost){background:#C6F0D0;color:#172321}
+.langsw{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:14px;color:var(--soft)}
+#langS .langsw{justify-content:flex-start;margin-top:4px}
+.langsw button{background:none;border:0;color:var(--soft);font:500 15px Inter,sans-serif;min-height:44px;padding:0 6px;cursor:pointer}
+.langsw button[aria-pressed=true]{color:var(--ink);font-weight:600;text-decoration:underline}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;margin:18px 0 16px}
 .seg button{height:40px;border:0;border-radius:9px;background:none;color:var(--soft);font:600 15px Inter,sans-serif;cursor:pointer}
 .seg button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
@@ -124,7 +128,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
   <div class="authcard">
     <svg viewBox="0 0 60 64" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square" width="44" height="47"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg>
     <h1>Marginal</h1>
-    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v3.2</span></p>
+    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v4</span></p>
     <div class="seg" role="tablist"><button type="button" id="mLogin" aria-pressed="true">Logga in</button><button type="button" id="mSignup" aria-pressed="false">Skapa konto</button></div>
     <form id="authForm">
       <label for="aEmail">E-post</label><input class="f" id="aEmail" type="email" autocomplete="email" required>
@@ -134,6 +138,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
       <button class="link" type="button" id="aForgot">Glömt lösenordet?</button>
     </form>
     <p class="msg" id="aMsg" role="status"></p>
+    <div id="langA"></div>
   </div>
 </div>
 
@@ -177,7 +182,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
     <div class="panel" id="newPanel" hidden>
       <b>Ny vara</b><p class="hint" style="margin:2px 0 10px">Streckkod <span id="newCode"></span>. Fyll i en gång, sedan känns varan igen nästa gång.</p>
       <label for="sName">Namn</label><input class="f" id="sName">
-      <div class="grid2" style="margin-top:10px"><div><label for="sUnit">Enhet i recept</label><select class="f" id="sUnit"><option>st</option><option>kg</option><option>l</option><option>flaska</option><option>förp</option></select></div>
+      <div class="grid2" style="margin-top:10px"><div><label for="sUnit">Enhet i recept</label><select class="f" id="sUnit"><option value="st">st</option><option value="kg">kg</option><option value="l">l</option><option value="flaska">flaska</option><option value="förp">förp</option></select></div>
       <div><label for="sPrice">Pris per enhet (kr)</label><input class="f" id="sPrice" inputmode="decimal"></div></div>
       <div class="grid2" style="margin-top:10px"><div><label for="sPack">Förpackningen innehåller</label><input class="f" id="sPack" inputmode="decimal" placeholder="T.ex. 12 (valfritt)"></div>
       <div><label for="sLoc">Lagerplats</label><select class="f" id="sLoc"></select></div></div>
@@ -205,7 +210,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
     <form id="addForm">
       <label for="nName">Namn</label><input class="f" id="nName" required placeholder="T.ex. Ägg">
       <div class="grid2" style="margin-top:10px">
-        <div><label for="nUnit">Enhet</label><select class="f" id="nUnit"><option>kg</option><option>l</option><option>st</option><option>flaska</option><option>förp</option><option>knippe</option></select></div>
+        <div><label for="nUnit">Enhet</label><select class="f" id="nUnit"><option value="kg">kg</option><option value="l">l</option><option value="st">st</option><option value="flaska">flaska</option><option value="förp">förp</option><option value="knippe">knippe</option></select></div>
         <div><label for="nPrice">Pris per enhet (kr)</label><input class="f" id="nPrice" inputmode="decimal" required></div>
       </div>
       <label for="nLoc" style="margin-top:10px">Lagerplats</label><select class="f" id="nLoc"></select>
@@ -257,6 +262,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
     <p class="msg" id="setMsg" role="status"></p>
   </div>
   <div class="box">
+    <div style="margin-bottom:10px"><b>Språk</b><div id="langS"></div></div>
     <a href="/app/villkor.html" target="_blank">Användarvillkor</a> · <a href="/app/integritet.html" target="_blank">Integritetspolicy</a><br>
     <span class="hint" style="font-size:13px">Frågor eller radera konto: info@nordicmargins.se</span>
   </div>
@@ -284,10 +290,139 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 <script>
 {
 const $=id=>document.getElementById(id);
+/* ---------- språk ---------- */
+let LANG='sv';
+try{LANG=localStorage.getItem('marginal-lang')||((navigator.language||'sv').toLowerCase().startsWith('sv')?'sv':'en')}catch(e){}
+if(LANG!=='en')LANG='sv';
+document.documentElement.lang=LANG;
+const EN={
+'Lager, inventering och food cost för restaurangkök.':'Stock, inventory counts and food cost for restaurant kitchens.',
+'Logga in':'Log in','Skapa konto':'Create account','E-post':'Email','Lösenord':'Password','(minst 8 tecken)':'(at least 8 characters)',
+'Jag godkänner':'I accept the','användarvillkoren':'terms of use','och':'and','integritetspolicyn':'privacy policy',
+'Glömt lösenordet?':'Forgot your password?','Välkommen!':'Welcome!',
+'Vad heter restaurangen? Ska du jobba i en restaurang som redan använder Marginal, be ägaren bjuda in din e-post i stället.':'What is the restaurant called? If you work at a restaurant that already uses Marginal, ask the owner to invite your email instead.',
+'Restaurangens namn':'Restaurant name','T.ex. Restaurang Granen':'E.g. The Spruce Kitchen','Skapa restaurang':'Create restaurant',
+'Jag har blivit inbjuden – kolla igen':'I have been invited – check again',
+'Vill du börja med exempelvaror och tre exempelrätter för att se hur det fungerar? Du kan ta bort dem när som helst.':'Would you like to start with sample items and three sample dishes to see how it works? You can delete them at any time.',
+'Ja, visa exempel':'Yes, show examples','Börja tomt':'Start empty','Logga ut':'Log out','Beta':'Beta',
+'Restaurang och personal':'Restaurant and staff',
+'Skanna en vara eller räkna med + och −. Allt sparas direkt.':'Scan an item or count with + and −. Everything is saved instantly.',
+'Skanna vara':'Scan item','Skriv in streckkoden i stället':'Type the barcode instead','Streckkod':'Barcode','T.ex. 7310865004703':'E.g. 7310865004703','OK':'OK',
+'Ny vara':'New item','. Fyll i en gång, sedan känns varan igen nästa gång.':'. Fill in once – next time the item is recognised.',
+'Namn':'Name','Enhet i recept':'Unit in recipes','Pris per enhet (kr)':'Price per unit (kr)','Förpackningen innehåller':'One pack contains','T.ex. 12 (valfritt)':'E.g. 12 (optional)',
+'Lagerplats':'Storage area','Fyller du i förpackningen räknas en hel förpackning för varje skanning.':'If you fill in the pack size, each scan counts one whole pack.',
+'Spara':'Save','Avbryt':'Cancel','Klar med inventeringen?':'Done counting?','Spara den i historiken och ladda ner den som PDF eller Excel.':'Save it to the history and download it as PDF or Excel.',
+'Spara dagens inventering':"Save today's count",'Ladda ner PDF':'Download PDF','Excel (CSV)':'Excel (CSV)',
+'Råvaror':'Items','Tryck på en vara för att ändra pris, förpackning, leverantör och beställningsnivå.':'Tap an item to change price, pack size, supplier and reorder level.',
+'Lägg till råvara utan streckkod':'Add item without barcode','T.ex. Ägg':'E.g. Eggs','Enhet':'Unit','Lägg till':'Add',
+'Meny':'Menu','Food cost per tallrik, räknat på dagens priser i lagret. Priser inkl. 12 % moms.':"Food cost per plate, based on today's stock prices. Prices incl. 12 % VAT.",
+'Ny rätt':'New dish','T.ex. Fish and chips':'E.g. Fish and chips','Pris inkl. moms':'Price incl. VAT','Lägg till rätt':'Add dish',
+'Månadsrapport':'Monthly report','Vad som borde ha gått åt enligt recepten, jämfört med vad som faktiskt gick åt.':'What should have been used according to the recipes, compared with what was actually used.',
+'Ingående lager (kr)':'Opening stock (kr)','Inköp under månaden (kr)':'Purchases this month (kr)',
+'Sparade inventeringar':'Saved counts','Tryck på en inventering för att ladda ner den eller använda den som ingående lager.':'Tap a count to download it or use it as opening stock.',
+'Personal':'Staff','Bjud in med e-post':'Invite by email','kock@exempel.se':'chef@example.com','Bjud in':'Invite',
+'Personen skapar sedan ett konto på nordicmargins.se/app med samma e-post och kommer direkt in i din restaurang.':'The person then creates an account at nordicmargins.se/app with the same email and goes straight into your restaurant.',
+'Användarvillkor':'Terms of use','Integritetspolicy':'Privacy policy','Frågor eller radera konto: info@nordicmargins.se':'Questions or delete account: info@nordicmargins.se',
+'Skannar':'Scanning','Håll streckkoden i rutan':'Hold the barcode inside the frame','Klar':'Done',
+'Inventera':'Count','Rapport':'Report','Alla':'All','Kyl':'Fridge','Frys':'Freezer','Torrförråd':'Dry store','Bar':'Bar',
+'Lagervärde totalt':'Total stock value','Food cost för menyn':'Menu food cost','Viktat efter hur mycket varje rätt säljer':'Weighted by how much each dish sells',
+'Faktisk food cost':'Actual food cost','Restaurang':'Restaurant','Ägare':'Owner',
+'Inga råvaror här än. Skanna en vara för att börja.':'No items here yet. Scan an item to get started.','Inga råvaror än.':'No items yet.',
+'Att beställa':'To order','Inget just nu. Sätt en beställningsnivå på varorna, så hamnar de här när de börjar ta slut.':'Nothing right now. Set a reorder level on your items and they will show up here when they run low.',
+'Ingen leverantör':'No supplier','Dela beställningslistan':'Share the order list','Ändra ›':'Edit ›',
+'Förpackning heter':'Pack is called','T.ex. kartong':'E.g. carton','T.ex. 12':'E.g. 12','…eller pris per förpackning (räknar om priset ovan)':'…or price per pack (recalculates the price above)','T.ex. 504':'E.g. 504',
+'Leverantör':'Supplier','T.ex. Menigo':'E.g. Menigo','Stäng':'Close','Ta bort varan':'Delete item',
+'Pris':'Price','Råvarukost':'Ingredients','Valfri plats':'Any area','Kvar/tallrik':'Left/plate','Recept och inställningar':'Recipe and settings','Inga ingredienser än.':'No ingredients yet.',
+'Mängd':'Qty','Mängd per portion, i varans enhet (t.ex. 0,2 kg).':"Amount per portion, in the item's unit (e.g. 0.2 kg).",'Sålda denna månad':'Sold this month','Ta bort rätten':'Delete dish',
+'Ingående lager':'Opening stock','+ Inköp':'+ Purchases','− Utgående lager (inventeringen)':'− Closing stock (the count)','= Det som gick åt':'= Used','Försäljning exkl. moms':'Sales excl. VAT',
+'Lägg in rätter och hur många som sålts under Meny, så räknas jämförelsen ut.':'Add dishes and how many were sold under Menu, and the comparison is calculated.',
+'Enligt recepten':'According to recipes','Faktiskt':'Actual','Råvaror som försvann utan att säljas':'Stock that disappeared without being sold',
+'Det kan vara svinn, för stora portioner eller felräknade leveranser. Börja med rätten som har högst food cost.':'It may be waste, oversized portions or miscounted deliveries. Start with the dish that has the highest food cost.',
+'Bra jobbat':'Well done','Inget glapp':'No gap','Det som gick åt stämmer med recepten.':'What was used matches the recipes.',
+'Inga sparade inventeringar än. Tryck på "Spara dagens inventering" under Inventera.':'No saved counts yet. Tap "Save today\'s count" under Count.',
+'Ladda ner PDF ':'Download PDF','Använd som ingående lager':'Use as opening stock',
+'(okänd)':'(unknown)','Inbjuden – har inte loggat in än':'Invited – has not logged in yet','Ta bort':'Remove','Säker?':'Sure?','Tryck igen för att ta bort':'Tap again to delete',
+'Bekräfta din e-post först – kolla inkorgen och skräpposten.':'Confirm your email first – check your inbox and spam folder.','Fel e-post eller lösenord.':'Wrong email or password.',
+'Du behöver godkänna villkoren och integritetspolicyn för att skapa konto.':'You need to accept the terms and privacy policy to create an account.',
+'Fyll i e-post och ett lösenord på minst 8 tecken.':'Enter an email and a password of at least 8 characters.','Loggar in …':'Logging in …','Minst 8 tecken.':'At least 8 characters.',
+'Om kontot finns har vi skickat en länk för nytt lösenord.':'If the account exists, we have sent a link to set a new password.','Skapar konto …':'Creating account …',
+'Skriv ett nytt lösenord och tryck på knappen.':'Type a new password and press the button.','Skriv in din e-post först.':'Enter your email first.','Spara nytt lösenord':'Save new password',
+'Namnet är sparat.':'The name is saved.','Skriv en giltig e-post.':'Enter a valid email.','Borttagen.':'Removed.','Inbjudan avbruten.':'Invitation cancelled.',
+'Fyll i namn och pris.':'Enter name and price.','Hittade ingen streckkod. Ta bilden närmare och rakt framifrån, eller skriv in koden.':'No barcode found. Take the photo closer and straight on, or type the code.',
+'Live-kameran går inte att använda här. Tryck på Skanna vara igen för att ta en bild.':'The live camera cannot be used here. Tap Scan item again to take a photo.',
+'Läser streckkoden …':'Reading barcode …','Ogiltig streckkod.':'Invalid barcode.',
+'beställningslistan kopierad':'order list copied','kunde inte dela':'could not share','kunde inte spara – kontrollera internet':'could not save – check your connection',
+'sparar …':'saving …','sparat':'saved','kunde inte ta bort':'could not delete','borttagen':'deleted',
+'Avbrutet.':'Cancelled.','Filen laddas ner.':'Downloading.','Inventeringen är sparad under Rapport.':'The count is saved under Report.','Klart.':'Done.','Kollar …':'Checking …',
+'Kunde inte ansluta till servern. Kontrollera internet och ladda om sidan.':'Could not connect to the server. Check your connection and reload the page.',
+'Lägger in exempel …':'Adding examples …','Nedladdning fungerar inte i den här vyn.':'Download does not work in this view.',
+'PDF-verktyget har inte laddats än. Försök igen om en stund.':'The PDF tool has not loaded yet. Try again in a moment.','Skapar …':'Creating …','Skriv restaurangens namn.':'Enter the restaurant name.','Sparar …':'Saving …',
+'En mindre':'One less','En till':'One more','Råvara':'Item','Mängd per portion':'Amount per portion','Ta bort ':'Remove','Restaurang och personal ':'Restaurant and staff','Språk':'Language',
+/* PDF / CSV / delning */
+'Inventering':'Stock count','inventering':'stock-count','Antal':'Qty','Pris/enhet':'Price/unit','Värde (kr)':'Value (kr)','Summa':'Total','Totalt lagervärde':'Total stock value',
+'Inventerat av:':'Counted by:','Datum:':'Date:','Datum':'Date','Värden exkl. moms, beräknade på senaste inköpspris.':'Values excl. VAT, based on the latest purchase price.',
+'Pris per enhet (kr) ':'Price per unit (kr)','Beställning':'Order','valfri plats':'any area',
+/* enheter */
+'st':'pcs','förp':'pack','flaska':'bottle','knippe':'bunch','kg':'kg','l':'l'
+};
+const PAT=[
+[/^Lagervärde i (.+)$/,m=>`Stock value in the ${tr(cap(m[1])).toLowerCase()}`],
+[/^Senast sparad inventering (.+)$/,m=>`Last saved count ${m[1]}`],
+[/^(\d+) råvaror i (\d+) lagerplatser$/,m=>`${m[1]} items in ${m[2]} storage areas`],
+[/^(\d+) råvaror$/,m=>`${m[1]} items`],
+[/^(\d+) var(?:a|or) under beställningsnivån$/,m=>`${m[1]} item${m[1]==='1'?'':'s'} below reorder level`],
+[/^Enligt recepten borde den vara (.+)$/,m=>`According to the recipes it should be ${m[1]}`],
+[/^Pris per (.+) \(kr\)$/,m=>`Price per ${tr(m[1])} (kr)`],
+[/^Innehåller \((.+)\)$/,m=>`Contains (${tr(m[1])})`],
+[/^Beställ under \((.+)\)$/,m=>`Reorder below (${tr(m[1])})`],
+[/^Att beställa \((\d+)\)$/,m=>`To order (${m[1]})`],
+[/^(.+) mot förra$/,m=>`${m[1]} vs previous`],
+[/^Klart! Vi har skickat ett mejl till (.+)\. Klicka på länken i mejlet och logga sedan in här\.$/,m=>`Done! We have sent an email to ${m[1]}. Click the link in the email, then log in here.`],
+[/^Inloggad, men kunde inte hämta restaurangen: (.+)$/,m=>`Logged in, but could not load the restaurant: ${m[1]}`],
+[/^Kunde inte logga in: (.+)$/,m=>`Could not log in: ${m[1]}`],
+[/^Något gick fel: (.+)$/,m=>`Something went wrong: ${m[1]}`],
+[/^Kunde inte spara: (.+)$/,m=>`Could not save: ${m[1]}`],
+[/^Ingen inbjudan hittades för (.+)\.$/,m=>`No invitation found for ${m[1]}.`],
+[/^Inbjuden! Be (.+) skapa ett konto på nordicmargins\.se\/app med den e-posten\.$/,m=>`Invited! Ask ${m[1]} to create an account at nordicmargins.se/app with that email.`],
+[/^Skannar till: (.+)$/,m=>`Scanning into: ${tr(m[1])}`],
+[/^(.+) \+(\S+) (\S+) \(nu (\S+)\)\.$/,m=>`${m[1]} +${m[2]} ${tr(m[3])} (now ${m[4]}).`],
+[/^(.+) är tillagd i (.+)\.$/,m=>`${m[1]} was added to the ${tr(cap(m[2])).toLowerCase()}.`],
+[/^ · (.+)$/,m=>` · ${tr(m[1])}`],
+[/^Fel: (.+)$/,m=>`Error: ${m[1]}`]
+];
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const WORDS=/(^|[\s(·=+,])(st|förp|flaska|knippe|Kyl|Frys|Torrförråd)(?=$|[\s),·.])/g;
+function tr(t){
+  if(LANG!=='en'||t==null)return t;
+  const s=String(t),k=s.trim();if(!k)return s;
+  if(Object.prototype.hasOwnProperty.call(EN,k))return s.replace(k,EN[k]);
+  for(const [re,fn] of PAT){const m=k.match(re);if(m)return s.replace(k,fn(m))}
+  if(/[\d·=]/.test(k))return s.replace(WORDS,(a,p,w)=>p+EN[w]);
+  return s;
+}
+const SKIP=n=>{for(let e=n.parentElement;e;e=e.parentElement){if(e.classList&&(e.classList.contains('nm')||e.classList.contains('sup')))return true;if(e.id==='restName'||e.id==='who'||e.id==='newCode'||e.tagName==='SCRIPT'||e.tagName==='STYLE')return true}return false};
+function trNode(n){
+  if(n.nodeType===3){if(SKIP(n))return;const v=tr(n.nodeValue);if(v!==n.nodeValue)n.nodeValue=v;return}
+  if(n.nodeType!==1)return;
+  for(const a of['placeholder','aria-label']){const v=n.getAttribute&&n.getAttribute(a);if(v){const t=tr(v);if(t!==v)n.setAttribute(a,t)}}
+  for(const c of n.childNodes)trNode(c);
+}
+if(LANG==='en'){
+  trNode(document.body);
+  new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')trNode(m.target);else m.addedNodes.forEach(trNode)}}).observe(document.body,{childList:true,subtree:true,characterData:true});
+  document.querySelectorAll('a[href="/app/villkor.html"]').forEach(a=>a.href='/app/terms.html');
+  document.querySelectorAll('a[href="/app/integritet.html"]').forEach(a=>a.href='/app/privacy.html');
+}
+const SEED_EN={'Laxfilé':'Salmon fillet','Grädde 36 %':'Cream 36 %','Smör':'Butter','Ägg':'Eggs','Citron':'Lemon','Dill':'Dill','Oxfilé':'Beef tenderloin','Kycklinglårfilé':'Chicken thigh fillet','Pommes frites':'French fries','Potatis':'Potatoes','Jasminris':'Jasmine rice','Olivolja':'Olive oil','Rödvin (till sås)':'Red wine (for sauce)','Fiskgrossisten':'Fish wholesaler','Grossisten':'Wholesaler','Gården':'The farm','Köttgrossisten':'Meat wholesaler','Systembolaget':'Wine shop','Lax med dillpotatis':'Salmon with dill potatoes','Oxfilé med pommes och rödvinssås':'Beef tenderloin with fries and red wine sauce','Krämig kyckling med ris':'Creamy chicken with rice'};
+const sn=s=>LANG==='en'&&SEED_EN[s]?SEED_EN[s]:s;
+function langSwitch(){return`<div class="langsw"><button type="button" data-lang="sv" aria-pressed="${LANG==='sv'}">Svenska</button><span aria-hidden="true">·</span><button type="button" data-lang="en" aria-pressed="${LANG==='en'}">English</button></div>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(!b)return;try{localStorage.setItem('marginal-lang',b.dataset.lang)}catch(err){}location.reload()});
+
 if(!window.supabase){$('aMsg').textContent='Kunde inte ansluta till servern. Kontrollera internet och ladda om sidan.';throw new Error('supabase saknas')}
 const sb=window.supabase.createClient('https://pquyhrbogqmmtjvwjhkd.supabase.co','sb_publishable_-Y8eFxapLaflPq16dm43gw_APtApYL4',{auth:{persistSession:true,autoRefreshToken:true}});
 window.addEventListener('unhandledrejection',e=>{const t='Fel: '+((e.reason&&e.reason.message)||e.reason);if(!$('auth').hidden)$('aMsg').textContent=t;else if(!$('setup').hidden)$('sMsg').textContent=t;else $('sync').textContent=' · '+t});
 const LOCS=['Kyl','Frys','Torrförråd','Bar'];
+$('langA').innerHTML=langSwitch();$('langS').innerHTML=langSwitch();
 const SEED_ITEMS=[['lax','Laxfilé','kg',189,'Kyl',6,null,'Fiskgrossisten',3],['gra','Grädde 36 %','l',42,'Kyl',12,null,'Grossisten',6],['smo','Smör','kg',98,'Kyl',8,null,'Grossisten',4],['agg','Ägg','st',3.2,'Kyl',120,30,'Gården',60],['cit','Citron','st',5,'Kyl',30,null,'Grossisten',20],['dil','Dill','knippe',18,'Kyl',10,null,'Grossisten',5],['oxf','Oxfilé','kg',459,'Frys',4,null,'Köttgrossisten',3],['kyc','Kycklinglårfilé','kg',119,'Frys',10,null,'Köttgrossisten',5],['pom','Pommes frites','kg',32,'Frys',25,2.5,'Grossisten',10],['pot','Potatis','kg',12,'Torrförråd',40,10,'Grossisten',20],['ris','Jasminris','kg',28,'Torrförråd',15,5,'Grossisten',5],['olj','Olivolja','l',95,'Torrförråd',6,null,'Grossisten',2],['vin','Rödvin (till sås)','flaska',89,'Torrförråd',6,null,'Systembolaget',3]];
 const SEED_DISHES=[['Lax med dillpotatis',289,140,[['lax',.2],['pot',.25],['smo',.03],['gra',.05],['dil',.2],['cit',.5]]],['Oxfilé med pommes och rödvinssås',349,90,[['oxf',.2],['pom',.2],['smo',.04],['vin',.1]]],['Krämig kyckling med ris',219,160,[['kyc',.2],['ris',.1],['gra',.1],['olj',.02]]]];
 const MONTH=new Date().toISOString().slice(0,7);
@@ -322,8 +457,8 @@ async function load(){
   S.ib=c.data?+c.data.opening_stock:0;S.buy=c.data?+c.data.purchases:0;S.hist=h.data||[];
 }
 async function seed(){
-  const map={};const items=SEED_ITEMS.map(([k,n,u,p,l,c,ps,sup,min])=>{const id=uid();map[k]=id;return{id,n,u,p,l,c,ps,pk:ps?'förp':null,sup,min}});
-  const dishes=SEED_DISHES.map(([n,price,sold,ing])=>({id:uid(),n,price,sold,ing:ing.map(([k,q])=>[map[k],q])}));
+  const map={};const items=SEED_ITEMS.map(([k,n,u,p,l,c,ps,sup,min])=>{const id=uid();map[k]=id;return{id,n:sn(n),u,p,l,c,ps,pk:ps?'förp':null,sup:sn(sup),min}});
+  const dishes=SEED_DISHES.map(([n,price,sold,ing])=>({id:uid(),n:sn(n),price,sold,ing:ing.map(([k,q])=>[map[k],q])}));
   const r1=await sb.from('items').insert(items.map(itemRow));if(r1.error)throw r1.error;
   const r2=await sb.from('dishes').insert(dishes.map(d=>({id:d.id,restaurant_id:RID,name:d.n,price:d.price,sold:d.sold,ingredients:d.ing})));if(r2.error)throw r2.error;
   await sb.from('reports').upsert({restaurant_id:RID,month:MONTH,opening_stock:11000,purchases:26000});
@@ -393,14 +528,14 @@ function inv(){
 }
 function editForm(i){return`<div class="edit" data-edit="${i.id}">
   <label>Namn</label><input class="f" data-f="n" value="${esc(i.n)}">
-  <div class="grid2"><div><label>Enhet</label><select class="f" data-f="u">${['kg','l','st','flaska','förp','knippe'].map(u=>`<option${u===i.u?' selected':''}>${u}</option>`).join('')}</select></div>
+  <div class="grid2"><div><label>Enhet</label><select class="f" data-f="u">${['kg','l','st','flaska','förp','knippe'].map(u=>`<option value="${u}"${u===i.u?' selected':''}>${u}</option>`).join('')}</select></div>
   <div><label>Pris per ${esc(i.u)} (kr)</label><input class="f" data-f="p" inputmode="decimal" value="${num(i.p)}"></div></div>
   <div class="grid2"><div><label>Förpackning heter</label><input class="f" data-f="pk" value="${esc(i.pk||'')}" placeholder="T.ex. kartong"></div>
   <div><label>Innehåller (${esc(i.u)})</label><input class="f" data-f="ps" inputmode="decimal" value="${i.ps?num(i.ps):''}" placeholder="T.ex. 12"></div></div>
   <div><label>…eller pris per förpackning (räknar om priset ovan)</label><input class="f" data-f="pp" inputmode="decimal" placeholder="T.ex. 504"></div>
   <div class="grid2"><div><label>Leverantör</label><input class="f" data-f="sup" value="${esc(i.sup||'')}" placeholder="T.ex. Menigo"></div>
   <div><label>Beställ under (${esc(i.u)})</label><input class="f" data-f="min" inputmode="decimal" value="${i.min!=null?num(i.min):''}"></div></div>
-  <div class="grid2"><div><label>Lagerplats</label><select class="f" data-f="l">${LOCS.map(l=>`<option${l===i.l?' selected':''}>${l}</option>`).join('')}</select></div>
+  <div class="grid2"><div><label>Lagerplats</label><select class="f" data-f="l">${LOCS.map(l=>`<option value="${l}"${l===i.l?' selected':''}>${l}</option>`).join('')}</select></div>
   <div><label>Streckkod</label><input class="f" data-f="code" inputmode="numeric" value="${esc(i.code||'')}"></div></div>
   <div class="grid2" style="margin-top:4px"><button class="btn" data-save="${i.id}" type="button">Spara</button><button class="btn ghost" data-close type="button">Stäng</button></div>
   <button class="link" data-del="${i.id}" type="button" style="color:var(--bad)">Ta bort varan</button></div>`}
@@ -410,14 +545,14 @@ function items(){
   else{const g={};o.forEach(x=>{(g[x.i.sup||'Ingen leverantör']??=[]).push(x)});
     $('orderBox').innerHTML=`<b>Att beställa (${o.length})</b>`+Object.entries(g).map(([s,l])=>`<div class="sup">${esc(s)}</div>`+l.map(x=>`<div class="sum"><span>${esc(x.i.n)}</span><b>${x.packs?`${x.packs} ${esc(x.i.pk||'förp')}`:`${num(Math.ceil(x.need*100)/100)} ${esc(x.i.u)}`}</b></div>`).join('')).join('')+`<button class="btn" id="shareOrder" type="button" style="width:100%;margin-top:10px">Dela beställningslistan</button>`}
   $('itemList').innerHTML=S.items.map(i=>`<div class="row item" data-open="${i.id}" style="grid-template-columns:minmax(0,1fr) auto;cursor:pointer"><div><div class="nm">${esc(i.n)}</div><div class="meta">${kr(i.p,i.p<10?2:0)}/${esc(i.u)}${i.ps>1?` · ${esc(i.pk||'förp')} à ${num(i.ps)} ${esc(i.u)}`:''} · ${esc(i.l)}${i.sup?' · '+esc(i.sup):''}</div></div><span class="meta" aria-hidden="true">Ändra ›</span></div>${editId===i.id?editForm(i):''}`).join('')||'<p class="pad hint">Inga råvaror än.</p>';
-  $('nLoc').innerHTML=LOCS.map(l=>`<option>${l}</option>`).join('');
+  $('nLoc').innerHTML=LOCS.map(l=>`<option value="${l}">${l}</option>`).join('');
 }
 function menu(){
   const opts=S.items.map(i=>`<option value="${i.id}">${esc(i.n)} (${esc(i.u)})</option>`).join('');
   $('menuList').innerHTML=S.dishes.map((d,k)=>{const c=cost(d),p=d.price?c/ex(d)*100:0;return`<div class="dish">
    <div class="dish-h"><div class="nm">${esc(d.n)}</div><div class="pct ${cls(p)}">${pc(p)} %</div></div>
    <div class="bar"><i style="width:${Math.min(p,100)}%;background:${col(p)}"></i></div>
-   <div class="kv"><div>Pris<b>${kr(d.price)}</b></div><div>Råvaror<b>${kr(c,2)}</b></div><div>Kvar/tallrik<b>${kr(ex(d)-c)}</b></div></div>
+   <div class="kv"><div>Pris<b>${kr(d.price)}</b></div><div>Råvarukost<b>${kr(c,2)}</b></div><div>Kvar/tallrik<b>${kr(ex(d)-c)}</b></div></div>
    <details data-k="${k}"><summary>Recept och inställningar</summary><table>${d.ing.map(([id,q],j)=>{const i=byId(id);return i?`<tr><td>${esc(i.n)}, ${num(q)} ${esc(i.u)}</td><td>${kr(i.p*q,2)} <button class="link" style="padding:0 0 0 8px;min-height:0" data-rmi="${k}:${j}" aria-label="Ta bort">×</button></td></tr>`:''}).join('')||'<tr><td>Inga ingredienser än.</td><td></td></tr>'}</table>
    ${S.items.length?`<div style="display:grid;grid-template-columns:minmax(0,1fr) 80px auto;gap:8px;margin-top:10px"><select class="f" data-isel="${k}" aria-label="Råvara">${opts}</select><input class="f" data-iq="${k}" inputmode="decimal" placeholder="Mängd" aria-label="Mängd per portion"><button class="btn" data-iadd="${k}" type="button" style="height:44px;padding:0 14px">+</button></div><p class="hint" style="margin:4px 0 0;font-size:12px">Mängd per portion, i varans enhet (t.ex. 0,2 kg).</p>`:''}
    <div class="grid2" style="margin-top:10px"><div><label for="dp${k}">Pris inkl. moms</label><input class="f" id="dp${k}" inputmode="decimal" value="${num(d.price)}" data-dp="${k}"></div>
@@ -467,8 +602,8 @@ $('v-items').addEventListener('click',async e=>{
     saveItem(i);editId=null;render();return}
   const del=e.target.closest('[data-del]');if(del){if(del.dataset.sure!=='1'){del.dataset.sure='1';del.textContent='Tryck igen för att ta bort';return}
     const i=byId(del.dataset.del);S.items=S.items.filter(x=>x!==i);editId=null;render();const r=await sb.from('items').delete().eq('id',i.id);syncMsg(r.error?'kunde inte ta bort':'borttagen');return}
-  if(e.target.closest('#shareOrder')){const g={};toOrder().forEach(x=>{(g[x.i.sup||'Ingen leverantör']??=[]).push(x)});
-    const text=`Beställning ${S.rest} ${new Date().toLocaleDateString('sv-SE')}\n`+Object.entries(g).map(([s,l])=>`\n${s}:\n`+l.map(x=>`- ${x.i.n}: ${x.packs?`${x.packs} ${x.i.pk||'förp'}`:`${num(Math.ceil(x.need*100)/100)} ${x.i.u}`}`).join('\n')).join('\n');
+  if(e.target.closest('#shareOrder')){const g={};toOrder().forEach(x=>{(g[x.i.sup||tr('Ingen leverantör')]??=[]).push(x)});
+    const text=`${tr('Beställning')} ${S.rest} ${new Date().toLocaleDateString('sv-SE')}\n`+Object.entries(g).map(([s,l])=>`\n${s}:\n`+l.map(x=>`- ${x.i.n}: ${x.packs?`${x.packs} ${x.i.pk||tr('förp')}`:`${num(Math.ceil(x.need*100)/100)} ${tr(x.i.u)}`}`).join('\n')).join('\n');
     try{if(navigator.share){await navigator.share({title:'Beställning',text});return}}catch(err){if(err.name==='AbortError')return}
     try{await navigator.clipboard.writeText(text);syncMsg('beställningslistan kopierad')}catch(err){syncMsg('kunde inte dela')}}
 });
@@ -508,7 +643,7 @@ $('rSave').addEventListener('click',async()=>{const n=$('rName').value.trim();if
 $('iSend').addEventListener('click',async()=>{const em=$('iEmail').value.trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(em)){setMsg('Skriv en giltig e-post.');return}
   const {error}=await sb.rpc('invite_member',{r:RID,invite_email:em});if(error){setMsg(error.message);return}
   $('iEmail').value='';setMsg('Inbjuden! Be '+em+' skapa ett konto på nordicmargins.se/app med den e-posten.');set();
-  try{if(navigator.share)await navigator.share({title:'Marginal',text:`Hej! Jag har bjudit in dig till ${S.rest} i Marginal. Skapa ett konto med ${em} här: https://nordicmargins.se/app/`})}catch(e){}});
+  try{if(navigator.share)await navigator.share({title:'Marginal',text:LANG==='en'?`Hi! I have invited you to ${S.rest} in Marginal. Create an account with ${em} here: https://nordicmargins.se/app/`:`Hej! Jag har bjudit in dig till ${S.rest} i Marginal. Skapa ett konto med ${em} här: https://nordicmargins.se/app/`})}catch(e){}});
 $('memList').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
   if(b.dataset.rm){if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Säker?';return}const {error}=await sb.rpc('remove_member',{r:RID,member:b.dataset.rm});setMsg(error?error.message:'Borttagen.');set()}
   if(b.dataset.cancel){const {error}=await sb.rpc('cancel_invite',{r:RID,invite_email:b.dataset.cancel});setMsg(error?error.message:'Inbjudan avbruten.');set()}});
@@ -532,33 +667,33 @@ function pdf(lines,date,by){
   const f=v=>(+v).toLocaleString('sv-SE',{minimumFractionDigits:2,maximumFractionDigits:2}).replace(/ /g,' ');
   const n=v=>String(num(v)).replace(/ /g,' ');
   doc.setFillColor(23,35,33);doc.rect(0,0,210,30,'F');
-  doc.setTextColor(245,241,232);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text('Inventering',15,14);
+  doc.setTextColor(245,241,232);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text(tr('Inventering'),15,14);
   doc.setFont('helvetica','normal');doc.setFontSize(11);doc.text(R+'  |  '+date,15,22);
   doc.setTextColor(198,240,208);doc.setFontSize(9);doc.text('Marginal by Nordic Margins',195,22,{align:'right'});
   doc.setTextColor(23,35,33);let y=42;
-  const cols=[[15,'Råvara','left'],[95,'Antal','right'],[110,'Enhet','left'],[155,'Pris/enhet','right'],[195,'Värde (kr)','right']];
+  const cols=[[15,tr('Råvara'),'left'],[95,tr('Antal'),'right'],[110,tr('Enhet'),'left'],[155,tr('Pris/enhet'),'right'],[195,tr('Värde (kr)'),'right']];
   const head=()=>{doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(91,103,99);cols.forEach(([x,t,a])=>doc.text(t,x,y,{align:a}));doc.setDrawColor(210,204,190);doc.line(15,y+2,195,y+2);y+=8;doc.setTextColor(23,35,33)};
   const brk=()=>{if(y>275){doc.addPage();y=20;head()}};
   let tot=0;
   for(const L of LOCS){const it=lines.filter(i=>i.location===L);if(!it.length)continue;
-    brk();doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text(L,15,y);y+=7;head();
+    brk();doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text(tr(L),15,y);y+=7;head();
     let sub=0;doc.setFont('helvetica','normal');doc.setFontSize(10);
-    for(const i of it){brk();const v=i.price*i.count;sub+=v;doc.text(String(i.name).slice(0,40),15,y);doc.text(n(i.count),95,y,{align:'right'});doc.text(String(i.unit),110,y);doc.text(f(i.price),155,y,{align:'right'});doc.text(f(v),195,y,{align:'right'});y+=6.5}
-    doc.setFont('helvetica','bold');doc.text('Summa '+L.toLowerCase(),15,y);doc.text(f(sub),195,y,{align:'right'});y+=11;tot+=sub}
+    for(const i of it){brk();const v=i.price*i.count;sub+=v;doc.text(String(i.name).slice(0,40),15,y);doc.text(n(i.count),95,y,{align:'right'});doc.text(String(tr(i.unit)),110,y);doc.text(f(i.price),155,y,{align:'right'});doc.text(f(v),195,y,{align:'right'});y+=6.5}
+    doc.setFont('helvetica','bold');doc.text(tr('Summa')+' '+tr(L).toLowerCase(),15,y);doc.text(f(sub),195,y,{align:'right'});y+=11;tot+=sub}
   brk();doc.setDrawColor(23,35,33);doc.setLineWidth(.6);doc.line(15,y-4,195,y-4);
-  doc.setFontSize(13);doc.text('Totalt lagervärde',15,y+3);doc.text(f(tot)+' kr',195,y+3,{align:'right'});
+  doc.setFontSize(13);doc.text(tr('Totalt lagervärde'),15,y+3);doc.text(f(tot)+' kr',195,y+3,{align:'right'});
   y+=20;if(y>270){doc.addPage();y=30}
   doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setLineWidth(.2);
-  doc.text('Inventerat av: '+(by||''),15,y);if(!by)doc.line(45,y,110,y);doc.text('Datum: '+date,120,y);
-  doc.setFontSize(8);doc.setTextColor(91,103,99);doc.text('Värden exkl. moms, beräknade på senaste inköpspris.',15,288);
-  saveFile('inventering-'+slug(R)+'-'+date+'.pdf',doc.output('blob'));
+  doc.text(tr('Inventerat av:')+' '+(by||''),15,y);if(!by)doc.line(45,y,110,y);doc.text(tr('Datum:')+' '+date,120,y);
+  doc.setFontSize(8);doc.setTextColor(91,103,99);doc.text(tr('Värden exkl. moms, beräknade på senaste inköpspris.'),15,288);
+  saveFile(tr('inventering')+'-'+slug(R)+'-'+date+'.pdf',doc.output('blob'));
 }
 function csv(){
   const c=v=>String(v).replace('.',',');const q=t=>'"'+String(t).replace(/"/g,'""')+'"';
-  const lines=[['Restaurang',restName()].map(q).join(';'),['Datum',today()].map(q).join(';'),'',['Lagerplats','Råvara','Leverantör','Streckkod','Antal','Enhet','Pris per enhet (kr)','Värde (kr)'].map(q).join(';')];
-  let tot=0;for(const L of LOCS)for(const i of S.items.filter(x=>x.l===L)){const v=Math.round(i.p*i.c*100)/100;tot+=v;lines.push([q(L),q(i.n),q(i.sup||''),q(i.code||''),c(i.c),q(i.u),c(i.p),c(v)].join(';'))}
-  lines.push('',[q('Totalt lagervärde'),'','','','','','',c(Math.round(tot*100)/100)].join(';'));
-  saveFile('inventering-'+slug(restName())+'-'+today()+'.csv',new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv'}));
+  const lines=[[tr('Restaurang'),restName()].map(q).join(';'),[tr('Datum'),today()].map(q).join(';'),'',['Lagerplats','Råvara','Leverantör','Streckkod','Antal','Enhet','Pris per enhet (kr)','Värde (kr)'].map(t=>q(tr(t))).join(';')];
+  let tot=0;for(const L of LOCS)for(const i of S.items.filter(x=>x.l===L)){const v=Math.round(i.p*i.c*100)/100;tot+=v;lines.push([q(tr(L)),q(i.n),q(i.sup||''),q(i.code||''),c(i.c),q(tr(i.u)),c(i.p),c(v)].join(';'))}
+  lines.push('',[q(tr('Totalt lagervärde')),'','','','','','',c(Math.round(tot*100)/100)].join(';'));
+  saveFile(tr('inventering')+'-'+slug(restName())+'-'+today()+'.csv',new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv'}));
 }
 $('pdfBtn').addEventListener('click',()=>pdf());
 $('csvBtn').addEventListener('click',csv);
@@ -572,7 +707,7 @@ function handleCode(code){
   code=String(code).replace(/\D/g,'');if(code.length<6){sm('Ogiltig streckkod.');return}
   const it=S.items.find(i=>i.code===code);
   if(it){it.c=Math.round((it.c+step(it))*100)/100;saveItem(it);if(loc!=='Alla'&&loc!==it.l)loc=it.l;render();sm(`${it.n} +${num(step(it))} ${it.u} (nu ${num(it.c)}).`);flash(it.id);return}
-  pendingCode=code;$('newCode').textContent=code;$('sLoc').innerHTML=LOCS.map(l=>`<option${l===loc?' selected':''}>${l}</option>`).join('');
+  pendingCode=code;$('newCode').textContent=code;$('sLoc').innerHTML=LOCS.map(l=>`<option value="${l}"${l===loc?' selected':''}>${l}</option>`).join('');
   $('newPanel').hidden=false;$('manPanel').hidden=true;sm('');$('sName').focus();
 }
 async function decode(file){
