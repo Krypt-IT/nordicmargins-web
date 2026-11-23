@@ -102,6 +102,9 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 .authcard{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px 22px}
 .authcard h1{font:700 32px/1.05 'Space Grotesk',sans-serif;margin:12px 0 4px}
 .authcard a,.box a{color:inherit}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;margin:18px 0 16px}
+.seg button{height:40px;border:0;border-radius:9px;background:none;color:var(--soft);font:600 15px Inter,sans-serif;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .chk{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--soft);margin:16px 0 10px;line-height:1.4}
 .chk input{width:22px;height:22px;flex:none;margin:0;accent-color:#1f7a4d}
 .gear{margin-left:10px;background:none;border:0;color:#F5F1E8;width:44px;height:44px;display:grid;place-items:center;cursor:pointer;margin-right:-10px}
@@ -119,13 +122,13 @@ nav button[aria-current=true] svg{color:#1f7a4d}
   <div class="authcard">
     <svg viewBox="0 0 60 64" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square" width="44" height="47"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg>
     <h1>Marginal</h1>
-    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v3</span></p>
+    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v3.1</span></p>
+    <div class="seg" role="tablist"><button type="button" id="mLogin" aria-pressed="true">Logga in</button><button type="button" id="mSignup" aria-pressed="false">Skapa konto</button></div>
     <form id="authForm">
       <label for="aEmail">E-post</label><input class="f" id="aEmail" type="email" autocomplete="email" required>
-      <label for="aPass" style="margin-top:10px">Lösenord (minst 8 tecken)</label><input class="f" id="aPass" type="password" autocomplete="current-password" minlength="8" required>
-      <button class="btn" style="width:100%;margin-top:14px" id="aLogin">Logga in</button>
-      <label class="chk"><input type="checkbox" id="aTerms"> <span>Jag godkänner <a href="/app/villkor.html" target="_blank">användarvillkoren</a> och <a href="/app/integritet.html" target="_blank">integritetspolicyn</a> (krävs för nytt konto)</span></label>
-      <button class="btn ghost" style="width:100%" type="button" id="aSignup">Skapa konto</button>
+      <label for="aPass" style="margin-top:10px">Lösenord <span id="passHint" hidden>(minst 8 tecken)</span></label><input class="f" id="aPass" type="password" autocomplete="current-password" required>
+      <label class="chk" id="termsRow" hidden><input type="checkbox" id="aTerms"> <span>Jag godkänner <a href="/app/villkor.html" target="_blank">användarvillkoren</a> och <a href="/app/integritet.html" target="_blank">integritetspolicyn</a></span></label>
+      <button class="btn" style="width:100%;margin-top:16px" id="aLogin">Logga in</button>
       <button class="link" type="button" id="aForgot">Glömt lösenordet?</button>
     </form>
     <p class="msg" id="aMsg" role="status"></p>
@@ -332,25 +335,30 @@ async function afterLogin(session){
   ME=(session.user.email||'').toLowerCase();$('who').textContent=ME;
   try{await sb.rpc('accept_invites')}catch(e){}
   const {data,error}=await sb.from('members').select('restaurant_id, role, restaurants(name)').eq('user_id',session.user.id).limit(1);
-  if(error){screen('auth');am('Något gick fel: '+error.message);return}
+  if(error){screen('auth');am('Inloggad, men kunde inte hämta restaurangen: '+error.message);return}
   if(!data||!data.length){screen('setup');$('setup1').hidden=false;$('setup2').hidden=true;return}
   RID=data[0].restaurant_id;ROLE=data[0].role;S.rest=data[0].restaurants?data[0].restaurants.name:'';$('restName').textContent=S.rest||'Beta';
   await load();screen('app');show('inv');
 }
-$('authForm').addEventListener('submit',async e=>{e.preventDefault();
+let mode='login';
+function setMode(m){mode=m;$('mLogin').setAttribute('aria-pressed',m==='login');$('mSignup').setAttribute('aria-pressed',m==='signup');
+  $('termsRow').hidden=m!=='signup';$('passHint').hidden=m!=='signup';$('aForgot').hidden=m!=='login';
+  $('aLogin').textContent=m==='login'?'Logga in':'Skapa konto';$('aPass').autocomplete=m==='login'?'current-password':'new-password';am('')}
+$('mLogin').addEventListener('click',()=>setMode('login'));$('mSignup').addEventListener('click',()=>setMode('signup'));
+$('authForm').addEventListener('submit',async e=>{e.preventDefault();if(mode==='signup'&&!recovering){signup();return}
   if(recovering){const password=$('aPass').value;if(password.length<8){am('Minst 8 tecken.');return}
     const {error}=await sb.auth.updateUser({password});if(error){am(error.message);return}recovering=false;$('aLogin').textContent='Logga in';const {data}=await sb.auth.getSession();afterLogin(data.session);return}
   am('Loggar in …');
   const {data,error}=await sb.auth.signInWithPassword({email:$('aEmail').value.trim(),password:$('aPass').value});
-  if(error){am(/confirm/i.test(error.message)?'Bekräfta din e-post först – kolla inkorgen.':'Fel e-post eller lösenord.');return}
+  if(error){am(/confirm/i.test(error.message)?'Bekräfta din e-post först – kolla inkorgen och skräpposten.':/invalid/i.test(error.message)?'Fel e-post eller lösenord.':'Kunde inte logga in: '+error.message);return}
   am('');afterLogin(data.session)});
-$('aSignup').addEventListener('click',async()=>{const email=$('aEmail').value.trim(),password=$('aPass').value;
+async function signup(){const email=$('aEmail').value.trim(),password=$('aPass').value;
   if(!email||password.length<8){am('Fyll i e-post och ett lösenord på minst 8 tecken.');return}
   if(!$('aTerms').checked){am('Du behöver godkänna villkoren och integritetspolicyn för att skapa konto.');return}
   am('Skapar konto …');
   const {data,error}=await sb.auth.signUp({email,password,options:{emailRedirectTo:location.origin+'/app/',data:{terms_accepted_at:new Date().toISOString()}}});
   if(error){am(error.message);return}
-  if(data.session){am('');afterLogin(data.session)}else am('Klart! Vi har skickat ett mejl till '+email+'. Klicka på länken i mejlet och logga sedan in här.')});
+  if(data.session){am('');afterLogin(data.session)}else{setMode('login');am('Klart! Vi har skickat ett mejl till '+email+'. Klicka på länken i mejlet och logga sedan in här.')}}
 $('aForgot').addEventListener('click',async()=>{const email=$('aEmail').value.trim();if(!email){am('Skriv in din e-post först.');return}
   await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/app/'});am('Om kontot finns har vi skickat en länk för nytt lösenord.')});
 $('sCreate').addEventListener('click',async()=>{const n=$('sRest').value.trim();if(!n){$('sMsg').textContent='Skriv restaurangens namn.';return}
