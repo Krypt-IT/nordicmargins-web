@@ -112,6 +112,11 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 .splash svg{stroke:light-dark(#172321,#C6F0D0);animation:pulse 1.2s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.35}}
 @media (prefers-reduced-motion:reduce){.splash svg{animation:none}}
+.offbar{position:sticky;top:0;z-index:20;background:#a86400;color:#fff;font-size:14px;padding:8px 18px;text-align:center}
+.dlv{border-color:var(--ok);border-width:2px}
+.dline{display:grid;grid-template-columns:minmax(0,1fr) 72px 88px 32px;gap:6px;align-items:end;padding:8px 0;border-top:1px solid var(--line)}
+.dline label{font-size:11px;margin-bottom:2px}.dline .f{height:40px;padding:0 8px}
+.dline .x{background:none;border:0;color:var(--soft);font-size:20px;height:40px;cursor:pointer}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;margin:18px 0 16px}
 .seg button{height:40px;border:0;border-radius:9px;background:none;color:var(--soft);font:600 15px Inter,sans-serif;cursor:pointer}
 .seg button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
@@ -133,7 +138,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
   <div class="authcard">
     <svg viewBox="0 0 60 64" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square" width="44" height="47"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg>
     <h1>Marginal</h1>
-    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v4.1</span></p>
+    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v5</span></p>
     <div class="seg" role="tablist"><button type="button" id="mLogin" aria-pressed="true">Logga in</button><button type="button" id="mSignup" aria-pressed="false">Skapa konto</button></div>
     <form id="authForm">
       <label for="aEmail">E-post</label><input class="f" id="aEmail" type="email" autocomplete="email" required>
@@ -167,6 +172,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 </div>
 
 <div class="app" id="app" hidden>
+<div class="offbar" id="offbar" hidden>Offline – allt sparas i telefonen och skickas när du får täckning.</div>
 <header>
   <div class="top">
     <svg viewBox="0 0 60 64" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg>
@@ -193,6 +199,16 @@ nav button[aria-current=true] svg{color:#1f7a4d}
       <div><label for="sLoc">Lagerplats</label><select class="f" id="sLoc"></select></div></div>
       <p class="hint" style="margin:6px 0 0;font-size:12px">Fyller du i förpackningen räknas en hel förpackning för varje skanning.</p>
       <div class="grid2" style="margin-top:12px"><button class="btn" id="sSave" type="button">Spara</button><button class="btn ghost" id="sCancel" type="button">Avbryt</button></div>
+    </div>
+    <button class="btn ghost" id="dlvOpen" type="button" style="width:100%;margin-top:6px">Ta emot leverans</button>
+    <div class="panel dlv" id="dlvPanel" hidden>
+      <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:18px">Leverans</b><button class="link" id="dlvCancel" type="button">Avbryt</button></div>
+      <p class="hint" style="margin:2px 0 10px">Skanna varorna eller välj i listan. Fyll i antal och pris från följesedeln.</p>
+      <label for="dlvSup">Leverantör</label><input class="f" id="dlvSup" list="supList" placeholder="T.ex. Menigo"><datalist id="supList"></datalist>
+      <div id="dlvLines" style="margin-top:10px"></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px"><select class="f" id="dlvItem" aria-label="Välj vara"></select><button class="btn" id="dlvAdd" type="button" style="padding:0 16px">+</button></div>
+      <div class="sum" style="margin-top:10px"><span>Summa</span><b id="dlvTot">0 kr</b></div>
+      <button class="btn" id="dlvBook" type="button" style="width:100%;margin-top:6px">Lägg in leveransen i lagret</button>
     </div>
     <p class="msg" id="scanMsg" role="status"></p>
   </div>
@@ -242,11 +258,14 @@ nav button[aria-current=true] svg{color:#1f7a4d}
       <div><label for="ib">Ingående lager (kr)</label><input class="f" id="ib" inputmode="decimal"></div>
       <div><label for="buy">Inköp under månaden (kr)</label><input class="f" id="buy" inputmode="decimal"></div>
     </div>
+    <p class="hint" style="font-size:13px;margin:8px 0 0">Räknas upp automatiskt när du tar emot leveranser.</p>
   </div>
   <div class="box" id="repSum"></div>
   <div class="box" id="repCmp"></div>
   <div class="gap" id="repGap"></div>
-  <div class="pad" style="padding-top:8px"><h2 style="font-size:20px">Sparade inventeringar</h2><p class="hint">Tryck på en inventering för att ladda ner den eller använda den som ingående lager.</p></div>
+  <div class="pad" style="padding-top:8px"><h2 style="font-size:20px">Leveranser denna månad</h2></div>
+  <div class="list" id="dlvList"></div>
+  <div class="pad" style="padding-top:20px"><h2 style="font-size:20px">Sparade inventeringar</h2><p class="hint">Tryck på en inventering för att ladda ner den eller använda den som ingående lager.</p></div>
   <div class="list" id="histList"></div>
 </section>
 
@@ -363,6 +382,11 @@ const EN={
 'Lägger in exempel …':'Adding examples …','Nedladdning fungerar inte i den här vyn.':'Download does not work in this view.',
 'PDF-verktyget har inte laddats än. Försök igen om en stund.':'The PDF tool has not loaded yet. Try again in a moment.','Skapar …':'Creating …','Skriv restaurangens namn.':'Enter the restaurant name.','Sparar …':'Saving …',
 'En mindre':'One less','En till':'One more','Råvara':'Item','Mängd per portion':'Amount per portion','Ta bort ':'Remove','Restaurang och personal ':'Restaurant and staff','Språk':'Language',
+'Ta emot leverans':'Receive delivery','Leverans':'Delivery','Lägg in leveransen i lagret':'Add delivery to stock','Välj vara':'Choose item',
+'Skanna varorna eller välj i listan. Fyll i antal och pris från följesedeln.':'Scan the items or pick from the list. Enter quantity and price from the delivery note.',
+'Leveranser denna månad':'Deliveries this month','Inga leveranser än denna månad.':'No deliveries this month yet.','Räknas upp automatiskt när du tar emot leveranser.':'Goes up automatically when you receive deliveries.',
+'Offline – allt sparas i telefonen och skickas när du får täckning.':'Offline – everything is saved on the phone and sent when you get a connection.','Lägg till minst en vara.':'Add at least one item.',
+'Fyll i ingående lager, eller använd en sparad inventering nedan, så räknas faktisk food cost ut.':'Enter the opening stock, or use a saved count below, and the actual food cost is calculated.',
 /* PDF / CSV / delning */
 'Inventering':'Stock count','inventering':'stock-count','Antal':'Qty','Pris/enhet':'Price/unit','Värde (kr)':'Value (kr)','Summa':'Total','Totalt lagervärde':'Total stock value',
 'Inventerat av:':'Counted by:','Datum:':'Date:','Datum':'Date','Värden exkl. moms, beräknade på senaste inköpspris.':'Values excl. VAT, based on the latest purchase price.',
@@ -393,7 +417,13 @@ const PAT=[
 [/^(.+) \+(\S+) (\S+) \(nu (\S+)\)\.$/,m=>`${m[1]} +${m[2]} ${tr(m[3])} (now ${m[4]}).`],
 [/^(.+) är tillagd i (.+)\.$/,m=>`${m[1]} was added to the ${tr(cap(m[2])).toLowerCase()}.`],
 [/^ · (.+)$/,m=>` · ${tr(m[1])}`],
-[/^Fel: (.+)$/,m=>`Error: ${m[1]}`]
+[/^Fel: (.+)$/,m=>`Error: ${m[1]}`],
+[/^Antal (.+)$/,m=>`Qty (${tr(m[1])})`],
+[/^offline – (\d+) ändringa?r? väntar$/,m=>`offline – ${m[1]} change${m[1]==='1'?'':'s'} waiting`],
+[/^Leveransen är inlagd: (.+)$/,m=>`Delivery added: ${m[1]}`],
+[/^(.+) \+1 \(leverans\)$/,m=>`${m[1]} +1 (delivery)`],
+[/^kunde inte spara – (.+)$/,m=>`could not save – ${m[1]}`],
+[/^(.+) · (\d+) rader · (.*)$/,m=>`${m[1]} · ${m[2]} lines · ${m[3]}`]
 ];
 const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 const WORDS=/(^|[\s(·=+,])(st|förp|flaska|knippe|Kyl|Frys|Torrförråd)(?=$|[\s),·.])/g;
@@ -449,17 +479,36 @@ const dt=s=>new Date(s).toLocaleDateString('sv-SE')+' '+new Date(s).toLocaleTime
 
 /* ---------- molnet ---------- */
 const syncMsg=t=>{$('sync').textContent=t?' · '+t:''};
+const OBX='marginal-outbox';let outbox=[];try{outbox=JSON.parse(localStorage.getItem(OBX))||[]}catch(e){}
+const saveOb=()=>{try{localStorage.setItem(OBX,JSON.stringify(outbox))}catch(e){}};
+function cacheS(){if(!RID)return;try{localStorage.setItem('marginal-cache-'+RID,JSON.stringify({S,RID,ROLE,ME,at:Date.now()}));localStorage.setItem('marginal-last',RID)}catch(e){}}
+function readCache(rid){try{return JSON.parse(localStorage.getItem('marginal-cache-'+(rid||localStorage.getItem('marginal-last'))))}catch(e){return null}}
+const netErr=e=>!navigator.onLine||/fetch|network|load failed|timeout/i.test(String(e&&(e.message||e)));
+function showSync(){const n=outbox.length;$('offbar').hidden=navigator.onLine;
+  syncMsg(!n?(navigator.onLine?'sparat':''):navigator.onLine?'sparar …':`offline – ${n} ${n===1?'ändring':'ändringar'} väntar`)}
+let flushing=false,ft=0;
+function queue(op){if(op.k)outbox=outbox.filter(o=>o.k!==op.k);outbox.push(op);saveOb();cacheS();showSync();clearTimeout(ft);ft=setTimeout(flush,600)}
+async function flush(){if(flushing)return;if(!outbox.length||!navigator.onLine){showSync();return}flushing=true;
+  try{while(outbox.length){const o=outbox[0];let r;
+    try{if(o.a==='up')r=await sb.from(o.t).upsert(o.row);else if(o.a==='ins')r=await sb.from(o.t).insert(o.row);else r=await sb.from(o.t).delete().eq('id',o.id)}catch(e){r={error:e}}
+    if(r&&r.error){if(netErr(r.error))break;console.warn('Marginal sync',r.error);syncMsg('kunde inte spara – '+(r.error.message||''))}
+    outbox.shift();saveOb()}}finally{flushing=false}
+  if(outbox.length)showSync();else showSync()}
+window.addEventListener('online',()=>{showSync();flush()});window.addEventListener('offline',showSync);setInterval(flush,20000);
 const timers={};
 function later(key,fn){clearTimeout(timers[key]);syncMsg('sparar …');timers[key]=setTimeout(async()=>{try{const r=await fn();if(r&&r.error)throw r.error;syncMsg('sparat')}catch(e){syncMsg('kunde inte spara – kontrollera internet')}},600)}
 const itemRow=i=>({id:i.id,restaurant_id:RID,code:i.code||null,name:i.n,unit:i.u,price:i.p,location:i.l,count:i.c,pack_name:i.pk||null,pack_size:i.ps||null,supplier:i.sup||null,min_level:i.min||null,updated_at:new Date().toISOString()});
-const saveItem=i=>later('i'+i.id,()=>sb.from('items').upsert(itemRow(i)));
-const saveDish=d=>later('d'+d.id,()=>sb.from('dishes').upsert({id:d.id,restaurant_id:RID,name:d.n,price:d.price,sold:d.sold,ingredients:d.ing}));
-const saveRep=()=>later('rep',()=>sb.from('reports').upsert({restaurant_id:RID,month:MONTH,opening_stock:S.ib,purchases:S.buy}));
+const saveItem=i=>queue({k:'i'+i.id,t:'items',a:'up',row:itemRow(i)});
+const saveDish=d=>queue({k:'d'+d.id,t:'dishes',a:'up',row:{id:d.id,restaurant_id:RID,name:d.n,price:d.price,sold:d.sold,ingredients:d.ing}});
+const saveRep=()=>queue({k:'rep'+MONTH,t:'reports',a:'up',row:{restaurant_id:RID,month:MONTH,opening_stock:S.ib,purchases:S.buy}});
 async function load(){
-  const [a,b,c,h]=await Promise.all([sb.from('items').select('*').eq('restaurant_id',RID).order('name'),sb.from('dishes').select('*').eq('restaurant_id',RID).order('name'),sb.from('reports').select('*').eq('restaurant_id',RID).eq('month',MONTH).maybeSingle(),sb.from('stock_counts').select('*').eq('restaurant_id',RID).order('taken_at',{ascending:false}).limit(24)]);
+  if(outbox.length)await flush();
+  if(outbox.length||!navigator.onLine){const c=readCache(RID);if(c&&c.S){S=c.S;S.dlv=S.dlv||[];return}}
+  const [a,b,c,h,dl]=await Promise.all([sb.from('items').select('*').eq('restaurant_id',RID).order('name'),sb.from('dishes').select('*').eq('restaurant_id',RID).order('name'),sb.from('reports').select('*').eq('restaurant_id',RID).eq('month',MONTH).maybeSingle(),sb.from('stock_counts').select('*').eq('restaurant_id',RID).order('taken_at',{ascending:false}).limit(24),sb.from('deliveries').select('*').eq('restaurant_id',RID).gte('received_at',MONTH+'-01').order('received_at',{ascending:false})]);
+  if(a.error&&netErr(a.error)){const cc=readCache(RID);if(cc&&cc.S){S=cc.S;S.dlv=S.dlv||[];return}}
   S.items=(a.data||[]).map(r=>({id:r.id,code:r.code,n:r.name,u:r.unit,p:+r.price,l:r.location,c:+r.count,pk:r.pack_name,ps:r.pack_size?+r.pack_size:null,sup:r.supplier,min:r.min_level!=null?+r.min_level:null}));
   S.dishes=(b.data||[]).map(r=>({id:r.id,n:r.name,price:+r.price,sold:+r.sold,ing:r.ingredients||[]}));
-  S.ib=c.data?+c.data.opening_stock:0;S.buy=c.data?+c.data.purchases:0;S.hist=h.data||[];
+  S.ib=c.data?+c.data.opening_stock:0;S.buy=c.data?+c.data.purchases:0;S.hist=h.data||[];S.dlv=dl.data||[];cacheS();
 }
 async function seed(){
   const map={};const items=SEED_ITEMS.map(([k,n,u,p,l,c,ps,sup,min])=>{const id=uid();map[k]=id;return{id,n:sn(n),u,p,l,c,ps,pk:ps?'förp':null,sup:sn(sup),min}});
@@ -477,10 +526,10 @@ async function afterLogin(session){
   ME=(session.user.email||'').toLowerCase();$('who').textContent=ME;
   try{await sb.rpc('accept_invites')}catch(e){}
   const {data,error}=await sb.from('members').select('restaurant_id, role, restaurants(name)').eq('user_id',session.user.id).limit(1);
-  if(error){screen('auth');am('Inloggad, men kunde inte hämta restaurangen: '+error.message);return}
+  if(error){const c=readCache();if(c&&netErr(error)){RID=c.RID;ROLE=c.ROLE;S=c.S;S.dlv=S.dlv||[];$('restName').textContent=S.rest||'Beta';screen('app');show('inv');showSync();return}screen('auth');am('Inloggad, men kunde inte hämta restaurangen: '+error.message);return}
   if(!data||!data.length){screen('setup');$('setup1').hidden=false;$('setup2').hidden=true;return}
   RID=data[0].restaurant_id;ROLE=data[0].role;S.rest=data[0].restaurants?data[0].restaurants.name:'';$('restName').textContent=S.rest||'Beta';
-  await load();screen('app');show('inv');
+  await load();screen('app');show('inv');showSync();
 }
 let mode='login';
 function setMode(m){mode=m;$('mLogin').setAttribute('aria-pressed',m==='login');$('mSignup').setAttribute('aria-pressed',m==='signup');
@@ -514,7 +563,10 @@ async function logout(){await sb.auth.signOut();RID=null;S={items:[],dishes:[],i
 $('logout').addEventListener('click',logout);$('sLogout').addEventListener('click',logout);
 sb.auth.onAuthStateChange(ev=>{if(ev==='PASSWORD_RECOVERY'){recovering=true;screen('auth');$('aLogin').textContent='Spara nytt lösenord';am('Skriv ett nytt lösenord och tryck på knappen.')}});
 setTimeout(()=>{if(!$('splash').hidden)screen('auth')},8000);
-(async()=>{const {data}=await sb.auth.getSession();if(data.session&&!location.hash.includes('type=recovery'))afterLogin(data.session);else screen('auth')})();
+(async()=>{let data={};try{({data}=await sb.auth.getSession())}catch(e){}
+  if(data&&data.session&&!location.hash.includes('type=recovery'))afterLogin(data.session);
+  else{const c=!navigator.onLine&&readCache();if(c&&c.S){RID=c.RID;ROLE=c.ROLE;ME=c.ME||'';S=c.S;S.dlv=S.dlv||[];$('who').textContent=ME;$('restName').textContent=S.rest||'Beta';screen('app');show('inv');showSync()}else screen('auth')}})();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/app/sw.js',{scope:'/app/'}).catch(()=>{});
 
 /* ---------- vyer ---------- */
 const toOrder=()=>S.items.filter(i=>i.min!=null&&i.c<i.min).map(i=>{const need=i.min-i.c;return{i,need,packs:i.ps>1?Math.ceil(need/i.ps-1e-9):null}});
@@ -522,7 +574,7 @@ function hero(){
   const h={inv:[`Lagervärde ${loc==='Alla'?'totalt':'i '+loc.toLowerCase()}`,kr(S.items.filter(i=>loc==='Alla'||i.l===loc).reduce((a,i)=>a+i.p*i.c,0)),S.hist[0]?`Senast sparad inventering ${dt(S.hist[0].taken_at)}`:`${S.items.length} råvaror`],
    items:['Lagervärde totalt',kr(stock()),(()=>{const n=toOrder().length;return n?`${n} ${n===1?'vara':'varor'} under beställningsnivån`:`${S.items.length} råvaror`})()],
    menu:(()=>{const t=S.dishes.reduce((a,d)=>a+cost(d)*d.sold,0),s=S.dishes.reduce((a,d)=>a+ex(d)*d.sold,0);return['Food cost för menyn',pc(t/s*100)+' %','Viktat efter hur mycket varje rätt säljer']})(),
-   rep:(()=>{const r=report();return['Faktisk food cost',pc(r.act)+' %',`Enligt recepten borde den vara ${pc(r.theo)} %`]})(),
+   rep:(()=>{const r=report();return['Faktisk food cost',S.ib?pc(r.act)+' %':'–',`Enligt recepten borde den vara ${pc(r.theo)} %`]})(),
    set:[S.rest||'Restaurang',ROLE==='owner'?'Ägare':'Personal',ME]}[view];
   $('hero').innerHTML=`<small>${esc(h[0])}</small><div class="big">${esc(h[1])}</div><div class="sub">${esc(h[2])}</div>`;
 }
@@ -572,11 +624,13 @@ function report(){
 function rep(){
   const r=report();$('ib').value=num(S.ib);$('buy').value=num(S.buy);
   $('repSum').innerHTML=[['Ingående lager',S.ib],['+ Inköp',S.buy],['− Utgående lager (inventeringen)',r.ub],['= Det som gick åt',r.use],['Försäljning exkl. moms',r.sales]].map(([a,b])=>`<div class="sum"><span>${a}</span><b>${kr(b)}</b></div>`).join('');
-  if(!r.sales){$('repCmp').innerHTML='<p class="hint" style="margin:0">Lägg in rätter och hur många som sålts under Meny, så räknas jämförelsen ut.</p>';$('repGap').hidden=true}
+  if(r.sales&&!S.ib){$('repCmp').innerHTML=`<div class="cmp"><div class="lbl"><span>Enligt recepten</span><b>${pc(r.theo)} %</b></div><div class="bar"><i style="width:${Math.min(r.theo,100)}%;background:var(--ok)"></i></div></div><p class="hint" style="margin:0">Fyll i ingående lager, eller använd en sparad inventering nedan, så räknas faktisk food cost ut.</p>`;$('repGap').hidden=true}
+  else if(!r.sales){$('repCmp').innerHTML='<p class="hint" style="margin:0">Lägg in rätter och hur många som sålts under Meny, så räknas jämförelsen ut.</p>';$('repGap').hidden=true}
   else{$('repGap').hidden=false;const mx=Math.max(r.theo,r.act,40);
   $('repCmp').innerHTML=`<div class="cmp"><div class="lbl"><span>Enligt recepten</span><b>${pc(r.theo)} %</b></div><div class="bar"><i style="width:${r.theo/mx*100}%;background:var(--ok)"></i></div></div>
    <div class="cmp"><div class="lbl"><span>Faktiskt</span><b class="${r.act-r.theo>3?'bad':'ok'}">${pc(r.act)} %</b></div><div class="bar"><i style="width:${Math.max(0,r.act/mx*100)}%;background:${r.act-r.theo>3?'var(--bad)':'var(--ok)'}"></i></div></div>`;
   $('repGap').innerHTML=r.gap>0?`<small>Råvaror som försvann utan att säljas</small><div class="big">${kr(r.gap)}</div><p style="margin:8px 0 0;font-size:14px;color:#d6dfd9">Det kan vara svinn, för stora portioner eller felräknade leveranser. Börja med rätten som har högst food cost.</p>`:`<small>Bra jobbat</small><div class="big">Inget glapp</div><p style="margin:8px 0 0;font-size:14px;color:#d6dfd9">Det som gick åt stämmer med recepten.</p>`}
+  $('dlvList').innerHTML=(S.dlv||[]).map(d=>`<div class="row" style="grid-template-columns:minmax(0,1fr) auto"><div><div class="nm">${esc(d.supplier||'')}</div><div class="meta">${dt(d.received_at)} · ${(d.lines||[]).length} rader · ${esc(d.received_by||'')}</div></div><b style="white-space:nowrap">${kr(d.total)}</b></div>`).join('')||'<p class="pad hint">Inga leveranser än denna månad.</p>';
   $('histList').innerHTML=S.hist.map((h,k)=>{const prev=S.hist[k+1],diff=prev?h.total-prev.total:null;return`<div class="row" style="grid-template-columns:minmax(0,1fr) auto"><div><div class="nm">${dt(h.taken_at)}</div><div class="meta">${esc(h.taken_by||'')}${diff!=null?` · ${diff>=0?'+':'−'}${kr(Math.abs(diff))} mot förra`:''}</div></div><b style="white-space:nowrap">${kr(h.total)}</b></div>
    <div class="histact"><button class="link" data-hpdf="${k}" type="button">Ladda ner PDF</button><button class="link" data-hib="${k}" type="button">Använd som ingående lager</button></div>`}).join('')||'<p class="pad hint">Inga sparade inventeringar än. Tryck på "Spara dagens inventering" under Inventera.</p>';
 }
@@ -607,7 +661,7 @@ $('v-items').addEventListener('click',async e=>{
     i.sup=g('sup')||null;const mn=pn(g('min'));i.min=isNaN(mn)?null:mn;const code=g('code').replace(/\D/g,'');i.code=code||null;
     saveItem(i);editId=null;render();return}
   const del=e.target.closest('[data-del]');if(del){if(del.dataset.sure!=='1'){del.dataset.sure='1';del.textContent='Tryck igen för att ta bort';return}
-    const i=byId(del.dataset.del);S.items=S.items.filter(x=>x!==i);editId=null;render();const r=await sb.from('items').delete().eq('id',i.id);syncMsg(r.error?'kunde inte ta bort':'borttagen');return}
+    const i=byId(del.dataset.del);S.items=S.items.filter(x=>x!==i);editId=null;render();queue({k:'i'+i.id,t:'items',a:'del',id:i.id});return}
   if(e.target.closest('#shareOrder')){const g={};toOrder().forEach(x=>{(g[x.i.sup||tr('Ingen leverantör')]??=[]).push(x)});
     const text=`${tr('Beställning')} ${S.rest} ${new Date().toLocaleDateString('sv-SE')}\n`+Object.entries(g).map(([s,l])=>`\n${s}:\n`+l.map(x=>`- ${x.i.n}: ${x.packs?`${x.packs} ${x.i.pk||tr('förp')}`:`${num(Math.ceil(x.need*100)/100)} ${tr(x.i.u)}`}`).join('\n')).join('\n');
     try{if(navigator.share){await navigator.share({title:'Beställning',text});return}}catch(err){if(err.name==='AbortError')return}
@@ -625,7 +679,7 @@ $('menuList').addEventListener('click',async e=>{const b=e.target.closest('butto
     if(!id||isNaN(q)||q<=0)return;keepOpen(()=>{d.ing.push([id,q]);saveDish(d)})}
   if(b.dataset.rmi){const [k,j]=b.dataset.rmi.split(':');const d=S.dishes[k];keepOpen(()=>{d.ing.splice(+j,1);saveDish(d)})}
   if(b.dataset.ddel!==undefined){if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Tryck igen för att ta bort';return}
-    const d=S.dishes[b.dataset.ddel];S.dishes.splice(+b.dataset.ddel,1);render();const r=await sb.from('dishes').delete().eq('id',d.id);syncMsg(r.error?'kunde inte ta bort':'borttagen')}});
+    const d=S.dishes[b.dataset.ddel];S.dishes.splice(+b.dataset.ddel,1);render();queue({k:'d'+d.id,t:'dishes',a:'del',id:d.id})}});
 $('dAdd').addEventListener('click',()=>{const n=$('dName').value.trim(),p=pn($('dPrice').value);if(!n||isNaN(p))return;
   const d={id:uid(),n,price:p,sold:0,ing:[]};S.dishes.push(d);saveDish(d);$('dName').value='';$('dPrice').value='';render();
   const det=document.querySelectorAll('#menuList details');if(det.length){det[det.length-1].open=true;det[det.length-1].scrollIntoView({block:'center'})}});
@@ -634,10 +688,8 @@ $('dAdd').addEventListener('click',()=>{const n=$('dName').value.trim(),p=pn($('
 for(const id of['ib','buy'])$(id).addEventListener('change',e=>{const v=pn(e.target.value);if(!isNaN(v)&&v>=0){S[id]=v;saveRep()}render()});
 const snapLines=()=>S.items.map(i=>({name:i.n,unit:i.u,price:i.p,count:i.c,location:i.l}));
 $('snapBtn').addEventListener('click',async()=>{const m=$('msg');m.textContent='Sparar …';
-  const row={restaurant_id:RID,taken_by:ME,total:Math.round(stock()*100)/100,lines:snapLines()};
-  const {data,error}=await sb.from('stock_counts').insert(row).select().single();
-  if(error){m.textContent='Kunde inte spara: '+error.message;return}
-  S.hist.unshift(data);m.textContent='Inventeringen är sparad under Rapport.';hero()});
+  const row={id:uid(),restaurant_id:RID,taken_by:ME,taken_at:new Date().toISOString(),total:Math.round(stock()*100)/100,lines:snapLines()};
+  S.hist.unshift(row);queue({t:'stock_counts',a:'ins',row});m.textContent='Inventeringen är sparad under Rapport.';hero()});
 $('histList').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   if(b.dataset.hpdf!==undefined){const h=S.hist[+b.dataset.hpdf];pdf(h.lines,new Date(h.taken_at).toLocaleDateString('sv-SE'),h.taken_by)}
   if(b.dataset.hib!==undefined){S.ib=+S.hist[+b.dataset.hib].total;saveRep();render();window.scrollTo({top:0,behavior:'smooth'})}});
@@ -707,11 +759,40 @@ $('csvBtn').addEventListener('click',csv);
 /* ---------- skanning ---------- */
 let pendingCode=null;
 const sm=t=>{$('scanMsg').textContent=t};
+let DLV=null;
+function dlvRender(){if(!DLV)return;
+  $('dlvLines').innerHTML=DLV.lines.map((l,k)=>{const i=byId(l.id);if(!i)return'';const pk=i.ps>1;const un=pk?(i.pk||'förp'):i.u;
+    return`<div class="dline"><div><div class="nm" style="font-size:15px">${esc(i.n)}</div><span class="meta">${pk?`${esc(i.pk||'förp')} à ${num(i.ps)} ${esc(i.u)}`:esc(i.u)}</span></div>
+    <div><label>Antal ${esc(un)}</label><input class="f" inputmode="decimal" data-dq="${k}" value="${num(l.n)}"></div>
+    <div><label>Pris per ${esc(un)} (kr)</label><input class="f" inputmode="decimal" data-dp="${k}" value="${l.pr?num(l.pr):''}"></div>
+    <button class="x" data-dx="${k}" type="button" aria-label="Ta bort">×</button></div>`}).join('');
+  $('dlvTot').textContent=kr(DLV.lines.reduce((a,l)=>a+(l.n||0)*(l.pr||0),0));
+  $('dlvItem').innerHTML='<option value="">Välj vara</option>'+S.items.map(i=>`<option value="${i.id}">${esc(i.n)}</option>`).join('');
+  $('supList').innerHTML=[...new Set(S.items.map(i=>i.sup).filter(Boolean))].map(x=>`<option value="${esc(x)}">`).join('');
+}
+function dlvAdd(i,silent){const ex=DLV.lines.find(l=>l.id===i.id);if(ex)ex.n=(ex.n||0)+1;else DLV.lines.push({id:i.id,n:1,pr:Math.round((i.ps>1?i.p*i.ps:i.p)*100)/100});
+  if(!DLV.sup&&i.sup){DLV.sup=i.sup;$('dlvSup').value=i.sup}dlvRender()}
+$('dlvOpen').addEventListener('click',()=>{DLV={lines:[],sup:''};$('dlvSup').value='';$('dlvPanel').hidden=false;$('dlvOpen').hidden=true;dlvRender();sm('')});
+$('dlvCancel').addEventListener('click',()=>{DLV=null;$('dlvPanel').hidden=true;$('dlvOpen').hidden=false});
+$('dlvAdd').addEventListener('click',()=>{const i=byId($('dlvItem').value);if(i)dlvAdd(i)});
+$('dlvSup').addEventListener('input',e=>{if(DLV)DLV.sup=e.target.value});
+$('dlvLines').addEventListener('change',e=>{const t=e.target,v=pn(t.value);if(t.dataset.dq!==undefined&&!isNaN(v))DLV.lines[+t.dataset.dq].n=v;if(t.dataset.dp!==undefined&&!isNaN(v))DLV.lines[+t.dataset.dp].pr=v;dlvRender()});
+$('dlvLines').addEventListener('click',e=>{const b=e.target.closest('[data-dx]');if(b){DLV.lines.splice(+b.dataset.dx,1);dlvRender()}});
+$('dlvBook').addEventListener('click',()=>{if(!DLV||!DLV.lines.length){sm('Lägg till minst en vara.');return}
+  const sup=$('dlvSup').value.trim();let tot=0;const lines=[];
+  for(const l of DLV.lines){const i=byId(l.id);if(!i||!(l.n>0))continue;const pk=i.ps>1;const qty=pk?l.n*i.ps:l.n;
+    tot+=l.n*(l.pr||0);i.c=Math.round((i.c+qty)*100)/100;if(l.pr>0)i.p=Math.round((pk?l.pr/i.ps:l.pr)*10000)/10000;if(sup&&!i.sup)i.sup=sup;saveItem(i);
+    lines.push({item_id:i.id,name:i.n,unit:i.u,qty,price:i.p})}
+  tot=Math.round(tot*100)/100;
+  const row={id:uid(),restaurant_id:RID,received_at:new Date().toISOString(),received_by:ME,supplier:sup||null,total:tot,lines};
+  S.dlv=S.dlv||[];S.dlv.unshift(row);queue({t:'deliveries',a:'ins',row});S.buy=Math.round((S.buy+tot)*100)/100;saveRep();
+  DLV=null;$('dlvPanel').hidden=true;$('dlvOpen').hidden=false;render();sm(`Leveransen är inlagd: ${kr(tot)}`)});
 function flash(id){const r=$('r-'+id);if(r){r.classList.add('flash');r.scrollIntoView({block:'center',behavior:'smooth'})}}
 const step=i=>i.ps>1?i.ps:1;
 function handleCode(code){
   code=String(code).replace(/\D/g,'');if(code.length<6){sm('Ogiltig streckkod.');return}
   const it=S.items.find(i=>i.code===code);
+  if(it&&DLV){dlvAdd(it);sm(`${it.n} +1 (leverans)`);return}
   if(it){it.c=Math.round((it.c+step(it))*100)/100;saveItem(it);if(loc!=='Alla'&&loc!==it.l)loc=it.l;render();sm(`${it.n} +${num(step(it))} ${it.u} (nu ${num(it.c)}).`);flash(it.id);return}
   pendingCode=code;$('newCode').textContent=code;$('sLoc').innerHTML=LOCS.map(l=>`<option value="${l}"${l===loc?' selected':''}>${l}</option>`).join('');
   $('newPanel').hidden=false;$('manPanel').hidden=true;sm('');$('sName').focus();
@@ -729,19 +810,20 @@ $('manCode').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault
 $('sCancel').addEventListener('click',()=>{$('newPanel').hidden=true;pendingCode=null});
 $('sSave').addEventListener('click',()=>{const n=$('sName').value.trim(),p=pn($('sPrice').value),ps=pn($('sPack').value);
   if(!n||isNaN(p)){sm('Fyll i namn och pris.');return}
-  const it={id:uid(),code:pendingCode,n,u:$('sUnit').value,p,l:$('sLoc').value,ps:ps>1?ps:null,pk:ps>1?'förp':null,c:0};it.c=step(it);S.items.push(it);S.items.sort((a,b)=>a.n.localeCompare(b.n,'sv'));saveItem(it);
-  $('newPanel').hidden=true;$('sName').value='';$('sPrice').value='';$('sPack').value='';pendingCode=null;loc=it.l;render();sm(`${n} är tillagd i ${it.l.toLowerCase()}.`);flash(it.id)});
+  const it={id:uid(),code:pendingCode,n,u:$('sUnit').value,p,l:$('sLoc').value,ps:ps>1?ps:null,pk:ps>1?'förp':null,c:0};if(DLV){if(DLV.sup)it.sup=DLV.sup}else it.c=step(it);S.items.push(it);S.items.sort((a,b)=>a.n.localeCompare(b.n,'sv'));saveItem(it);
+  $('newPanel').hidden=true;$('sName').value='';$('sPrice').value='';$('sPack').value='';pendingCode=null;loc=it.l;render();if(DLV){dlvAdd(it);sm(`${n} +1 (leverans)`)}else{sm(`${n} är tillagd i ${it.l.toLowerCase()}.`);flash(it.id)}});
 let liveFailed=false,stream=null,zx=null,raf=0,lastCode='',lastAt=0;
 const canLive=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
 function liveHit(code){
   code=String(code).replace(/\D/g,'');const now=Date.now();
   if(code.length<6||(code===lastCode&&now-lastAt<2500))return;lastCode=code;lastAt=now;
   const it=S.items.find(i=>i.code===code);
+  if(it&&DLV){dlvAdd(it);try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}$('toast').textContent=`${it.n} +1 (leverans)`;return}
   if(it){it.c=Math.round((it.c+step(it))*100)/100;saveItem(it);render();try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}$('toast').textContent=`${it.n} +${num(step(it))} → ${num(it.c)} ${it.u}`;return}
   stopLive();handleCode(code);
 }
 async function startLive(){
-  $('live').hidden=false;$('toast').textContent='Håll streckkoden i rutan';$('liveLoc').textContent='Skannar till: '+(loc==='Alla'?'valfri plats':loc.toLowerCase());
+  $('live').hidden=false;$('toast').textContent='Håll streckkoden i rutan';$('liveLoc').textContent=DLV?'Leverans':'Skannar till: '+(loc==='Alla'?'valfri plats':loc.toLowerCase());
   const v=$('vid');
   try{
     if('BarcodeDetector' in window){
