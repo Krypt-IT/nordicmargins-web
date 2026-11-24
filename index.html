@@ -160,26 +160,24 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <a href="#sa-funkar-det">Så funkar det</a>
 <a href="#erbjudande">Erbjudanden</a>
 <a href="#om">Om oss</a>
-<a class="btn btn-mynta" href="#kontakt">Boka menyanalys</a>
+<a class="btn btn-mynta" href="/app/">Prova appen</a>
 </div>
 </nav>
 <div class="wrap hero">
 <div class="hero-text">
-<p class="kicker">FÖR RESTAURANGER I SVERIGE</p>
-<h1>Vet du vad varje rätt på din meny tjänar?</h1>
-<p class="lead">Leverantörspriserna rör sig varje vecka. Menypriserna står still. Vi räknar ut kostnad och vinst per portion – och säger vilka rätter du ska höja, justera eller lyfta fram.</p>
+<p class="kicker">FÖR RESTAURANGKÖK I SVERIGE</p>
+<h1>Lager, inventering och food cost – direkt i mobilen.</h1>
+<p class="lead">Marginal skannar dina varor, räknar lagervärdet och visar vad varje rätt kostar att laga. Byggt av en kökschef, för kök som inte har tid att räkna.</p>
 <div class="ctas">
-<a class="btn btn-mynta" href="#kontakt">Boka menyanalys</a>
+<a class="btn btn-mynta" href="/app/">Prova gratis</a>
 <a class="btn btn-ghost" href="#sa-funkar-det">Så funkar det</a>
 </div>
 </div>
-<div class="card" aria-label="Exempel på menyanalys">
-<div class="card-head"><span class="sg">Menyanalys</span><span class="muted">Exempel, fiktiva siffror</span></div>
-<div class="row th"><span>RÄTT</span><span>RÅVAROR</span><span>PRIS</span><span>FOOD COST</span></div>
-<div class="row"><span>Pasta carbonara</span><span>38 kr</span><span>179 kr</span><span class="fc">24 %</span></div>
-<div class="row"><span>Grillad lax</span><span>72 kr</span><span>249 kr</span><span class="fc">32 %</span></div>
-<div class="row flag"><span>Oxfilé</span><span>118 kr</span><span>285 kr</span><span class="fc">46 %</span></div>
-<p class="card-note">Oxfilén äter upp marginalen: höj priset, byt detalj eller krymp portionen. Varje rätt får sin egen siffra – och ett förslag.</p>
+<div class="card" aria-label="Exempel från appen Marginal">
+<div class="card-head"><span class="sg">Inventering · kyl</span><span class="muted">Exempel, fiktiva siffror</span></div>
+<div class="row th"><span>RÅVARA</span><span>ANTAL</span><span>PRIS</span><span>VÄRDE</span></div>
+<div class="row"><span>Laxfilé</span><span>6 kg</span><span>189 kr</span><span class="fc">1 134 kr</span></div><div class="row flag"><span>Grädde 36 %</span><span>2 kartong</span><span>42 kr/l</span><span class="fc">1 008 kr</span></div><div class="row"><span>Smör</span><span>3 kg</span><span>98 kr</span><span class="fc">294 kr</span></div>
+<p class="card-note"><b>Under beställningsnivå:</b> Grädde 36 %. Skanna, räkna, spara. Inventeringen blir en PDF till ägaren eller revisorn – och appen säger vad som behöver beställas.</p>
 </div>
 </div>
 </header>
@@ -188,13 +186,13 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <section id="sa-funkar-det">
 <div class="wrap">
 <div class="intro">
-<h2>Från prislista till beslut</h2>
-<p>Du behöver inte räkna själv. Det enda vi behöver är dina recept och dina leverantörspriser.</p>
+<h2>Från hyllan till siffran</h2>
+<p>Ingen installation och ingen utbildning. Öppna appen i mobilen och börja skanna.</p>
 </div>
 <div class="steps">
-<div class="step"><div class="num sg">1</div><h3>Skicka recept och prislistor</h3><p>Recept i valfritt format och prislistor från Menigo, Tingstad eller andra leverantörer – PDF går bra.</p></div>
-<div class="step"><div class="num sg">2</div><h3>Vi räknar per portion</h3><p>Varje rätt får kostnad, täckningsbidrag och food cost per portion, inte ett snitt för hela köket.</p></div>
-<div class="step"><div class="num sg">3</div><h3>Du får en åtgärdslista</h3><p>Vilka rätter du ska höja, byta råvara på, krympa eller lyfta fram – genomgånget med dig.</p></div>
+<div class="step"><div class="num sg">1</div><h3>Skanna varorna</h3><p>Håll upp streckkoden mot kameran. Första gången fyller du i pris – sedan känns varan igen. Fungerar även i kylrum utan täckning.</p></div>
+<div class="step"><div class="num sg">2</div><h3>Inventera på minuter</h3><p>Räkna per lagerplats med stora knappar. Spara inventeringen och ladda ner den som PDF eller Excel.</p></div>
+<div class="step"><div class="num sg">3</div><h3>Se vad rätterna kostar</h3><p>Lägg in recepten en gång. Appen räknar food cost per tallrik och jämför med vad som faktiskt gick åt – så ser du svinnet.</p></div>
 </div>
 </div>
 </section>
@@ -202,18 +200,31 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <section id="erbjudande" class="offers-bg">
 <div class="wrap offers">
 <div class="offer dark">
-<p class="tag">TILLGÄNGLIGT NU</p>
+<p class="tag" style="display:flex;align-items:center;gap:10px"><svg width="24" height="26" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>BETA · GRATIS ATT PROVA</p>
+<h3>Marginal <span class="sub">by Nordic Margins</span></h3>
+<p class="price sg">0 kr <small>under testperioden · därefter från 299 kr/mån exkl. moms</small></p>
+<ul>
+<li>Skanna varor med mobilens kamera</li>
+<li>Inventering per lagerplats – PDF och Excel</li>
+<li>Leveranser, leverantörer och beställningslistor</li>
+<li>Food cost per rätt och månadsrapport</li>
+<li>Hela personalen i samma lager, på svenska och engelska</li>
+</ul>
+<a class="btn btn-mynta" href="/app/">Prova gratis</a>
+</div>
+<div class="offer mint">
+<p class="tag">TILLÄGG</p>
 <h3>Menyanalys</h3>
-<p class="price sg">990 kr <small>exkl. moms · introduktionspris för de första kunderna</small></p>
+<p>Vill du att vi gör jobbet? Vi räknar igenom hela menyn åt dig och går igenom resultatet.</p>
+<p class="price sg" style="color:var(--granskog)">990 kr <small style="color:var(--text2)">exkl. moms · introduktionspris</small></p>
 <ul>
 <li>Kostnad och vinst per portion för hela menyn</li>
-<li>Rätterna rangordnade efter lönsamhet</li>
 <li>Konkreta förslag per rätt</li>
 <li>Genomgång på plats i Örebro eller via video</li>
 </ul>
-<a class="btn btn-mynta" href="#kontakt" data-amne="Menyanalys">Boka menyanalys</a>
+<a class="btn btn-dark" href="#kontakt" data-amne="Menyanalys">Boka menyanalys</a>
 </div>
-<div class="offer mint">
+<div class="offer light">
 <p class="tag">UTBILDNING</p>
 <h3>Kalkyl för kockar</h3>
 <p>En praktisk workshop där ditt kök lär sig räkna vad varje tallrik kostar och tjänar – med er egen meny som övning.</p>
@@ -223,18 +234,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <li>Gästlektioner för restaurangskolor och YH</li>
 </ul>
 <p class="price sg" style="color:var(--granskog)">från 5 900 kr <small style="color:var(--text2)">exkl. moms per workshop</small></p>
-<a class="btn btn-dark" href="#kontakt" data-amne="Utbildning – workshop för vårt kök">Boka utbildning</a>
-</div>
-<div class="offer light">
-<p class="tag" style="display:flex;align-items:center;gap:10px"><svg width="24" height="26" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/></svg>UNDER UTVECKLING</p>
-<h3>Marginal <span class="sub">by Nordic Margins</span></h3>
-<p>Verktyget som håller siffrorna uppdaterade efter analysen: prisbevakning på dina leverantörer, receptkalkyl och menyanalys – löpande.</p>
-<ul>
-<li>Larmar när en råvara blir dyrare</li>
-<li>Räknar om alla rätter som påverkas</li>
-<li>Visar vilka menypriser som behöver ses över</li>
-</ul>
-<a class="btn btn-outline" href="#kontakt" data-amne="Marginal – intresseanmälan">Anmäl intresse</a>
+<a class="btn btn-outline" href="#kontakt" data-amne="Utbildning – workshop för vårt kök">Boka utbildning</a>
 </div>
 </div>
 </section>
@@ -246,7 +246,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <p class="kicker" style="color:var(--text2)">OM NORDIC MARGINS</p>
 <h2>Från köket, inte från kontoret</h2>
 <p>Jag heter Olliver och är kökschef i Örebro. Varje vecka ser jag samma sak: grädden, köttet och fisken blir dyrare – men menyn står still. Inte för att någon slarvar, utan för att ingen hinner räkna.</p>
-<p>Därför startade jag Nordic Margins. Jag räknar åt dig, med samma prislistor och samma vardag som du har.</p>
+<p>Därför startade jag Nordic Margins och byggde Marginal – verktyget jag själv saknade i köket. Det räknar åt dig, med samma prislistor och samma vardag som du har.</p>
 <div class="principles">
 <div class="principle"><h3>Per portion</h3><p>Varje rätt får sin egen siffra – inte ett snitt för hela köket.</p></div>
 <div class="principle"><h3>Köksspråk</h3><p>Portioner, svinn och leverantörer. Inga konsultord.</p></div>
