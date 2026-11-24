@@ -117,6 +117,8 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 .dline{display:grid;grid-template-columns:minmax(0,1fr) 72px 88px 32px;gap:6px;align-items:end;padding:8px 0;border-top:1px solid var(--line)}
 .dline label{font-size:11px;margin-bottom:2px}.dline .f{height:40px;padding:0 8px}
 .dline .x{background:none;border:0;color:var(--soft);font-size:20px;height:40px;cursor:pointer}
+.install{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.box .install{margin:0 0 12px;padding:0 0 12px;border-top:0;border-bottom:1px solid var(--line)}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;margin:18px 0 16px}
 .seg button{height:40px;border:0;border-radius:9px;background:none;color:var(--soft);font:600 15px Inter,sans-serif;cursor:pointer}
 .seg button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
@@ -138,7 +140,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
   <div class="authcard">
     <svg viewBox="0 0 60 64" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square" width="44" height="47"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg>
     <h1>Marginal</h1>
-    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v5</span></p>
+    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v5.1</span></p>
     <div class="seg" role="tablist"><button type="button" id="mLogin" aria-pressed="true">Logga in</button><button type="button" id="mSignup" aria-pressed="false">Skapa konto</button></div>
     <form id="authForm">
       <label for="aEmail">E-post</label><input class="f" id="aEmail" type="email" autocomplete="email" required>
@@ -148,6 +150,10 @@ nav button[aria-current=true] svg{color:#1f7a4d}
       <button class="link" type="button" id="aForgot">Glömt lösenordet?</button>
     </form>
     <p class="msg" id="aMsg" role="status"></p>
+    <div class="install" data-install hidden>
+      <button class="btn" type="button" data-install-btn style="width:100%" hidden>Installera appen</button>
+      <p class="hint" data-install-ios style="margin:0" hidden><b>Spara appen på hemskärmen:</b> tryck på dela-ikonen <span aria-hidden="true">⬆︎</span> längst ner i Safari och välj <b>Lägg till på hemskärmen</b>.</p>
+    </div>
     <div id="langA"></div>
   </div>
 </div>
@@ -287,6 +293,10 @@ nav button[aria-current=true] svg{color:#1f7a4d}
   </div>
   <div class="box">
     <div style="margin-bottom:10px"><b>Språk</b><div id="langS"></div></div>
+    <div class="install" data-install hidden>
+      <button class="btn" type="button" data-install-btn style="width:100%" hidden>Installera appen</button>
+      <p class="hint" data-install-ios style="margin:0" hidden><b>Spara appen på hemskärmen:</b> tryck på dela-ikonen <span aria-hidden="true">⬆︎</span> längst ner i Safari och välj <b>Lägg till på hemskärmen</b>.</p>
+    </div>
     <a href="/app/villkor.html" target="_blank">Användarvillkor</a> · <a href="/app/integritet.html" target="_blank">Integritetspolicy</a><br>
     <span class="hint" style="font-size:13px">Frågor eller radera konto: info@nordicmargins.se</span>
   </div>
@@ -387,6 +397,7 @@ const EN={
 'Leveranser denna månad':'Deliveries this month','Inga leveranser än denna månad.':'No deliveries this month yet.','Räknas upp automatiskt när du tar emot leveranser.':'Goes up automatically when you receive deliveries.',
 'Offline – allt sparas i telefonen och skickas när du får täckning.':'Offline – everything is saved on the phone and sent when you get a connection.','Lägg till minst en vara.':'Add at least one item.',
 'Fyll i ingående lager, eller använd en sparad inventering nedan, så räknas faktisk food cost ut.':'Enter the opening stock, or use a saved count below, and the actual food cost is calculated.',
+'Installera appen':'Install the app','Spara appen på hemskärmen:':'Save the app to your home screen:','tryck på dela-ikonen':'tap the share icon','längst ner i Safari och välj':'at the bottom of Safari and choose','Lägg till på hemskärmen':'Add to Home Screen',
 /* PDF / CSV / delning */
 'Inventering':'Stock count','inventering':'stock-count','Antal':'Qty','Pris/enhet':'Price/unit','Värde (kr)':'Value (kr)','Summa':'Total','Totalt lagervärde':'Total stock value',
 'Inventerat av:':'Counted by:','Datum:':'Date:','Datum':'Date','Värden exkl. moms, beräknade på senaste inköpspris.':'Values excl. VAT, based on the latest purchase price.',
@@ -705,6 +716,19 @@ $('iSend').addEventListener('click',async()=>{const em=$('iEmail').value.trim().
 $('memList').addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
   if(b.dataset.rm){if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Säker?';return}const {error}=await sb.rpc('remove_member',{r:RID,member:b.dataset.rm});setMsg(error?error.message:'Borttagen.');set()}
   if(b.dataset.cancel){const {error}=await sb.rpc('cancel_invite',{r:RID,invite_email:b.dataset.cancel});setMsg(error?error.message:'Inbjudan avbruten.');set()}});
+
+
+/* ---------- installera ---------- */
+let deferredInstall=null;
+const standalone=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+function installUI(){document.querySelectorAll('[data-install]').forEach(b=>{
+  const canBtn=!!deferredInstall,ios=isIOS&&!canBtn;b.hidden=standalone()||(!canBtn&&!ios);
+  b.querySelector('[data-install-btn]').hidden=!canBtn;b.querySelector('[data-install-ios]').hidden=!ios})}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;installUI()});
+window.addEventListener('appinstalled',()=>{deferredInstall=null;installUI()});
+document.addEventListener('click',async e=>{if(!e.target.closest('[data-install-btn]')||!deferredInstall)return;deferredInstall.prompt();try{await deferredInstall.userChoice}catch(err){}deferredInstall=null;installUI()});
+installUI();
 
 /* ---------- export ---------- */
 const today=()=>new Date().toLocaleDateString('sv-SE');

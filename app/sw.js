@@ -1,5 +1,5 @@
 /* Marginal service worker – gör att appen startar utan täckning */
-const CACHE='marginal-v5';
+const CACHE='marginal-v5-1';
 const SHELL=['/app/','/app/index.html','/app/manifest.json','/app/icon-192.png','/app/icon-512.png','/app/villkor.html','/app/integritet.html','/app/terms.html','/app/privacy.html'];
 const CDN=['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js','https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js','https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(async c=>{await c.addAll(SHELL);await Promise.allSettled(CDN.map(u=>c.add(u)))}).then(()=>self.skipWaiting()))});
