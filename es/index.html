@@ -158,26 +158,24 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <a href="#sa-funkar-det">Cómo funciona</a>
 <a href="#erbjudande">Servicios</a>
 <a href="#om">Sobre nosotros</a>
-<a class="btn btn-mynta" href="#kontakt">Reservar análisis de menú</a>
+<a class="btn btn-mynta" href="/app/">Prueba la app</a>
 </div>
 </nav>
 <div class="wrap hero">
 <div class="hero-text">
-<p class="kicker">PARA RESTAURANTES EN SUECIA</p>
-<h1>¿Sabes cuánto gana cada plato de tu carta?</h1>
-<p class="lead">Los precios de los proveedores cambian cada semana. Los precios de la carta no. Calculamos el coste y el beneficio por ración, y te decimos qué platos subir, ajustar o destacar.</p>
+<p class="kicker">PARA COCINAS DE RESTAURANTES EN SUECIA</p>
+<h1>Stock, inventario y food cost – en tu móvil.</h1>
+<p class="lead">Marginal escanea tus productos, calcula el valor del stock y muestra cuánto cuesta preparar cada plato. Creada por un jefe de cocina, para cocinas que no tienen tiempo de hacer cuentas.</p>
 <div class="ctas">
-<a class="btn btn-mynta" href="#kontakt">Reservar análisis de menú</a>
+<a class="btn btn-mynta" href="/app/">Pruébala gratis</a>
 <a class="btn btn-ghost" href="#sa-funkar-det">Cómo funciona</a>
 </div>
 </div>
-<div class="card" aria-label="Ejemplo de análisis de menú">
-<div class="card-head"><span class="sg">Análisis de menú</span><span class="muted">Ejemplo, cifras ficticias</span></div>
-<div class="row th"><span>PLATO</span><span>MATERIA PRIMA</span><span>PRECIO</span><span>FOOD COST</span></div>
-<div class="row"><span>Pasta carbonara</span><span>38 kr</span><span>179 kr</span><span class="fc">24 %</span></div>
-<div class="row"><span>Salmón a la parrilla</span><span>72 kr</span><span>249 kr</span><span class="fc">32 %</span></div>
-<div class="row flag"><span>Solomillo de ternera</span><span>118 kr</span><span>285 kr</span><span class="fc">46 %</span></div>
-<p class="card-note">El solomillo se come el margen: sube el precio, cambia un componente o reduce la ración. Cada plato tiene su propia cifra, y una propuesta.</p>
+<div class="card" aria-label="Ejemplo de la app Marginal">
+<div class="card-head"><span class="sg">Inventario · cámara</span><span class="muted">Ejemplo, cifras ficticias</span></div>
+<div class="row th"><span>PRODUCTO</span><span>CANT.</span><span>PRECIO</span><span>VALOR</span></div>
+<div class="row"><span>Filete de salmón</span><span>6 kg</span><span>189 kr</span><span class="fc">1 134 kr</span></div><div class="row flag"><span>Nata 36 %</span><span>2 cajas</span><span>42 kr/l</span><span class="fc">1 008 kr</span></div><div class="row"><span>Mantequilla</span><span>3 kg</span><span>98 kr</span><span class="fc">294 kr</span></div>
+<p class="card-note"><b>Por debajo del nivel de pedido:</b> Nata 36 %. Escanea, cuenta, guarda. El inventario se convierte en un PDF para el dueño o el gestor – y la app te dice qué pedir.</p>
 </div>
 </div>
 </header>
@@ -186,13 +184,13 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <section id="sa-funkar-det">
 <div class="wrap">
 <div class="intro">
-<h2>De la lista de precios a la decisión</h2>
-<p>No tienes que hacer cuentas. Solo necesitamos tus recetas y los precios de tus proveedores.</p>
+<h2>Del estante a la cifra</h2>
+<p>Sin instalación ni formación. Abre la app en el móvil y empieza a escanear.</p>
 </div>
 <div class="steps">
-<div class="step"><div class="num sg">1</div><h3>Envía recetas y listas de precios</h3><p>Recetas en cualquier formato y listas de precios de Menigo, Tingstad u otros proveedores. Un PDF sirve.</p></div>
-<div class="step"><div class="num sg">2</div><h3>Calculamos por ración</h3><p>Cada plato tiene su coste, margen de contribución y food cost por ración, no una media de toda la cocina.</p></div>
-<div class="step"><div class="num sg">3</div><h3>Recibes una lista de acciones</h3><p>Qué platos subir de precio, cambiar de ingrediente, reducir o destacar, revisado contigo.</p></div>
+<div class="step"><div class="num sg">1</div><h3>Escanea los productos</h3><p>Acerca el código de barras a la cámara. La primera vez introduces el precio – luego el producto se reconoce solo. Funciona incluso en cámaras frigoríficas sin cobertura.</p></div>
+<div class="step"><div class="num sg">2</div><h3>Inventario en minutos</h3><p>Cuenta por zona de almacén con botones grandes. Guarda el inventario y descárgalo en PDF o Excel.</p></div>
+<div class="step"><div class="num sg">3</div><h3>Mira lo que cuestan los platos</h3><p>Introduce las recetas una vez. La app calcula el food cost por plato y lo compara con lo que realmente se usó – así ves la merma.</p></div>
 </div>
 </div>
 </section>
@@ -200,18 +198,31 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <section id="erbjudande" class="offers-bg">
 <div class="wrap offers">
 <div class="offer dark">
-<p class="tag">DISPONIBLE AHORA</p>
-<h3>Análisis de menú</h3>
-<p class="price sg">990 SEK <small>sin IVA · precio de lanzamiento para los primeros clientes</small></p>
+<p class="tag" style="display:flex;align-items:center;gap:10px"><svg width="24" height="26" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>BETA · GRATIS PARA PROBAR</p>
+<h3>Marginal <span class="sub">by Nordic Margins</span></h3>
+<p class="price sg">0 kr <small>durante el periodo de prueba · después desde 299 kr/mes sin IVA</small></p>
 <ul>
-<li>Coste y beneficio por ración de toda la carta</li>
-<li>Platos ordenados por rentabilidad</li>
-<li>Propuestas concretas para cada plato</li>
-<li>Revisión en persona en Örebro o por videollamada</li>
+<li>Escanea productos con la cámara del móvil</li>
+<li>Inventario por zona de almacén – PDF y Excel</li>
+<li>Entregas, proveedores y listas de pedidos</li>
+<li>Food cost por plato e informe mensual</li>
+<li>Todo el equipo en el mismo stock, en sueco e inglés</li>
 </ul>
-<a class="btn btn-mynta" href="#kontakt" data-amne="Menyanalys">Reservar análisis de menú</a>
+<a class="btn btn-mynta" href="/app/">Pruébala gratis</a>
 </div>
 <div class="offer mint">
+<p class="tag">COMPLEMENTO</p>
+<h3>Análisis de menú</h3>
+<p>¿Prefieres que lo hagamos nosotros? Revisamos todo tu menú y te explicamos los resultados.</p>
+<p class="price sg" style="color:var(--granskog)">990 kr <small style="color:var(--text2)">sin IVA · precio de lanzamiento</small></p>
+<ul>
+<li>Coste y beneficio por ración de todo el menú</li>
+<li>Propuestas concretas por plato</li>
+<li>Revisión en Örebro o por videollamada</li>
+</ul>
+<a class="btn btn-dark" href="#kontakt" data-amne="Menyanalys">Reservar análisis de menú</a>
+</div>
+<div class="offer light">
 <p class="tag">FORMACIÓN</p>
 <h3>Escandallos para cocineros</h3>
 <p>Un taller práctico en el que tu cocina aprende a calcular cuánto cuesta y gana cada plato, con vuestra propia carta como ejercicio.</p>
@@ -221,18 +232,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <li>Clases invitadas para escuelas de hostelería</li>
 </ul>
 <p class="price sg" style="color:var(--granskog)"><span style="font-size:.55em;font-weight:600">desde</span> 5.900 SEK <small style="color:var(--text2)">sin IVA por taller</small></p>
-<a class="btn btn-dark" href="#kontakt" data-amne="Utbildning – workshop för vårt kök">Reservar formación</a>
-</div>
-<div class="offer light">
-<p class="tag" style="display:flex;align-items:center;gap:10px"><svg width="24" height="26" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/></svg>EN DESARROLLO</p>
-<h3>Marginal <span class="sub">by Nordic Margins</span></h3>
-<p>La herramienta que mantiene las cifras al día después del análisis: seguimiento de precios de tus proveedores, escandallos y análisis de menú, de forma continua.</p>
-<ul>
-<li>Avisa cuando un ingrediente sube de precio</li>
-<li>Recalcula todos los platos afectados</li>
-<li>Muestra qué precios de la carta hay que revisar</li>
-</ul>
-<a class="btn btn-outline" href="#kontakt" data-amne="Marginal – intresseanmälan">Me interesa</a>
+<a class="btn btn-outline" href="#kontakt" data-amne="Utbildning – workshop för vårt kök">Reservar formación</a>
 </div>
 </div>
 </section>
@@ -244,7 +244,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <p class="kicker" style="color:var(--text2)">SOBRE NORDIC MARGINS</p>
 <h2>Desde la cocina, no desde la oficina</h2>
 <p>Me llamo Olliver y soy jefe de cocina en Örebro. Cada semana veo lo mismo: la nata, la carne y el pescado suben de precio, pero la carta no cambia. No por descuido, sino porque nadie tiene tiempo de hacer las cuentas.</p>
-<p>Por eso fundé Nordic Margins. Hago las cuentas por ti, con las mismas listas de precios y el mismo día a día que tú.</p>
+<p>Por eso fundé Nordic Margins y creé Marginal – la herramienta que me faltaba en mi propia cocina. Hace las cuentas por ti, con las mismas listas de precios y el mismo día a día que tú.</p>
 <div class="principles">
 <div class="principle"><h3>Por ración</h3><p>Cada plato tiene su propia cifra, no una media de toda la cocina.</p></div>
 <div class="principle"><h3>Lenguaje de cocina</h3><p>Raciones, mermas y proveedores. Sin jerga de consultor.</p></div>
