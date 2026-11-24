@@ -158,26 +158,24 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <a href="#sa-funkar-det">How it works</a>
 <a href="#erbjudande">Services</a>
 <a href="#om">About</a>
-<a class="btn btn-mynta" href="#kontakt">Book a menu analysis</a>
+<a class="btn btn-mynta" href="/app/">Try the app</a>
 </div>
 </nav>
 <div class="wrap hero">
 <div class="hero-text">
-<p class="kicker">FOR RESTAURANTS IN SWEDEN</p>
-<h1>Do you know what every dish on your menu earns?</h1>
-<p class="lead">Supplier prices change every week. Menu prices stand still. We calculate cost and profit per portion – and tell you which dishes to raise, adjust or promote.</p>
+<p class="kicker">FOR RESTAURANT KITCHENS IN SWEDEN</p>
+<h1>Stock, inventory and food cost – right on your phone.</h1>
+<p class="lead">Marginal scans your items, calculates your stock value and shows what every dish costs to make. Built by a head chef, for kitchens that have no time to calculate.</p>
 <div class="ctas">
-<a class="btn btn-mynta" href="#kontakt">Book a menu analysis</a>
+<a class="btn btn-mynta" href="/app/">Try for free</a>
 <a class="btn btn-ghost" href="#sa-funkar-det">How it works</a>
 </div>
 </div>
-<div class="card" aria-label="Example menu analysis">
-<div class="card-head"><span class="sg">Menu analysis</span><span class="muted">Example, fictional figures</span></div>
-<div class="row th"><span>DISH</span><span>INGREDIENTS</span><span>PRICE</span><span>FOOD COST</span></div>
-<div class="row"><span>Pasta carbonara</span><span>38 kr</span><span>179 kr</span><span class="fc">24 %</span></div>
-<div class="row"><span>Grilled salmon</span><span>72 kr</span><span>249 kr</span><span class="fc">32 %</span></div>
-<div class="row flag"><span>Beef tenderloin</span><span>118 kr</span><span>285 kr</span><span class="fc">46 %</span></div>
-<p class="card-note">The tenderloin eats the margin: raise the price, swap a component or shrink the portion. Every dish gets its own number – and a suggestion.</p>
+<div class="card" aria-label="Example from the Marginal app">
+<div class="card-head"><span class="sg">Stock count · fridge</span><span class="muted">Example, fictional figures</span></div>
+<div class="row th"><span>ITEM</span><span>QTY</span><span>PRICE</span><span>VALUE</span></div>
+<div class="row"><span>Salmon fillet</span><span>6 kg</span><span>189 kr</span><span class="fc">1 134 kr</span></div><div class="row flag"><span>Cream 36 %</span><span>2 cartons</span><span>42 kr/l</span><span class="fc">1 008 kr</span></div><div class="row"><span>Butter</span><span>3 kg</span><span>98 kr</span><span class="fc">294 kr</span></div>
+<p class="card-note"><b>Below reorder level:</b> Cream 36 %. Scan, count, save. The count becomes a PDF for the owner or accountant – and the app tells you what to order.</p>
 </div>
 </div>
 </header>
@@ -186,13 +184,13 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <section id="sa-funkar-det">
 <div class="wrap">
 <div class="intro">
-<h2>From price list to decision</h2>
-<p>You don't have to do the maths. All we need are your recipes and your supplier prices.</p>
+<h2>From the shelf to the numbers</h2>
+<p>No installation and no training. Open the app on your phone and start scanning.</p>
 </div>
 <div class="steps">
-<div class="step"><div class="num sg">1</div><h3>Send recipes and price lists</h3><p>Recipes in any format and price lists from Menigo, Tingstad or other suppliers – PDF is fine.</p></div>
-<div class="step"><div class="num sg">2</div><h3>We calculate per portion</h3><p>Every dish gets its cost, contribution margin and food cost per portion – not an average for the whole kitchen.</p></div>
-<div class="step"><div class="num sg">3</div><h3>You get an action list</h3><p>Which dishes to raise, re-source, shrink or promote – walked through with you.</p></div>
+<div class="step"><div class="num sg">1</div><h3>Scan your items</h3><p>Hold the barcode up to the camera. The first time you enter the price – after that the item is recognised. Works in walk-in fridges without signal too.</p></div>
+<div class="step"><div class="num sg">2</div><h3>Count in minutes</h3><p>Count per storage area with big buttons. Save the count and download it as PDF or Excel.</p></div>
+<div class="step"><div class="num sg">3</div><h3>See what dishes cost</h3><p>Add your recipes once. The app calculates food cost per plate and compares it with what was actually used – so you see the waste.</p></div>
 </div>
 </div>
 </section>
@@ -200,18 +198,31 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <section id="erbjudande" class="offers-bg">
 <div class="wrap offers">
 <div class="offer dark">
-<p class="tag">AVAILABLE NOW</p>
-<h3>Menu analysis</h3>
-<p class="price sg">SEK 990 <small>excl. VAT · introductory price for our first customers</small></p>
+<p class="tag" style="display:flex;align-items:center;gap:10px"><svg width="24" height="26" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#C6F0D0" stroke-width="6" stroke-linecap="square"/></svg>BETA · FREE TO TRY</p>
+<h3>Marginal <span class="sub">by Nordic Margins</span></h3>
+<p class="price sg">0 kr <small>during the test period · then from 299 kr/month excl. VAT</small></p>
 <ul>
-<li>Cost and profit per portion for the whole menu</li>
-<li>Dishes ranked by profitability</li>
-<li>Concrete suggestions for each dish</li>
-<li>Review on site in Örebro or by video</li>
+<li>Scan items with your phone camera</li>
+<li>Stock counts per storage area – PDF and Excel</li>
+<li>Deliveries, suppliers and order lists</li>
+<li>Food cost per dish and monthly report</li>
+<li>The whole team in the same stock, in Swedish and English</li>
 </ul>
-<a class="btn btn-mynta" href="#kontakt" data-amne="Menyanalys">Book a menu analysis</a>
+<a class="btn btn-mynta" href="/app/">Try for free</a>
 </div>
 <div class="offer mint">
+<p class="tag">ADD-ON</p>
+<h3>Menu analysis</h3>
+<p>Want us to do the work? We go through your whole menu for you and walk you through the results.</p>
+<p class="price sg" style="color:var(--granskog)">990 kr <small style="color:var(--text2)">excl. VAT · introductory price</small></p>
+<ul>
+<li>Cost and profit per portion for the whole menu</li>
+<li>Concrete suggestions per dish</li>
+<li>Review on site in Örebro or by video</li>
+</ul>
+<a class="btn btn-dark" href="#kontakt" data-amne="Menyanalys">Book a menu analysis</a>
+</div>
+<div class="offer light">
 <p class="tag">TRAINING</p>
 <h3>Food costing for chefs</h3>
 <p>A hands-on workshop where your kitchen learns to calculate what every plate costs and earns – using your own menu as the exercise.</p>
@@ -221,18 +232,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <li>Guest lectures for culinary schools and colleges</li>
 </ul>
 <p class="price sg" style="color:var(--granskog)"><span style="font-size:.55em;font-weight:600">from</span> SEK 5,900 <small style="color:var(--text2)">excl. VAT per workshop</small></p>
-<a class="btn btn-dark" href="#kontakt" data-amne="Utbildning – workshop för vårt kök">Book training</a>
-</div>
-<div class="offer light">
-<p class="tag" style="display:flex;align-items:center;gap:10px"><svg width="24" height="26" viewBox="0 0 60 64" aria-hidden="true"><path d="M16 24 L30 10 L44 24" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M10 40 L30 20 L50 40" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/><path d="M4 56 L30 30 L56 56" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square"/></svg>IN DEVELOPMENT</p>
-<h3>Marginal <span class="sub">by Nordic Margins</span></h3>
-<p>The tool that keeps the numbers up to date after the analysis: supplier price tracking, recipe costing and menu analysis – ongoing.</p>
-<ul>
-<li>Alerts you when an ingredient gets more expensive</li>
-<li>Recalculates every affected dish</li>
-<li>Shows which menu prices need reviewing</li>
-</ul>
-<a class="btn btn-outline" href="#kontakt" data-amne="Marginal – intresseanmälan">Register interest</a>
+<a class="btn btn-outline" href="#kontakt" data-amne="Utbildning – workshop för vårt kök">Book training</a>
 </div>
 </div>
 </section>
@@ -244,7 +244,7 @@ window.va = window.va || function () { (window.vaq = window.vaq || []).push(argu
 <p class="kicker" style="color:var(--text2)">ABOUT NORDIC MARGINS</p>
 <h2>From the kitchen, not the office</h2>
 <p>I'm Olliver, a head chef in Örebro. Every week I see the same thing: cream, meat and fish get more expensive – but the menu stays the same. Not because anyone is careless, but because nobody has time to do the maths.</p>
-<p>That's why I started Nordic Margins. I do the maths for you, with the same price lists and the same daily reality as you.</p>
+<p>That's why I started Nordic Margins and built Marginal – the tool I was missing in my own kitchen. It does the maths for you, with the same price lists and the same daily reality as you.</p>
 <div class="principles">
 <div class="principle"><h3>Per portion</h3><p>Every dish gets its own number – not an average for the whole kitchen.</p></div>
 <div class="principle"><h3>Kitchen language</h3><p>Portions, waste and suppliers. No consultant jargon.</p></div>
