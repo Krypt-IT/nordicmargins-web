@@ -719,7 +719,7 @@ function impRows(){const {rows,h,m}=IMP;return rows.slice(h+1).map(r=>({code:m.c
 function matchItem(x){const c=x.code.replace(/\s/g,'');return S.items.find(i=>(c&&(i.code===c||i.art===c)))||S.items.find(i=>norm(i.n)===norm(x.name))}
 function impRender(){const {head,m}=IMP;const opt=f=>`<select class="f" data-col="${f}"><option value="">– Ingen –</option>${head.map((h,i)=>`<option value="${i}"${m[f]===i?' selected':''}>${esc(h||'Kolumn '+(i+1))}</option>`).join('')}</select>`;
   const list=impRows(),hits=list.map(x=>({x,i:matchItem(x)})),match=hits.filter(h=>h.i),fresh=hits.filter(h=>!h.i);
-  const up=match.filter(h=>Math.abs(h.x.price-unitPriceFor(h))>0.005);
+  const up=match.filter(h=>Math.abs(unitPriceFor(h)-h.i.p)>0.005);
   $('impStep').hidden=false;
   $('impStep').innerHTML=`<p class="hint" style="margin:12px 0 0"><b>${esc(IMP.file)}</b> · ${list.length} rader med pris</p>
   <div class="imap"><label>Artikelnummer / EAN</label>${opt('code')}<label>Namn</label>${opt('name')}<label>Enhet</label>${opt('unit')}<label>Pris (kr)</label>${opt('price')}</div>
