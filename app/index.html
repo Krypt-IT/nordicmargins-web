@@ -144,7 +144,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
   <div class="authcard">
     <svg viewBox="0 0 60 64" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square" width="44" height="47"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg>
     <h1>Marginal</h1>
-    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v5.2</span></p>
+    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v5.3</span></p>
     <div class="seg" role="tablist"><button type="button" id="mLogin" aria-pressed="true">Logga in</button><button type="button" id="mSignup" aria-pressed="false">Skapa konto</button></div>
     <form id="authForm">
       <label for="aEmail">E-post</label><input class="f" id="aEmail" type="email" autocomplete="email" required>
@@ -236,6 +236,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
   <div class="pad"><h2>Råvaror</h2><p class="hint">Tryck på en vara för att ändra pris, förpackning, leverantör och beställningsnivå.</p></div>
   <div class="box" id="orderBox"></div>
   <div class="list" id="itemList"></div>
+  <div style="padding:6px 18px 0"><button class="link" id="reSort" type="button">Sortera lagerplatser automatiskt</button></div>
   <div class="box" style="margin-top:14px">
     <h2 style="font-size:18px;margin-bottom:12px">Lägg till råvara utan streckkod</h2>
     <form id="addForm">
@@ -415,6 +416,7 @@ const EN={
 'Välj fil':'Choose file','Artikelnummer / EAN':'Item number / EAN','Pris (kr)':'Price (kr)','– Ingen –':'– None –','Varor som finns i appen':'Items already in the app','Varav med nytt pris':'With a new price','Nya varor i filen':'New items in the file',
 'Nu':'Now','Nytt':'New','Ändring':'Change','Uppdatera priser':'Update prices','Läser filen …':'Reading file …','Filen verkar vara tom.':'The file seems to be empty.',
 'Kunde inte läsa filen. Spara den som .xlsx eller .csv och försök igen.':'Could not read the file. Save it as .xlsx or .csv and try again.','Importverktyget har inte laddats än. Försök igen om en stund.':'The import tool has not loaded yet. Try again in a moment.',
+'Sortera lagerplatser automatiskt':'Sort storage areas automatically','Allt ser rätt ut':'Everything looks right',
 /* PDF / CSV / delning */
 'Inventering':'Stock count','inventering':'stock-count','Antal':'Qty','Pris/enhet':'Price/unit','Värde (kr)':'Value (kr)','Summa':'Total','Totalt lagervärde':'Total stock value',
 'Inventerat av:':'Counted by:','Datum:':'Date:','Datum':'Date','Värden exkl. moms, beräknade på senaste inköpspris.':'Values excl. VAT, based on the latest purchase price.',
@@ -450,6 +452,10 @@ const PAT=[
 [/^Lägg även till de (\d+) nya varorna \(i torrförrådet, antal 0\)$/,m=>`Also add the ${m[1]} new items (in dry store, quantity 0)`],
 [/^Klart: (\d+) priser uppdaterade(?:, (\d+) nya varor tillagda)?\.$/,m=>`Done: ${m[1]} prices updated${m[2]?`, ${m[2]} new items added`:''}.`],
 [/^… och (\d+) till$/,m=>`… and ${m[1]} more`],
+[/^Lägg även till de (\d+) nya varorna \(antal 0\)$/,m=>`Also add the ${m[1]} new items (quantity 0)`],
+[/^Lagerplats väljs automatiskt: (.+)$/,m=>`Storage area is chosen automatically: ${m[1].replace(/kyl/g,'fridge').replace(/frys/g,'freezer').replace(/torrförråd/g,'dry store').replace(/bar/g,'bar')}`],
+[/^Flytta (\d+) varor från torrförrådet\? Tryck igen$/,m=>`Move ${m[1]} items out of the dry store? Tap again`],
+[/^(\d+) varor flyttade$/,m=>`${m[1]} items moved`],
 [/^Antal (.+)$/,m=>`Qty (${tr(m[1])})`],
 [/^offline – (\d+) ändringa?r? väntar$/,m=>`offline – ${m[1]} change${m[1]==='1'?'':'s'} waiting`],
 [/^Leveransen är inlagd: (.+)$/,m=>`Delivery added: ${m[1]}`],
@@ -700,6 +706,24 @@ $('v-items').addEventListener('click',async e=>{
     try{await navigator.clipboard.writeText(text);syncMsg('beställningslistan kopierad')}catch(err){syncMsg('kunde inte dela')}}
 });
 
+
+/* ---------- gissa lagerplats ---------- */
+const LOCW={
+ Frys:['fryst','frys','frozen','fryst ','pommes','glass','isglass','frozen'],
+ Bar:['öl ','öl,','lager ','ipa','cider','vin ','rödvin','vitvin','rosévin','mousserande','champagne','prosecco','cava','vodka','gin ','gin,','rom ','whisky','tequila','likör','bitter','vermouth','tonic','läsk','cola','sprite','fanta','mineralvatten','sodavatten','ramlösa','loka','beer','wine','spirit'],
+ Kyl:['oxfilé','entrecote','ryggbiff','fläsk','karré','kotlett','lamm','kalv','nöt','biff','färs','bacon','korv','skinka','salami','prosciutto','chark','kyckling','anka','kalkon','lax','torsk','sej','gös','hälleflundra','räk','kräft','hummer','musslor','sill','tonfisk','fisk','grädde','mjölk','smör','ost','parmesan','mozzarella','burrata','fetaost','halloumi','crème','creme','fraiche','yoghurt','kvarg','keso','ägg','sallad','ruccola','spenat','dill','persilja','koriander','basilika','gräslök','timjan','rosmarin','mynta','örter','citron','lime','tomat','gurka','paprika','svamp','champinjon','bär','jordgubb','hallon','blåbär','juice','majonnäs','aioli','pesto','dressing','tofu','deg','färsk']};
+function guessLoc(name){const n=' '+String(name||'').toLowerCase()+' ';
+  if(/fryst|frozen|\bfrys/.test(n))return'Frys';
+  if(/rödvin|vitvin|\bvin\b/.test(n)&&/sås|till mat|matlagning/.test(n))return'Torrförråd';
+  if(/konserv|burk|i olja|torkad|pulver|buljong|fond |hel tomat|krossade/.test(n))return'Torrförråd';
+  const hit=w=>w.endsWith(' ')||w.endsWith(',')?n.includes(' '+w.replace(/[ ,]$/,'')+' ')||n.includes(' '+w.replace(/[ ,]$/,'')+','):w.length<4?n.includes(' '+w):n.includes(w);
+  for(const L of['Frys','Bar','Kyl'])if(LOCW[L].some(hit))return L;
+  return'Torrförråd'}
+
+$('reSort').addEventListener('click',e=>{const b=e.target;const ch=S.items.filter(i=>guessLoc(i.n)!==i.l&&i.l==='Torrförråd');
+  if(!ch.length){b.textContent='Allt ser rätt ut';setTimeout(()=>{b.textContent='Sortera lagerplatser automatiskt'},2500);return}
+  if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent=`Flytta ${ch.length} varor från torrförrådet? Tryck igen`;return}
+  ch.forEach(i=>{i.l=guessLoc(i.n);saveItem(i)});b.dataset.sure='';b.textContent=`${ch.length} varor flyttade`;render()});
 /* ---------- importera prislista ---------- */
 let IMP=null;
 const imsg=t=>{$('impMsg').textContent=t};
@@ -728,7 +752,7 @@ function impRender(){const {head,m}=IMP;const opt=f=>`<select class="f" data-col
   <div class="sum"><span>Varav med nytt pris</span><b>${up.length}</b></div>
   <div class="sum"><span>Nya varor i filen</span><b>${fresh.length}</b></div>
   ${up.length?`<table class="iprev"><tr><th>Vara</th><th class="r">Nu</th><th class="r">Nytt</th><th class="r">Ändring</th></tr>${up.slice(0,8).map(h=>{const o=h.i.p,n=unitPriceFor(h),d=o?(n-o)/o*100:0;return`<tr><td>${esc(h.i.n)}</td><td class="r">${kr(o,2)}</td><td class="r">${kr(n,2)}</td><td class="r ${d>0?'up':'down'}">${d>0?'+':''}${pc(d)} %</td></tr>`}).join('')}</table>${up.length>8?`<p class="hint" style="font-size:12px;margin:0">… och ${up.length-8} till</p>`:''}`:''}
-  <label class="chk" style="margin:12px 0"><input type="checkbox" id="impNew"${IMP.addNew?' checked':''}> <span>Lägg även till de ${fresh.length} nya varorna (i torrförrådet, antal 0)</span></label>
+  <label class="chk" style="margin:12px 0"><input type="checkbox" id="impNew"${IMP.addNew?' checked':''}> <span>Lägg även till de ${fresh.length} nya varorna (antal 0)</span></label>${fresh.length?`<p class="hint" style="margin:-4px 0 12px;font-size:13px">Lagerplats väljs automatiskt: ${LOCS.map(L=>[L,fresh.filter(h=>guessLoc(h.x.name)===L).length]).filter(a=>a[1]).map(a=>`${a[1]} ${a[0].toLowerCase()}`).join(', ')}</p>`:''}
   <div class="grid2"><button class="btn" id="impGo" type="button">Uppdatera priser</button><button class="btn ghost" id="impCancel" type="button">Avbryt</button></div>`;
 }
 function unitPriceFor(h){const i=h.i,x=h.x;return i&&i.ps>1&&x.unit==='förp'?Math.round(x.price/i.ps*10000)/10000:x.price}
@@ -750,7 +774,7 @@ $('impStep').addEventListener('click',e=>{if(!IMP)return;
   const sup=($('impSup').value||'').trim();let upd=0,add=0;
   for(const x of impRows()){const h={x,i:matchItem(x)};
     if(h.i){const np=unitPriceFor(h);if(Math.abs(np-h.i.p)>0.005){h.i.p=np;upd++}if(sup&&!h.i.sup)h.i.sup=sup;if(x.code&&!h.i.art&&x.code!==h.i.code)h.i.art=x.code;saveItem(h.i)}
-    else if(IMP.addNew){const c=x.code.replace(/\s/g,'');const it={id:uid(),n:x.name.slice(0,80),u:x.unit,p:x.price,l:'Torrförråd',c:0,sup:sup||null,code:/^\d{8,14}$/.test(c)?c:null,art:/^\d{8,14}$/.test(c)?null:(c||null)};S.items.push(it);saveItem(it);add++}}
+    else if(IMP.addNew){const c=x.code.replace(/\s/g,'');const it={id:uid(),n:x.name.slice(0,80),u:x.unit,p:x.price,l:guessLoc(x.name),c:0,sup:sup||null,code:/^\d{8,14}$/.test(c)?c:null,art:/^\d{8,14}$/.test(c)?null:(c||null)};S.items.push(it);saveItem(it);add++}}
   S.items.sort((a,b)=>a.n.localeCompare(b.n,'sv'));IMP=null;$('impStep').hidden=true;$('impStep').innerHTML='';render();
   imsg(`Klart: ${upd} priser uppdaterade${add?`, ${add} nya varor tillagda`:''}.`)});
 
@@ -907,6 +931,8 @@ $('cam').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0]
 $('manBtn').addEventListener('click',()=>{$('manPanel').hidden=!$('manPanel').hidden;if(!$('manPanel').hidden)$('manCode').focus()});
 $('manGo').addEventListener('click',()=>{handleCode($('manCode').value);$('manCode').value=''});
 $('manCode').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('manGo').click()}});
+$('sName').addEventListener('input',e=>{$('sLoc').value=guessLoc(e.target.value)});
+$('nName').addEventListener('input',e=>{$('nLoc').value=guessLoc(e.target.value)});
 $('sCancel').addEventListener('click',()=>{$('newPanel').hidden=true;pendingCode=null});
 $('sSave').addEventListener('click',()=>{const n=$('sName').value.trim(),p=pn($('sPrice').value),ps=pn($('sPack').value);
   if(!n||isNaN(p)){sm('Fyll i namn och pris.');return}
