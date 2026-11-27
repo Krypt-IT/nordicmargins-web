@@ -119,6 +119,10 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 .dline .x{background:none;border:0;color:var(--soft);font-size:20px;height:40px;cursor:pointer}
 .install{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
 .box .install{margin:0 0 12px;padding:0 0 12px;border-top:0;border-bottom:1px solid var(--line)}
+.imap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:8px 10px;align-items:center;margin:10px 0}
+.imap label{margin:0}.imap .f{height:40px}
+.iprev{font-size:13px;width:100%;border-collapse:collapse;margin:8px 0}.iprev td,.iprev th{padding:6px 4px;border-top:1px solid var(--line);text-align:left}.iprev td.r,.iprev th.r{text-align:right;white-space:nowrap}
+.up{color:var(--bad)}.down{color:var(--ok)}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;margin:18px 0 16px}
 .seg button{height:40px;border:0;border-radius:9px;background:none;color:var(--soft);font:600 15px Inter,sans-serif;cursor:pointer}
 .seg button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
@@ -140,7 +144,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
   <div class="authcard">
     <svg viewBox="0 0 60 64" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square" width="44" height="47"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg>
     <h1>Marginal</h1>
-    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v5.1</span></p>
+    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v5.2</span></p>
     <div class="seg" role="tablist"><button type="button" id="mLogin" aria-pressed="true">Logga in</button><button type="button" id="mSignup" aria-pressed="false">Skapa konto</button></div>
     <form id="authForm">
       <label for="aEmail">E-post</label><input class="f" id="aEmail" type="email" autocomplete="email" required>
@@ -244,6 +248,14 @@ nav button[aria-current=true] svg{color:#1f7a4d}
       <button class="btn" style="margin-top:14px;width:100%">Lägg till</button>
     </form>
   </div>
+  <div class="box" id="impBox">
+    <h2 style="font-size:18px;margin-bottom:4px">Importera prislista</h2>
+    <p class="hint" style="margin:0 0 12px">Ladda upp en Excel- eller CSV-fil från din grossist, till exempel Menigo, Martin &amp; Servera eller Svensk Cater. Priserna uppdateras och food cost räknas om.</p>
+    <label class="btn ghost" for="impFile" style="display:flex;align-items:center;justify-content:center;width:100%;cursor:pointer">Välj fil</label>
+    <input type="file" id="impFile" accept=".xlsx,.xls,.csv,text/csv" hidden>
+    <div id="impStep" hidden></div>
+    <p class="msg" id="impMsg" role="status"></p>
+  </div>
 </section>
 
 <section id="v-menu" hidden>
@@ -321,6 +333,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 {
 const $=id=>document.getElementById(id);
@@ -398,6 +411,10 @@ const EN={
 'Offline – allt sparas i telefonen och skickas när du får täckning.':'Offline – everything is saved on the phone and sent when you get a connection.','Lägg till minst en vara.':'Add at least one item.',
 'Fyll i ingående lager, eller använd en sparad inventering nedan, så räknas faktisk food cost ut.':'Enter the opening stock, or use a saved count below, and the actual food cost is calculated.',
 'Installera appen':'Install the app','Spara appen på hemskärmen:':'Save the app to your home screen:','tryck på dela-ikonen':'tap the share icon','längst ner i Safari och välj':'at the bottom of Safari and choose','Lägg till på hemskärmen':'Add to Home Screen',
+'Importera prislista':'Import price list','Ladda upp en Excel- eller CSV-fil från din grossist, till exempel Menigo, Martin & Servera eller Svensk Cater. Priserna uppdateras och food cost räknas om.':'Upload an Excel or CSV file from your wholesaler, such as Menigo, Martin & Servera or Svensk Cater. Prices are updated and food cost is recalculated.',
+'Välj fil':'Choose file','Artikelnummer / EAN':'Item number / EAN','Pris (kr)':'Price (kr)','– Ingen –':'– None –','Varor som finns i appen':'Items already in the app','Varav med nytt pris':'With a new price','Nya varor i filen':'New items in the file',
+'Nu':'Now','Nytt':'New','Ändring':'Change','Uppdatera priser':'Update prices','Läser filen …':'Reading file …','Filen verkar vara tom.':'The file seems to be empty.',
+'Kunde inte läsa filen. Spara den som .xlsx eller .csv och försök igen.':'Could not read the file. Save it as .xlsx or .csv and try again.','Importverktyget har inte laddats än. Försök igen om en stund.':'The import tool has not loaded yet. Try again in a moment.',
 /* PDF / CSV / delning */
 'Inventering':'Stock count','inventering':'stock-count','Antal':'Qty','Pris/enhet':'Price/unit','Värde (kr)':'Value (kr)','Summa':'Total','Totalt lagervärde':'Total stock value',
 'Inventerat av:':'Counted by:','Datum:':'Date:','Datum':'Date','Värden exkl. moms, beräknade på senaste inköpspris.':'Values excl. VAT, based on the latest purchase price.',
@@ -429,6 +446,10 @@ const PAT=[
 [/^(.+) är tillagd i (.+)\.$/,m=>`${m[1]} was added to the ${tr(cap(m[2])).toLowerCase()}.`],
 [/^ · (.+)$/,m=>` · ${tr(m[1])}`],
 [/^Fel: (.+)$/,m=>`Error: ${m[1]}`],
+[/^(\d+) rader med pris$/,m=>`${m[1]} rows with a price`],
+[/^Lägg även till de (\d+) nya varorna \(i torrförrådet, antal 0\)$/,m=>`Also add the ${m[1]} new items (in dry store, quantity 0)`],
+[/^Klart: (\d+) priser uppdaterade(?:, (\d+) nya varor tillagda)?\.$/,m=>`Done: ${m[1]} prices updated${m[2]?`, ${m[2]} new items added`:''}.`],
+[/^… och (\d+) till$/,m=>`… and ${m[1]} more`],
 [/^Antal (.+)$/,m=>`Qty (${tr(m[1])})`],
 [/^offline – (\d+) ändringa?r? väntar$/,m=>`offline – ${m[1]} change${m[1]==='1'?'':'s'} waiting`],
 [/^Leveransen är inlagd: (.+)$/,m=>`Delivery added: ${m[1]}`],
@@ -508,7 +529,7 @@ async function flush(){if(flushing)return;if(!outbox.length||!navigator.onLine){
 window.addEventListener('online',()=>{showSync();flush()});window.addEventListener('offline',showSync);setInterval(flush,20000);
 const timers={};
 function later(key,fn){clearTimeout(timers[key]);syncMsg('sparar …');timers[key]=setTimeout(async()=>{try{const r=await fn();if(r&&r.error)throw r.error;syncMsg('sparat')}catch(e){syncMsg('kunde inte spara – kontrollera internet')}},600)}
-const itemRow=i=>({id:i.id,restaurant_id:RID,code:i.code||null,name:i.n,unit:i.u,price:i.p,location:i.l,count:i.c,pack_name:i.pk||null,pack_size:i.ps||null,supplier:i.sup||null,min_level:i.min||null,updated_at:new Date().toISOString()});
+const itemRow=i=>({id:i.id,restaurant_id:RID,code:i.code||null,name:i.n,unit:i.u,price:i.p,location:i.l,count:i.c,pack_name:i.pk||null,art_no:i.art||null,pack_size:i.ps||null,supplier:i.sup||null,min_level:i.min||null,updated_at:new Date().toISOString()});
 const saveItem=i=>queue({k:'i'+i.id,t:'items',a:'up',row:itemRow(i)});
 const saveDish=d=>queue({k:'d'+d.id,t:'dishes',a:'up',row:{id:d.id,restaurant_id:RID,name:d.n,price:d.price,sold:d.sold,ingredients:d.ing}});
 const saveRep=()=>queue({k:'rep'+MONTH,t:'reports',a:'up',row:{restaurant_id:RID,month:MONTH,opening_stock:S.ib,purchases:S.buy}});
@@ -517,7 +538,7 @@ async function load(){
   if(outbox.length||!navigator.onLine){const c=readCache(RID);if(c&&c.S){S=c.S;S.dlv=S.dlv||[];return}}
   const [a,b,c,h,dl]=await Promise.all([sb.from('items').select('*').eq('restaurant_id',RID).order('name'),sb.from('dishes').select('*').eq('restaurant_id',RID).order('name'),sb.from('reports').select('*').eq('restaurant_id',RID).eq('month',MONTH).maybeSingle(),sb.from('stock_counts').select('*').eq('restaurant_id',RID).order('taken_at',{ascending:false}).limit(24),sb.from('deliveries').select('*').eq('restaurant_id',RID).gte('received_at',MONTH+'-01').order('received_at',{ascending:false})]);
   if(a.error&&netErr(a.error)){const cc=readCache(RID);if(cc&&cc.S){S=cc.S;S.dlv=S.dlv||[];return}}
-  S.items=(a.data||[]).map(r=>({id:r.id,code:r.code,n:r.name,u:r.unit,p:+r.price,l:r.location,c:+r.count,pk:r.pack_name,ps:r.pack_size?+r.pack_size:null,sup:r.supplier,min:r.min_level!=null?+r.min_level:null}));
+  S.items=(a.data||[]).map(r=>({id:r.id,code:r.code,n:r.name,u:r.unit,p:+r.price,l:r.location,c:+r.count,pk:r.pack_name,art:r.art_no,ps:r.pack_size?+r.pack_size:null,sup:r.supplier,min:r.min_level!=null?+r.min_level:null}));
   S.dishes=(b.data||[]).map(r=>({id:r.id,n:r.name,price:+r.price,sold:+r.sold,ing:r.ingredients||[]}));
   S.ib=c.data?+c.data.opening_stock:0;S.buy=c.data?+c.data.purchases:0;S.hist=h.data||[];S.dlv=dl.data||[];cacheS();
 }
@@ -678,6 +699,61 @@ $('v-items').addEventListener('click',async e=>{
     try{if(navigator.share){await navigator.share({title:'Beställning',text});return}}catch(err){if(err.name==='AbortError')return}
     try{await navigator.clipboard.writeText(text);syncMsg('beställningslistan kopierad')}catch(err){syncMsg('kunde inte dela')}}
 });
+
+/* ---------- importera prislista ---------- */
+let IMP=null;
+const imsg=t=>{$('impMsg').textContent=t};
+const KEYS={code:['artikelnummer','artikelnr','art.nr','artnr','art nr','ean','gtin','streckkod','produktnummer','artikel-nr','varunummer'],
+  name:['benämning','artikelnamn','artikelbenämning','produktnamn','beskrivning','namn','produkt','vara','artikel'],
+  unit:['enhet','säljenhet','förpackning','förp','jämförenhet','fp'],
+  price:['ditt pris','nettopris','pris/enhet','à-pris','a-pris','apris','styckpris','pris','jämförpris','kr']};
+const norm=t=>String(t??'').toLowerCase().trim();
+function score(cell,keys){const c=norm(cell);if(!c)return 0;let b=0;keys.forEach((k,i)=>{if(c===k)b=Math.max(b,100-i);else if(c.includes(k))b=Math.max(b,50-i)});return b}
+function guessCols(head){const used=new Set(),m={};
+  for(const f of['price','code','name','unit']){let best=-1,bs=0;head.forEach((h,i)=>{if(used.has(i))return;const sc=score(h,KEYS[f]);if(sc>bs){bs=sc;best=i}});if(best>=0){m[f]=best;used.add(best)}}
+  return m}
+function findHeader(rows){let bi=0,bs=-1;rows.slice(0,20).forEach((r,i)=>{const sc=r.reduce((a,c)=>a+(Object.values(KEYS).some(ks=>score(c,ks)>0)?1:0),0);if(sc>bs){bs=sc;bi=i}});return bi}
+const priceNum=v=>{if(typeof v==='number')return v;const t=String(v??'').replace(/[^\d,.\-]/g,'').replace(/\s/g,'');if(!t)return NaN;const x=t.includes(',')&&t.lastIndexOf(',')>t.lastIndexOf('.')?t.replace(/\./g,'').replace(',','.'):t.replace(/,/g,'');return parseFloat(x)};
+function unitOf(t){const u=norm(t);if(/^(kg|kilo)/.test(u))return'kg';if(/^(l|liter|lit)$/.test(u)||u==='lt')return'l';if(/^(st|styck|pcs)/.test(u))return'st';if(/flaska|fl$/.test(u))return'flaska';if(/knippe/.test(u))return'knippe';return u?'förp':'st'}
+function impRows(){const {rows,h,m}=IMP;return rows.slice(h+1).map(r=>({code:m.code!=null?String(r[m.code]??'').trim():'',name:m.name!=null?String(r[m.name]??'').trim():'',unit:m.unit!=null?unitOf(r[m.unit]):'st',price:m.price!=null?priceNum(r[m.price]):NaN})).filter(x=>x.name&&isFinite(x.price)&&x.price>0)}
+function matchItem(x){const c=x.code.replace(/\s/g,'');return S.items.find(i=>(c&&(i.code===c||i.art===c)))||S.items.find(i=>norm(i.n)===norm(x.name))}
+function impRender(){const {head,m}=IMP;const opt=f=>`<select class="f" data-col="${f}"><option value="">– Ingen –</option>${head.map((h,i)=>`<option value="${i}"${m[f]===i?' selected':''}>${esc(h||'Kolumn '+(i+1))}</option>`).join('')}</select>`;
+  const list=impRows(),hits=list.map(x=>({x,i:matchItem(x)})),match=hits.filter(h=>h.i),fresh=hits.filter(h=>!h.i);
+  const up=match.filter(h=>Math.abs(h.x.price-unitPriceFor(h))>0.005);
+  $('impStep').hidden=false;
+  $('impStep').innerHTML=`<p class="hint" style="margin:12px 0 0"><b>${esc(IMP.file)}</b> · ${list.length} rader med pris</p>
+  <div class="imap"><label>Artikelnummer / EAN</label>${opt('code')}<label>Namn</label>${opt('name')}<label>Enhet</label>${opt('unit')}<label>Pris (kr)</label>${opt('price')}</div>
+  <label for="impSup">Leverantör</label><input class="f" id="impSup" value="${esc(IMP.sup||'')}" placeholder="T.ex. Menigo">
+  <div class="sum" style="margin-top:10px"><span>Varor som finns i appen</span><b>${match.length}</b></div>
+  <div class="sum"><span>Varav med nytt pris</span><b>${up.length}</b></div>
+  <div class="sum"><span>Nya varor i filen</span><b>${fresh.length}</b></div>
+  ${up.length?`<table class="iprev"><tr><th>Vara</th><th class="r">Nu</th><th class="r">Nytt</th><th class="r">Ändring</th></tr>${up.slice(0,8).map(h=>{const o=h.i.p,n=unitPriceFor(h),d=o?(n-o)/o*100:0;return`<tr><td>${esc(h.i.n)}</td><td class="r">${kr(o,2)}</td><td class="r">${kr(n,2)}</td><td class="r ${d>0?'up':'down'}">${d>0?'+':''}${pc(d)} %</td></tr>`}).join('')}</table>${up.length>8?`<p class="hint" style="font-size:12px;margin:0">… och ${up.length-8} till</p>`:''}`:''}
+  <label class="chk" style="margin:12px 0"><input type="checkbox" id="impNew"${IMP.addNew?' checked':''}> <span>Lägg även till de ${fresh.length} nya varorna (i torrförrådet, antal 0)</span></label>
+  <div class="grid2"><button class="btn" id="impGo" type="button">Uppdatera priser</button><button class="btn ghost" id="impCancel" type="button">Avbryt</button></div>`;
+}
+function unitPriceFor(h){const i=h.i,x=h.x;return i&&i.ps>1&&x.unit==='förp'?Math.round(x.price/i.ps*10000)/10000:x.price}
+$('impFile').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;
+  if(!window.XLSX){imsg('Importverktyget har inte laddats än. Försök igen om en stund.');return}
+  imsg('Läser filen …');
+  try{const buf=await f.arrayBuffer();const wb=XLSX.read(buf,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''}).filter(r=>r.some(c=>String(c).trim()!==''));
+    if(!rows.length){imsg('Filen verkar vara tom.');return}
+    const h=findHeader(rows),head=rows[h].map(c=>String(c).trim());
+    IMP={file:f.name,rows,h,head,m:guessCols(head),addNew:false,sup:/menigo/i.test(f.name)?'Menigo':/servera/i.test(f.name)?'Martin & Servera':''};
+    imsg('');impRender()}catch(err){imsg('Kunde inte läsa filen. Spara den som .xlsx eller .csv och försök igen.')}});
+$('impStep').addEventListener('change',e=>{const t=e.target;if(!IMP)return;
+  if(t.dataset.col){IMP.m[t.dataset.col]=t.value===''?undefined:+t.value;impRender()}
+  if(t.id==='impNew')IMP.addNew=t.checked;if(t.id==='impSup')IMP.sup=t.value});
+$('impStep').addEventListener('click',e=>{if(!IMP)return;
+  if(e.target.id==='impCancel'){IMP=null;$('impStep').hidden=true;$('impStep').innerHTML='';return}
+  if(e.target.id!=='impGo')return;
+  const sup=($('impSup').value||'').trim();let upd=0,add=0;
+  for(const x of impRows()){const h={x,i:matchItem(x)};
+    if(h.i){const np=unitPriceFor(h);if(Math.abs(np-h.i.p)>0.005){h.i.p=np;upd++}if(sup&&!h.i.sup)h.i.sup=sup;if(x.code&&!h.i.art&&x.code!==h.i.code)h.i.art=x.code;saveItem(h.i)}
+    else if(IMP.addNew){const c=x.code.replace(/\s/g,'');const it={id:uid(),n:x.name.slice(0,80),u:x.unit,p:x.price,l:'Torrförråd',c:0,sup:sup||null,code:/^\d{8,14}$/.test(c)?c:null,art:/^\d{8,14}$/.test(c)?null:(c||null)};S.items.push(it);saveItem(it);add++}}
+  S.items.sort((a,b)=>a.n.localeCompare(b.n,'sv'));IMP=null;$('impStep').hidden=true;$('impStep').innerHTML='';render();
+  imsg(`Klart: ${upd} priser uppdaterade${add?`, ${add} nya varor tillagda`:''}.`)});
+
 $('addForm').addEventListener('submit',e=>{e.preventDefault();const p=pn($('nPrice').value);if(isNaN(p))return;
   const i={id:uid(),n:$('nName').value.trim(),u:$('nUnit').value,p,l:$('nLoc').value,c:0};S.items.push(i);S.items.sort((a,b)=>a.n.localeCompare(b.n,'sv'));saveItem(i);e.target.reset();render()});
 
