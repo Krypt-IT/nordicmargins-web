@@ -144,7 +144,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
   <div class="authcard">
     <svg viewBox="0 0 60 64" fill="none" stroke="#172321" stroke-width="6" stroke-linecap="square" width="44" height="47"><path d="M16 24 L30 10 L44 24"/><path d="M10 40 L30 20 L50 40"/><path d="M4 56 L30 30 L56 56"/></svg>
     <h1>Marginal</h1>
-    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v5.3</span></p>
+    <p class="hint">Lager, inventering och food cost för restaurangkök. <span style="opacity:.6">v5.4</span></p>
     <div class="seg" role="tablist"><button type="button" id="mLogin" aria-pressed="true">Logga in</button><button type="button" id="mSignup" aria-pressed="false">Skapa konto</button></div>
     <form id="authForm">
       <label for="aEmail">E-post</label><input class="f" id="aEmail" type="email" autocomplete="email" required>
@@ -219,6 +219,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
       <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px"><select class="f" id="dlvItem" aria-label="Välj vara"></select><button class="btn" id="dlvAdd" type="button" style="padding:0 16px">+</button></div>
       <div class="sum" style="margin-top:10px"><span>Summa</span><b id="dlvTot">0 kr</b></div>
       <button class="btn" id="dlvBook" type="button" style="width:100%;margin-top:6px">Lägg in leveransen i lagret</button>
+      <button class="link" id="dlvPdf" type="button">Har du följesedeln som PDF? Ladda upp den i stället</button>
     </div>
     <p class="msg" id="scanMsg" role="status"></p>
   </div>
@@ -251,9 +252,9 @@ nav button[aria-current=true] svg{color:#1f7a4d}
   </div>
   <div class="box" id="impBox">
     <h2 style="font-size:18px;margin-bottom:4px">Importera prislista</h2>
-    <p class="hint" style="margin:0 0 12px">Ladda upp en Excel- eller CSV-fil från din grossist, till exempel Menigo, Martin &amp; Servera eller Svensk Cater. Priserna uppdateras och food cost räknas om.</p>
+    <p class="hint" style="margin:0 0 12px">Ladda upp en prislista (Excel eller CSV) eller en följesedel (PDF) från din grossist, till exempel Menigo, Martin &amp; Servera eller Svensk Cater. Priserna uppdateras och food cost räknas om.</p>
     <label class="btn ghost" for="impFile" style="display:flex;align-items:center;justify-content:center;width:100%;cursor:pointer">Välj fil</label>
-    <input type="file" id="impFile" accept=".xlsx,.xls,.csv,text/csv" hidden>
+    <input type="file" id="impFile" accept=".xlsx,.xls,.csv,text/csv,.pdf,application/pdf" hidden>
     <div id="impStep" hidden></div>
     <p class="msg" id="impMsg" role="status"></p>
   </div>
@@ -335,6 +336,7 @@ nav button[aria-current=true] svg{color:#1f7a4d}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
 {
 const $=id=>document.getElementById(id);
@@ -417,6 +419,9 @@ const EN={
 'Nu':'Now','Nytt':'New','Ändring':'Change','Uppdatera priser':'Update prices','Läser filen …':'Reading file …','Filen verkar vara tom.':'The file seems to be empty.',
 'Kunde inte läsa filen. Spara den som .xlsx eller .csv och försök igen.':'Could not read the file. Save it as .xlsx or .csv and try again.','Importverktyget har inte laddats än. Försök igen om en stund.':'The import tool has not loaded yet. Try again in a moment.',
 'Sortera lagerplatser automatiskt':'Sort storage areas automatically','Allt ser rätt ut':'Everything looks right',
+'Ladda upp en prislista (Excel eller CSV) eller en följesedel (PDF) från din grossist, till exempel Menigo, Martin & Servera eller Svensk Cater. Priserna uppdateras och food cost räknas om.':'Upload a price list (Excel or CSV) or a delivery note (PDF) from your wholesaler, such as Menigo, Martin & Servera or Svensk Cater. Prices are updated and food cost is recalculated.',
+'Antal (valfritt)':'Quantity (optional)','Lägg in antalen i lagret som en leverans (räknas även in i månadens inköp)':"Add the quantities to stock as a delivery (also counted in this month's purchases)",
+'Har du följesedeln som PDF? Ladda upp den i stället':'Have the delivery note as a PDF? Upload it instead','Kunde inte läsa PDF:en. Den behöver vara elektronisk (text som går att markera), inte inskannad.':'Could not read the PDF. It must be electronic (selectable text), not scanned.',
 /* PDF / CSV / delning */
 'Inventering':'Stock count','inventering':'stock-count','Antal':'Qty','Pris/enhet':'Price/unit','Värde (kr)':'Value (kr)','Summa':'Total','Totalt lagervärde':'Total stock value',
 'Inventerat av:':'Counted by:','Datum:':'Date:','Datum':'Date','Värden exkl. moms, beräknade på senaste inköpspris.':'Values excl. VAT, based on the latest purchase price.',
@@ -452,6 +457,7 @@ const PAT=[
 [/^Lägg även till de (\d+) nya varorna \(i torrförrådet, antal 0\)$/,m=>`Also add the ${m[1]} new items (in dry store, quantity 0)`],
 [/^Klart: (\d+) priser uppdaterade(?:, (\d+) nya varor tillagda)?\.$/,m=>`Done: ${m[1]} prices updated${m[2]?`, ${m[2]} new items added`:''}.`],
 [/^… och (\d+) till$/,m=>`… and ${m[1]} more`],
+[/^Klart: (\d+) priser uppdaterade(?:, (\d+) nya varor tillagda)?\. Leverans på (.+) inlagd i lagret\.$/,m=>`Done: ${m[1]} prices updated${m[2]?`, ${m[2]} new items added`:''}. Delivery of ${m[3]} added to stock.`],
 [/^Lägg även till de (\d+) nya varorna \(antal 0\)$/,m=>`Also add the ${m[1]} new items (quantity 0)`],
 [/^Lagerplats väljs automatiskt: (.+)$/,m=>`Storage area is chosen automatically: ${m[1].replace(/kyl/g,'fridge').replace(/frys/g,'freezer').replace(/torrförråd/g,'dry store').replace(/bar/g,'bar')}`],
 [/^Flytta (\d+) varor från torrförrådet\? Tryck igen$/,m=>`Move ${m[1]} items out of the dry store? Tap again`],
@@ -710,7 +716,7 @@ $('v-items').addEventListener('click',async e=>{
 /* ---------- gissa lagerplats ---------- */
 const LOCW={
  Frys:['fryst','frys','frozen','fryst ','pommes','glass','isglass','frozen'],
- Bar:['öl ','öl,','lager ','ipa','cider','vin ','rödvin','vitvin','rosévin','mousserande','champagne','prosecco','cava','vodka','gin ','gin,','rom ','whisky','tequila','likör','bitter','vermouth','tonic','läsk','cola','sprite','fanta','mineralvatten','sodavatten','ramlösa','loka','beer','wine','spirit'],
+ Bar:['öl ','öl,','lager ','ipa','cider','vin ','rödvin','vitvin','rosévin','mousserande','champagne','prosecco','cava','vodka','gin ','gin,','rom ','whisky','tequila','likör','bitter','vermouth','tonic','läsk','cola ','coca-cola','sprite','fanta','mineralvatten','sodavatten','ramlösa','loka ','beer','wine','spirit'],
  Kyl:['oxfilé','entrecote','ryggbiff','fläsk','karré','kotlett','lamm','kalv','nöt','biff','färs','bacon','korv','skinka','salami','prosciutto','chark','kyckling','anka','kalkon','lax','torsk','sej','gös','hälleflundra','räk','kräft','hummer','musslor','sill','tonfisk','fisk','grädde','mjölk','smör','ost','parmesan','mozzarella','burrata','fetaost','halloumi','crème','creme','fraiche','yoghurt','kvarg','keso','ägg','sallad','ruccola','spenat','dill','persilja','koriander','basilika','gräslök','timjan','rosmarin','mynta','örter','citron','lime','tomat','gurka','paprika','svamp','champinjon','bär','jordgubb','hallon','blåbär','juice','majonnäs','aioli','pesto','dressing','tofu','deg','färsk']};
 function guessLoc(name){const n=' '+String(name||'').toLowerCase()+' ';
   if(/fryst|frozen|\bfrys/.test(n))return'Frys';
@@ -730,53 +736,74 @@ const imsg=t=>{$('impMsg').textContent=t};
 const KEYS={code:['artikelnummer','artikelnr','art.nr','artnr','art nr','ean','gtin','streckkod','produktnummer','artikel-nr','varunummer'],
   name:['benämning','artikelnamn','artikelbenämning','produktnamn','beskrivning','namn','produkt','vara','artikel'],
   unit:['enhet','säljenhet','förpackning','förp','jämförenhet','fp'],
-  price:['ditt pris','nettopris','pris/enhet','à-pris','a-pris','apris','styckpris','pris','jämförpris','kr']};
+  price:['ditt pris','nettopris','pris/enhet','à-pris','a-pris','apris','à pris','styckpris','pris','jämförpris'],
+  qty:['levererat antal','lev. antal','levererat','antal','kvantitet','ant.','ant']};
 const norm=t=>String(t??'').toLowerCase().trim();
-function score(cell,keys){const c=norm(cell);if(!c)return 0;let b=0;keys.forEach((k,i)=>{if(c===k)b=Math.max(b,100-i);else if(c.includes(k))b=Math.max(b,50-i)});return b}
+function score(cell,keys){const c=norm(cell);if(!c||/belopp|summa|totalt|moms/.test(c)&&keys===KEYS.price)return 0;let b=0;keys.forEach((k,i)=>{if(c===k)b=Math.max(b,100-i);else if(c.includes(k))b=Math.max(b,50-i)});return b}
 function guessCols(head){const used=new Set(),m={};
-  for(const f of['price','code','name','unit']){let best=-1,bs=0;head.forEach((h,i)=>{if(used.has(i))return;const sc=score(h,KEYS[f]);if(sc>bs){bs=sc;best=i}});if(best>=0){m[f]=best;used.add(best)}}
+  for(const f of['price','qty','code','name','unit']){let best=-1,bs=0;head.forEach((h,i)=>{if(used.has(i))return;const sc=score(h,KEYS[f]);if(sc>bs){bs=sc;best=i}});if(best>=0){m[f]=best;used.add(best)}}
   return m}
 function findHeader(rows){let bi=0,bs=-1;rows.slice(0,20).forEach((r,i)=>{const sc=r.reduce((a,c)=>a+(Object.values(KEYS).some(ks=>score(c,ks)>0)?1:0),0);if(sc>bs){bs=sc;bi=i}});return bi}
 const priceNum=v=>{if(typeof v==='number')return v;const t=String(v??'').replace(/[^\d,.\-]/g,'').replace(/\s/g,'');if(!t)return NaN;const x=t.includes(',')&&t.lastIndexOf(',')>t.lastIndexOf('.')?t.replace(/\./g,'').replace(',','.'):t.replace(/,/g,'');return parseFloat(x)};
 function unitOf(t){const u=norm(t);if(/^(kg|kilo)/.test(u))return'kg';if(/^(l|liter|lit)$/.test(u)||u==='lt')return'l';if(/^(st|styck|pcs)/.test(u))return'st';if(/flaska|fl$/.test(u))return'flaska';if(/knippe/.test(u))return'knippe';return u?'förp':'st'}
-function impRows(){const {rows,h,m}=IMP;return rows.slice(h+1).map(r=>({code:m.code!=null?String(r[m.code]??'').trim():'',name:m.name!=null?String(r[m.name]??'').trim():'',unit:m.unit!=null?unitOf(r[m.unit]):'st',price:m.price!=null?priceNum(r[m.price]):NaN})).filter(x=>x.name&&isFinite(x.price)&&x.price>0)}
+async function pdfTable(buf){
+  if(!window.pdfjsLib)throw new Error('pdf');
+  try{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'}catch(e){}
+  const pdf=await pdfjsLib.getDocument({data:buf}).promise;const lines=[];
+  for(let p=1;p<=pdf.numPages;p++){const pg=await pdf.getPage(p);const tc=await pg.getTextContent();const items=tc.items.filter(it=>it.str&&it.str.trim()).map(it=>({x0:it.transform[4],x1:it.transform[4]+(it.width||it.str.length*4),y:it.transform[5],s:it.str.trim()}));
+    items.sort((a,b)=>b.y-a.y||a.x0-b.x0);let cur=null;
+    for(const it of items){if(!cur||Math.abs(cur.y-it.y)>3){cur={y:it.y,cells:[]};lines.push(cur)}
+      const last=cur.cells[cur.cells.length-1];if(last&&it.x0-last.x1<3){last.s+=' '+it.s;last.x1=it.x1}else cur.cells.push({...it})}}
+  let hi=-1,hs=0;lines.forEach((l,i)=>{const sc=l.cells.filter(c=>Object.values(KEYS).some(ks=>score(c.s,ks)>0)).length;if(sc>hs){hs=sc;hi=i}});
+  if(hi<0||hs<2)return lines.map(l=>l.cells.map(c=>c.s));
+  const head=lines[hi].cells,cen=c=>(c.x0+c.x1)/2;
+  const rows=[head.map(c=>c.s)];
+  for(const l of lines.slice(hi+1)){if(!l.cells.some(c=>/\d/.test(c.s)))continue;if(/^(summa|totalt|att betala|moms)/i.test(l.cells[0].s))continue;
+    const r=head.map(()=>'');for(const c of l.cells){let bi=0,bd=1e9;head.forEach((h,i)=>{const d=Math.abs(cen(h)-cen(c));if(d<bd){bd=d;bi=i}});r[bi]=r[bi]?r[bi]+' '+c.s:c.s}rows.push(r)}
+  return rows}
+function impRows(){const {rows,h,m}=IMP;return rows.slice(h+1).map(r=>({code:m.code!=null?String(r[m.code]??'').trim():'',name:m.name!=null?String(r[m.name]??'').trim():'',unit:m.unit!=null?unitOf(r[m.unit]):'st',price:m.price!=null?priceNum(r[m.price]):NaN,qty:m.qty!=null?priceNum(r[m.qty]):NaN})).filter(x=>x.name&&isFinite(x.price)&&x.price>0)}
 function matchItem(x){const c=x.code.replace(/\s/g,'');return S.items.find(i=>(c&&(i.code===c||i.art===c)))||S.items.find(i=>norm(i.n)===norm(x.name))}
 function impRender(){const {head,m}=IMP;const opt=f=>`<select class="f" data-col="${f}"><option value="">– Ingen –</option>${head.map((h,i)=>`<option value="${i}"${m[f]===i?' selected':''}>${esc(h||'Kolumn '+(i+1))}</option>`).join('')}</select>`;
   const list=impRows(),hits=list.map(x=>({x,i:matchItem(x)})),match=hits.filter(h=>h.i),fresh=hits.filter(h=>!h.i);
   const up=match.filter(h=>Math.abs(unitPriceFor(h)-h.i.p)>0.005);
   $('impStep').hidden=false;
   $('impStep').innerHTML=`<p class="hint" style="margin:12px 0 0"><b>${esc(IMP.file)}</b> · ${list.length} rader med pris</p>
-  <div class="imap"><label>Artikelnummer / EAN</label>${opt('code')}<label>Namn</label>${opt('name')}<label>Enhet</label>${opt('unit')}<label>Pris (kr)</label>${opt('price')}</div>
+  <div class="imap"><label>Artikelnummer / EAN</label>${opt('code')}<label>Namn</label>${opt('name')}<label>Enhet</label>${opt('unit')}<label>Pris (kr)</label>${opt('price')}<label>Antal (valfritt)</label>${opt('qty')}</div>
   <label for="impSup">Leverantör</label><input class="f" id="impSup" value="${esc(IMP.sup||'')}" placeholder="T.ex. Menigo">
   <div class="sum" style="margin-top:10px"><span>Varor som finns i appen</span><b>${match.length}</b></div>
   <div class="sum"><span>Varav med nytt pris</span><b>${up.length}</b></div>
   <div class="sum"><span>Nya varor i filen</span><b>${fresh.length}</b></div>
   ${up.length?`<table class="iprev"><tr><th>Vara</th><th class="r">Nu</th><th class="r">Nytt</th><th class="r">Ändring</th></tr>${up.slice(0,8).map(h=>{const o=h.i.p,n=unitPriceFor(h),d=o?(n-o)/o*100:0;return`<tr><td>${esc(h.i.n)}</td><td class="r">${kr(o,2)}</td><td class="r">${kr(n,2)}</td><td class="r ${d>0?'up':'down'}">${d>0?'+':''}${pc(d)} %</td></tr>`}).join('')}</table>${up.length>8?`<p class="hint" style="font-size:12px;margin:0">… och ${up.length-8} till</p>`:''}`:''}
   <label class="chk" style="margin:12px 0"><input type="checkbox" id="impNew"${IMP.addNew?' checked':''}> <span>Lägg även till de ${fresh.length} nya varorna (antal 0)</span></label>${fresh.length?`<p class="hint" style="margin:-4px 0 12px;font-size:13px">Lagerplats väljs automatiskt: ${LOCS.map(L=>[L,fresh.filter(h=>guessLoc(h.x.name)===L).length]).filter(a=>a[1]).map(a=>`${a[1]} ${a[0].toLowerCase()}`).join(', ')}</p>`:''}
+  ${m.qty!=null?`<label class="chk" style="margin:0 0 12px"><input type="checkbox" id="impBook"${IMP.book?' checked':''}> <span>Lägg in antalen i lagret som en leverans (räknas även in i månadens inköp)</span></label>`:''}
   <div class="grid2"><button class="btn" id="impGo" type="button">Uppdatera priser</button><button class="btn ghost" id="impCancel" type="button">Avbryt</button></div>`;
 }
 function unitPriceFor(h){const i=h.i,x=h.x;return i&&i.ps>1&&x.unit==='förp'?Math.round(x.price/i.ps*10000)/10000:x.price}
 $('impFile').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;
-  if(!window.XLSX){imsg('Importverktyget har inte laddats än. Försök igen om en stund.');return}
+  if(!window.XLSX&&!/\.pdf$/i.test(f.name)){imsg('Importverktyget har inte laddats än. Försök igen om en stund.');return}
   imsg('Läser filen …');
-  try{const buf=await f.arrayBuffer();const wb=XLSX.read(buf,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];
-    const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''}).filter(r=>r.some(c=>String(c).trim()!==''));
+  const isPdf=/\.pdf$/i.test(f.name)||f.type==='application/pdf';
+  try{const buf=await f.arrayBuffer();let rows;
+    if(isPdf){rows=await pdfTable(buf)}else{const wb=XLSX.read(buf,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''})}
+    rows=rows.filter(r=>r.some(c=>String(c).trim()!==''));
     if(!rows.length){imsg('Filen verkar vara tom.');return}
     const h=findHeader(rows),head=rows[h].map(c=>String(c).trim());
-    IMP={file:f.name,rows,h,head,m:guessCols(head),addNew:false,sup:/menigo/i.test(f.name)?'Menigo':/servera/i.test(f.name)?'Martin & Servera':''};
-    imsg('');impRender()}catch(err){imsg('Kunde inte läsa filen. Spara den som .xlsx eller .csv och försök igen.')}});
+    IMP={file:f.name,isPdf,rows,h,head,m:guessCols(head),addNew:false,book:isPdf,sup:/menigo/i.test(f.name)?'Menigo':/servera/i.test(f.name)?'Martin & Servera':''};
+    imsg('');impRender()}catch(err){imsg(isPdf?'Kunde inte läsa PDF:en. Den behöver vara elektronisk (text som går att markera), inte inskannad.':'Kunde inte läsa filen. Spara den som .xlsx eller .csv och försök igen.')}});
 $('impStep').addEventListener('change',e=>{const t=e.target;if(!IMP)return;
   if(t.dataset.col){IMP.m[t.dataset.col]=t.value===''?undefined:+t.value;impRender()}
-  if(t.id==='impNew')IMP.addNew=t.checked;if(t.id==='impSup')IMP.sup=t.value});
+  if(t.id==='impNew')IMP.addNew=t.checked;if(t.id==='impBook')IMP.book=t.checked;if(t.id==='impSup')IMP.sup=t.value});
 $('impStep').addEventListener('click',e=>{if(!IMP)return;
   if(e.target.id==='impCancel'){IMP=null;$('impStep').hidden=true;$('impStep').innerHTML='';return}
   if(e.target.id!=='impGo')return;
-  const sup=($('impSup').value||'').trim();let upd=0,add=0;
+  const sup=($('impSup').value||'').trim();let upd=0,add=0,tot=0;const book=IMP.book&&IMP.m.qty!=null;const dl=[];
   for(const x of impRows()){const h={x,i:matchItem(x)};
-    if(h.i){const np=unitPriceFor(h);if(Math.abs(np-h.i.p)>0.005){h.i.p=np;upd++}if(sup&&!h.i.sup)h.i.sup=sup;if(x.code&&!h.i.art&&x.code!==h.i.code)h.i.art=x.code;saveItem(h.i)}
-    else if(IMP.addNew){const c=x.code.replace(/\s/g,'');const it={id:uid(),n:x.name.slice(0,80),u:x.unit,p:x.price,l:guessLoc(x.name),c:0,sup:sup||null,code:/^\d{8,14}$/.test(c)?c:null,art:/^\d{8,14}$/.test(c)?null:(c||null)};S.items.push(it);saveItem(it);add++}}
+    if(h.i){const np=unitPriceFor(h);if(Math.abs(np-h.i.p)>0.005){h.i.p=np;upd++}if(sup&&!h.i.sup)h.i.sup=sup;if(x.code&&!h.i.art&&x.code!==h.i.code)h.i.art=x.code;if(book&&x.qty>0){const q=h.i.ps>1&&x.unit==='förp'?x.qty*h.i.ps:x.qty;h.i.c=Math.round((h.i.c+q)*100)/100;tot+=x.qty*x.price;dl.push({item_id:h.i.id,name:h.i.n,unit:h.i.u,qty:q,price:h.i.p})}saveItem(h.i)}
+    else if(IMP.addNew){const c=x.code.replace(/\s/g,'');const it={id:uid(),n:x.name.slice(0,80),u:x.unit,p:x.price,l:guessLoc(x.name),c:0,sup:sup||null,code:/^\d{8,14}$/.test(c)?c:null,art:/^\d{8,14}$/.test(c)?null:(c||null)};if(book&&x.qty>0){it.c=x.qty;tot+=x.qty*x.price;dl.push({item_id:it.id,name:it.n,unit:it.u,qty:x.qty,price:it.p})}S.items.push(it);saveItem(it);add++}}
+  if(book&&dl.length){tot=Math.round(tot*100)/100;const row={id:uid(),restaurant_id:RID,received_at:new Date().toISOString(),received_by:ME,supplier:sup||null,total:tot,lines:dl};S.dlv=S.dlv||[];S.dlv.unshift(row);queue({t:'deliveries',a:'ins',row});S.buy=Math.round((S.buy+tot)*100)/100;saveRep()}
   S.items.sort((a,b)=>a.n.localeCompare(b.n,'sv'));IMP=null;$('impStep').hidden=true;$('impStep').innerHTML='';render();
-  imsg(`Klart: ${upd} priser uppdaterade${add?`, ${add} nya varor tillagda`:''}.`)});
+  imsg(`Klart: ${upd} priser uppdaterade${add?`, ${add} nya varor tillagda`:''}.`+(book&&dl.length?` Leverans på ${kr(tot)} inlagd i lagret.`:''))});
+$('dlvPdf').addEventListener('click',()=>{$('dlvCancel').click();show('items');$('impFile').click();setTimeout(()=>$('impBox').scrollIntoView({block:'start'}),300)});
 
 $('addForm').addEventListener('submit',e=>{e.preventDefault();const p=pn($('nPrice').value);if(isNaN(p))return;
   const i={id:uid(),n:$('nName').value.trim(),u:$('nUnit').value,p,l:$('nLoc').value,c:0};S.items.push(i);S.items.sort((a,b)=>a.n.localeCompare(b.n,'sv'));saveItem(i);e.target.reset();render()});
